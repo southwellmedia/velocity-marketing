@@ -1,0 +1,10 @@
+{
+  "version": "0.2.1-beta",
+  "createdAt": "2026-02-17",
+  "updatedAt": "2026-02-17",
+  "features": {
+    "demo": false,
+    "i18n": true,
+    "components": "all"
+  }
+}
