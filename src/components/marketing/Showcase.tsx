@@ -47,7 +47,7 @@ const SHOWCASE_ITEMS: ShowcaseItem[] = [
     description:
       'Dashboard analytics with real-time data visualization and team collaboration tools',
     gradient:
-      'radial-gradient(ellipse at 25% 50%, rgba(249,76,16,0.22) 0%, oklch(7% 0 0) 65%)',
+      'radial-gradient(ellipse at 25% 50%, rgba(249,76,16,0.22) 0%, var(--color-background-deep) 65%)',
     accent: 'var(--color-brand-500)',
   },
   {
@@ -56,7 +56,7 @@ const SHOWCASE_ITEMS: ShowcaseItem[] = [
     description:
       'Portfolio and case studies with scroll-driven animations and dynamic page transitions',
     gradient:
-      'radial-gradient(ellipse at 75% 30%, rgba(129,140,248,0.25) 0%, oklch(7% 0 0) 65%)',
+      'radial-gradient(ellipse at 75% 30%, rgba(129,140,248,0.25) 0%, var(--color-background-deep) 65%)',
     accent: '#818cf8',
   },
   {
@@ -65,7 +65,7 @@ const SHOWCASE_ITEMS: ShowcaseItem[] = [
     description:
       'Infrastructure monitoring with real-time metrics, alerting, and intelligent anomaly detection',
     gradient:
-      'radial-gradient(ellipse at 50% 70%, rgba(52,211,153,0.22) 0%, oklch(7% 0 0) 65%)',
+      'radial-gradient(ellipse at 50% 70%, rgba(52,211,153,0.22) 0%, var(--color-background-deep) 65%)',
     accent: '#34d399',
   },
 ];
@@ -160,7 +160,7 @@ function FeaturedCard({
             <img
               src={item.image}
               alt={`${item.name} — ${item.description}`}
-              className="h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+              className="h-full w-full object-cover object-top grayscale transition-all duration-700 ease-out group-hover:scale-[1.03] group-hover:grayscale-0"
               loading="lazy"
               decoding="async"
             />
@@ -188,27 +188,27 @@ function FeaturedCard({
                   className="h-1.5 w-1.5 rounded-full"
                   style={{ backgroundColor: item.accent }}
                 />
-                <span className="text-xs font-mono uppercase tracking-widest text-foreground-muted">
+                <span className="text-xs font-mono uppercase tracking-widest text-white/70">
                   {item.category}
                 </span>
-                <span className="hidden sm:inline text-xs font-mono text-foreground-subtle">
+                <span className="hidden sm:inline text-xs font-mono text-white/50">
                   / Featured
                 </span>
               </div>
 
               <h3
-                className="font-display font-bold text-foreground tracking-tight leading-none"
+                className="font-display font-bold text-white tracking-tight leading-none"
                 style={{ fontSize: 'var(--text-4xl)' }}
               >
                 {item.name}
               </h3>
 
-              <p className="mt-3 max-w-lg text-sm md:text-base text-foreground-muted leading-relaxed">
+              <p className="mt-3 max-w-lg text-sm md:text-base text-white/70 leading-relaxed">
                 {item.description}
               </p>
 
               {/* Hover link */}
-              <div className="mt-6 inline-flex items-center gap-2 text-foreground-subtle group-hover:text-foreground-muted transition-colors duration-300">
+              <div className="mt-6 inline-flex items-center gap-2 text-white/50 group-hover:text-white/70 transition-colors duration-300">
                 <span className="text-xs font-mono uppercase tracking-wider">
                   Visit Site
                 </span>
@@ -289,7 +289,7 @@ function ShowcaseCard({
               className="absolute inset-x-0 bottom-0 h-3/4"
               style={{
                 background:
-                  'linear-gradient(to top, oklch(7% 0 0) 0%, transparent 100%)',
+                  'linear-gradient(to top, var(--color-background-deep) 0%, transparent 100%)',
               }}
             />
 
@@ -396,9 +396,9 @@ export default function Showcase() {
     <section
       id="showcase"
       ref={ref}
-      className="invert-section bg-noise relative overflow-hidden"
+      className="bg-noise relative overflow-hidden"
       style={{
-        backgroundColor: 'oklch(7% 0 0)',
+        backgroundColor: 'var(--color-background-deep)',
         paddingTop: 'var(--space-section)',
         paddingBottom: 'var(--space-section)',
       }}

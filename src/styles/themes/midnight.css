@@ -32,6 +32,7 @@
      ------------------------------------------------------------------------- */
   --background: oklch(99% 0.006 285);
   --background-secondary: oklch(97% 0.01 285);
+  --background-deep: oklch(97% 0.01 285);
   --background-tertiary: oklch(94.5% 0.015 285);
   --background-elevated: oklch(99.5% 0.004 285);
 
@@ -130,6 +131,7 @@
 .dark {
   --background: oklch(10% 0.04 285);
   --background-secondary: oklch(14% 0.035 285);
+  --background-deep: oklch(7% 0.04 285);
   --background-tertiary: oklch(18% 0.03 285);
   --background-elevated: oklch(14% 0.035 285);
 

@@ -48,8 +48,8 @@ const socialLinks = [
 ---
 
 <footer
-  class="invert-section bg-noise relative overflow-hidden"
-  style={`background-color: oklch(7% 0 0); padding-top: var(--space-section); padding-bottom: 0;`}
+  class="bg-noise relative overflow-hidden"
+  style={`background-color: var(--color-background-deep); padding-top: var(--space-section); padding-bottom: 0;`}
 >
   {/* Subtle brand glow at top — mirrors Showcase's bottom glow */}
   <div
@@ -67,7 +67,7 @@ const socialLinks = [
       {/* Brand column — large logo wordmark + tagline */}
       <div class="lg:col-span-5">
         <a href="/" class="inline-flex items-center gap-3 group" aria-label="Velocity home">
-          <Logo size="lg" forceDark={true} />
+          <Logo size="lg" />
           <span
             class="font-display font-bold text-foreground tracking-tight"
             style="font-size: var(--text-2xl);"

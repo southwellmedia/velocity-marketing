@@ -132,43 +132,47 @@ const configPanelHtml = `
 `;
 ---
 
-<section
-  class={cn(
-    'relative min-h-screen flex flex-col',
-    className
-  )}
->
+<section class={cn('relative min-h-screen flex flex-col', className)}>
   <!-- Background effects (clipped to section) -->
-  <div class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+  <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
     <div class="bg-glow-orange absolute inset-0"></div>
-    <div class="absolute inset-0 bg-grid-pattern opacity-30" style="mask-image: radial-gradient(ellipse 50% 50% at 50% 40%, black 0%, transparent 70%); -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 40%, black 0%, transparent 70%);"></div>
+    <div
+      class="bg-grid-pattern absolute inset-0 opacity-30"
+      style="mask-image: radial-gradient(ellipse 50% 50% at 50% 40%, black 0%, transparent 70%); -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 40%, black 0%, transparent 70%);"
+    >
+    </div>
   </div>
 
   <!-- Main content — pushed up to make room for browser mockup -->
-  <div class="container relative z-10 text-center max-w-4xl mx-auto flex-1 flex flex-col justify-center" style="padding-top: var(--space-page-top); padding-bottom: var(--space-section-sm);">
+  <div
+    class="relative z-10 container mx-auto flex max-w-4xl flex-1 flex-col justify-center text-center"
+    style="padding-top: var(--space-page-top); padding-bottom: var(--space-section-sm);"
+  >
     <div>
-      <div class="opacity-0 animate-slide-up delay-0">
+      <div class="animate-slide-up opacity-0 delay-0">
         <Badge variant="brand">Astro 6 Starter Kit</Badge>
       </div>
 
       <h1
-        class="font-display tracking-tight font-bold mt-6 text-foreground opacity-0 animate-slide-up delay-1 text-balance"
+        class="font-display text-foreground animate-slide-up mt-6 font-bold tracking-tight text-balance opacity-0 delay-1"
         style="font-size: var(--text-5xl);"
       >
         Your Next Site<br />
-        <span class="bg-brand-500 text-white px-3 py-1 rounded-lg inline-block mt-2">Starts Here</span>
+        <span class="bg-brand-500 mt-2 inline-block rounded-lg px-3 py-1 text-white"
+          >Starts Here</span
+        >
       </h1>
 
       <p
-        class="text-foreground-muted max-w-2xl mx-auto mt-6 opacity-0 animate-slide-up delay-2"
+        class="text-foreground-muted animate-slide-up mx-auto mt-6 max-w-3xl opacity-0 delay-2"
         style="font-size: var(--text-xl);"
       >
-        The production-ready Astro 6 starter kit with 57+ components, design tokens,
-        and everything you need to launch.
+        The production-ready Astro 6 starter kit with 57+ components, design tokens, and everything
+        you need to launch.
       </p>
 
       <div
-        class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-10 opacity-0 animate-slide-up delay-3"
+        class="animate-slide-up mt-10 flex flex-col items-center justify-center gap-4 opacity-0 delay-3 sm:flex-row"
       >
         <NpmCopyButton />
         <Button variant="outline" size="lg" href="https://docs.deployvelocity.com" target="_blank">
@@ -180,40 +184,61 @@ const configPanelHtml = `
   </div>
 
   <!-- Large IDE mockup — bleeds into next section -->
-  <div class="relative z-10 opacity-0 animate-slide-up delay-4 hidden md:block" style="animation-delay: 400ms;" aria-hidden="true">
-    <div class="container max-w-5xl mx-auto" style="perspective: 2000px;">
+  <div
+    class="animate-slide-up relative z-10 hidden opacity-0 delay-4 md:block"
+    style="animation-delay: 400ms;"
+    aria-hidden="true"
+  >
+    <div class="container mx-auto max-w-5xl" style="perspective: 2000px;">
       <div
-        class="rounded-t-xl border border-b-0 border-border bg-card overflow-hidden"
+        class="border-border bg-card overflow-hidden rounded-t-xl border border-b-0"
         style="transform: rotateX(2deg); transform-origin: bottom center; box-shadow: 0 -8px 80px rgba(249, 76, 16, 0.08), 0 -2px 40px rgba(0, 0, 0, 0.3);"
       >
         <!-- Editor title bar -->
-        <div class="flex items-center px-4 h-10 bg-background-tertiary border-b border-border">
+        <div class="bg-background-tertiary border-border flex h-10 items-center border-b px-4">
           <div class="flex items-center gap-1.5">
-            <div class="w-3 h-3 rounded-full bg-foreground-subtle/20"></div>
-            <div class="w-3 h-3 rounded-full bg-foreground-subtle/20"></div>
-            <div class="w-3 h-3 rounded-full bg-foreground-subtle/20"></div>
+            <div class="bg-foreground-subtle/20 h-3 w-3 rounded-full"></div>
+            <div class="bg-foreground-subtle/20 h-3 w-3 rounded-full"></div>
+            <div class="bg-foreground-subtle/20 h-3 w-3 rounded-full"></div>
           </div>
-          <div class="flex-1 flex justify-center">
-            <span class="text-xs text-foreground-muted" data-ide-title>velocity &mdash; src/pages/index.astro</span>
+          <div class="flex flex-1 justify-center">
+            <span class="text-foreground-muted text-xs" data-ide-title
+              >velocity &mdash; src/pages/index.astro</span
+            >
           </div>
           <div class="w-16"></div>
         </div>
 
         <!-- Editor tab bar -->
-        <div class="flex items-end bg-background-tertiary/50 border-b border-border h-9 px-2 gap-px" data-ide-tabs>
-          <button data-ide-tab="index" class="ide-tab ide-tab-active flex items-center gap-1.5 px-3 h-8 text-xs rounded-t-md -mb-px relative z-10 cursor-pointer transition-colors">
+        <div
+          class="bg-background-tertiary/50 border-border flex h-9 items-end gap-px border-b px-2"
+          data-ide-tabs
+        >
+          <button
+            data-ide-tab="index"
+            class="ide-tab ide-tab-active relative z-10 -mb-px flex h-8 cursor-pointer items-center gap-1.5 rounded-t-md px-3 text-xs transition-colors"
+          >
             <Icon name="brand-astro" size="xs" />
             index.astro
           </button>
-          <button data-ide-tab="hero" class="ide-tab flex items-center gap-1.5 px-3 h-8 text-xs rounded-t-md cursor-pointer transition-colors">
+          <button
+            data-ide-tab="hero"
+            class="ide-tab flex h-8 cursor-pointer items-center gap-1.5 rounded-t-md px-3 text-xs transition-colors"
+          >
             <Icon name="brand-astro" size="xs" />
             Hero.astro
           </button>
-          <button data-ide-tab="tokens" class="ide-tab flex items-center gap-1.5 px-3 h-8 text-xs rounded-t-md cursor-pointer transition-colors">
+          <button
+            data-ide-tab="tokens"
+            class="ide-tab flex h-8 cursor-pointer items-center gap-1.5 rounded-t-md px-3 text-xs transition-colors"
+          >
             <Icon name="palette" size="xs" />
             default.css
           </button>
-          <button data-ide-tab="config" class="ide-tab flex items-center gap-1.5 px-3 h-8 text-xs rounded-t-md cursor-pointer transition-colors">
+          <button
+            data-ide-tab="config"
+            class="ide-tab flex h-8 cursor-pointer items-center gap-1.5 rounded-t-md px-3 text-xs transition-colors"
+          >
             <Icon name="brand-typescript" size="xs" />
             site.config.ts
           </button>
@@ -222,66 +247,84 @@ const configPanelHtml = `
         <!-- Editor content area -->
         <div class="flex h-[340px] lg:h-[400px]">
           <!-- File explorer sidebar -->
-          <div class="w-48 lg:w-52 border-r border-border bg-background-secondary/30 text-xs shrink-0 overflow-hidden">
-            <div class="px-3 py-2 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Explorer</div>
+          <div
+            class="border-border bg-background-secondary/30 w-48 shrink-0 overflow-hidden border-r text-xs lg:w-52"
+          >
+            <div
+              class="text-foreground-muted px-3 py-2 text-[10px] font-semibold tracking-wider uppercase"
+            >
+              Explorer
+            </div>
             <div class="space-y-px px-1">
-              <div class="flex items-center gap-1 px-2 py-1 text-foreground-muted">
+              <div class="text-foreground-muted flex items-center gap-1 px-2 py-1">
                 <Icon name="chevron-down" size="xs" />
-                <span class="font-medium text-foreground-secondary">src</span>
+                <span class="text-foreground-secondary font-medium">src</span>
               </div>
-              <div class="flex items-center gap-1 px-5 py-1 text-foreground-muted">
+              <div class="text-foreground-muted flex items-center gap-1 px-5 py-1">
                 <Icon name="chevron-down" size="xs" />
                 <span>components</span>
               </div>
-              <div class="flex items-center gap-1 px-8 py-1 text-foreground-muted">
+              <div class="text-foreground-muted flex items-center gap-1 px-8 py-1">
                 <Icon name="chevron-right" size="xs" />
                 <span>layout</span>
               </div>
-              <div class="flex items-center gap-1 px-8 py-1 text-foreground-muted">
+              <div class="text-foreground-muted flex items-center gap-1 px-8 py-1">
                 <Icon name="chevron-down" size="xs" />
                 <span>marketing</span>
               </div>
-              <div class="flex items-center gap-1 px-11 py-1 text-foreground-muted" data-ide-explorer="hero">
+              <div
+                class="text-foreground-muted flex items-center gap-1 px-11 py-1"
+                data-ide-explorer="hero"
+              >
                 <Icon name="brand-astro" size="xs" />
                 <span>Hero.astro</span>
               </div>
-              <div class="flex items-center gap-1 px-8 py-1 text-foreground-muted">
+              <div class="text-foreground-muted flex items-center gap-1 px-8 py-1">
                 <Icon name="chevron-right" size="xs" />
                 <span>ui</span>
               </div>
-              <div class="flex items-center gap-1 px-5 py-1 text-foreground-muted">
+              <div class="text-foreground-muted flex items-center gap-1 px-5 py-1">
                 <Icon name="chevron-down" size="xs" />
                 <span>config</span>
               </div>
-              <div class="flex items-center gap-1 px-8 py-1 text-foreground-muted" data-ide-explorer="config">
+              <div
+                class="text-foreground-muted flex items-center gap-1 px-8 py-1"
+                data-ide-explorer="config"
+              >
                 <Icon name="brand-typescript" size="xs" />
                 <span>site.config.ts</span>
               </div>
-              <div class="flex items-center gap-1 px-5 py-1 text-foreground-muted">
+              <div class="text-foreground-muted flex items-center gap-1 px-5 py-1">
                 <Icon name="chevron-right" size="xs" />
                 <span>layouts</span>
               </div>
-              <div class="flex items-center gap-1 px-5 py-1 text-foreground-muted">
+              <div class="text-foreground-muted flex items-center gap-1 px-5 py-1">
                 <Icon name="chevron-down" size="xs" />
                 <span>pages</span>
               </div>
-              <div class="flex items-center gap-1 px-8 py-1 rounded bg-brand-500/10 text-brand-500" data-ide-explorer="index">
+              <div
+                class="bg-brand-500/10 text-brand-500 flex items-center gap-1 rounded px-8 py-1"
+                data-ide-explorer="index"
+              >
                 <Icon name="brand-astro" size="xs" />
                 <span class="font-medium">index.astro</span>
               </div>
-              <div class="flex items-center gap-1 px-5 py-1 text-foreground-muted">
+              <div class="text-foreground-muted flex items-center gap-1 px-5 py-1">
                 <Icon name="chevron-down" size="xs" />
                 <span>styles</span>
               </div>
-              <div class="flex items-center gap-1 px-8 py-1 text-foreground-muted">
+              <div class="text-foreground-muted flex items-center gap-1 px-8 py-1">
                 <Icon name="chevron-down" size="xs" />
                 <span>themes</span>
               </div>
-              <div class="flex items-center gap-1 px-11 py-1 text-foreground-muted" data-ide-explorer="tokens">
+              <div
+                class="text-foreground-muted flex items-center gap-1 px-11 py-1"
+                data-ide-explorer="tokens"
+              >
                 <Icon name="palette" size="xs" />
                 <span>default.css</span>
               </div>
-              <div class="flex items-center gap-1 px-8 py-1 text-foreground-muted">
+              <div class="text-foreground-muted flex items-center gap-1 px-8 py-1">
                 <Icon name="file-text" size="xs" />
                 <span>marketing.css</span>
               </div>
@@ -289,17 +332,33 @@ const configPanelHtml = `
           </div>
 
           <!-- Code editor panes — rendered via set:html to avoid Astro parsing curly braces -->
-          <div class="flex-1 overflow-hidden font-mono text-[13px] leading-[1.65] bg-card relative">
-            <div class="ide-panel p-4 lg:p-5 absolute inset-0 overflow-hidden" data-ide-panel="index" set:html={indexPanelHtml} />
-            <div class="ide-panel p-4 lg:p-5 absolute inset-0 overflow-hidden hidden" data-ide-panel="hero" set:html={heroPanelHtml} />
-            <div class="ide-panel p-4 lg:p-5 absolute inset-0 overflow-hidden hidden" data-ide-panel="tokens" set:html={tokensPanelHtml} />
-            <div class="ide-panel p-4 lg:p-5 absolute inset-0 overflow-hidden hidden" data-ide-panel="config" set:html={configPanelHtml} />
+          <div class="bg-card relative flex-1 overflow-hidden font-mono text-[13px] leading-[1.65]">
+            <div
+              class="ide-panel absolute inset-0 overflow-hidden p-4 lg:p-5"
+              data-ide-panel="index"
+              set:html={indexPanelHtml}
+            />
+            <div
+              class="ide-panel absolute inset-0 hidden overflow-hidden p-4 lg:p-5"
+              data-ide-panel="hero"
+              set:html={heroPanelHtml}
+            />
+            <div
+              class="ide-panel absolute inset-0 hidden overflow-hidden p-4 lg:p-5"
+              data-ide-panel="tokens"
+              set:html={tokensPanelHtml}
+            />
+            <div
+              class="ide-panel absolute inset-0 hidden overflow-hidden p-4 lg:p-5"
+              data-ide-panel="config"
+              set:html={configPanelHtml}
+            />
           </div>
         </div>
       </div>
     </div>
     <!-- Bottom gradient fade — masks the hard bottom edge into the next section -->
-    <div class="h-24 bg-gradient-to-t from-background to-transparent relative z-20 -mt-24"></div>
+    <div class="from-background relative z-20 -mt-24 h-24 bg-gradient-to-t to-transparent"></div>
   </div>
 </section>
 
@@ -319,11 +378,11 @@ const configPanelHtml = `
       index: 'src/pages/index.astro',
       hero: 'src/components/marketing/Hero.astro',
       tokens: 'src/styles/themes/default.css',
-      config: 'src/config/site.config.ts'
+      config: 'src/config/site.config.ts',
     };
 
     function activate(tabId) {
-      tabs.forEach(function(tab) {
+      tabs.forEach(function (tab) {
         var isActive = tab.dataset.ideTab === tabId;
         if (isActive) {
           tab.classList.add('ide-tab-active');
@@ -332,7 +391,7 @@ const configPanelHtml = `
         }
       });
 
-      panels.forEach(function(panel) {
+      panels.forEach(function (panel) {
         if (panel.dataset.idePanel === tabId) {
           panel.classList.remove('hidden');
         } else {
@@ -344,7 +403,7 @@ const configPanelHtml = `
         titleEl.textContent = 'velocity \u2014 ' + (filePaths[tabId] || '');
       }
 
-      explorerItems.forEach(function(item) {
+      explorerItems.forEach(function (item) {
         if (item.dataset.ideExplorer === tabId) {
           item.className = item.className.replace('text-foreground-muted', '').trim();
           item.classList.add('rounded', 'bg-brand-500/10', 'text-brand-500');
@@ -357,8 +416,8 @@ const configPanelHtml = `
       });
     }
 
-    tabs.forEach(function(tab) {
-      tab.addEventListener('click', function() {
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
         activate(tab.dataset.ideTab);
       });
     });

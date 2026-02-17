@@ -24,6 +24,7 @@
   /* Colors */
   --color-background: var(--background);
   --color-background-secondary: var(--background-secondary);
+  --color-background-deep: var(--background-deep);
   --color-background-tertiary: var(--background-tertiary);
   --color-foreground: var(--foreground);
   --color-foreground-secondary: var(--foreground-secondary);
