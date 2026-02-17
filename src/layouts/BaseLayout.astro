@@ -5,6 +5,7 @@ import JsonLd from '@/components/seo/JsonLd.astro';
 import Hreflang from '@/components/i18n/Hreflang.astro';
 import Analytics from '@/components/layout/Analytics.astro';
 import ConsentBanner from '@/components/ui/overlay/ConsentBanner';
+import consentConfig from '@/config/consent.config';
 import { createWebsiteSchema, createOrganizationSchema } from '@/lib/schema';
 import type { WebSite, Organization, WithContext } from 'schema-dts';
 import siteConfig from '@/config/site.config';
@@ -64,6 +65,17 @@ const consentUi = {
 };
 const consentAlwaysOnLabel = tc('consent.alwaysOn');
 
+// Build GCM v2 default consent state from consent config
+// All non-required categories default to 'denied', required ones to 'granted'
+const gcmDefaults: Record<string, string> = {};
+for (const [, cat] of Object.entries(consentConfig.categories)) {
+  for (const gcmType of cat.gcmTypes) {
+    gcmDefaults[gcmType] = cat.required ? 'granted' : 'denied';
+  }
+}
+const gcmDefaultsJson = JSON.stringify(gcmDefaults);
+const consentEnabled = import.meta.env.PUBLIC_CONSENT_ENABLED === 'true';
+
 // Build JSON-LD schemas
 const schemas: Array<WithContext<WebSite> | WithContext<Organization>> = [createWebsiteSchema()];
 if (includeOrgSchema) {
@@ -120,6 +132,15 @@ if (includeOrgSchema) {
 
     <!-- JSON-LD Structured Data -->
     <JsonLd schema={schemas} />
+
+    <!-- Google Consent Mode v2 defaults — MUST run before any gtag/GTM scripts -->
+    {consentEnabled && (
+      <script is:inline define:vars={{ gcmDefaultsJson }}>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('consent', 'default', JSON.parse(gcmDefaultsJson));
+      </script>
+    )}
 
     <!-- Analytics (loads if PUBLIC_GA_MEASUREMENT_ID or PUBLIC_GTM_ID is set) -->
     <Analytics />
