@@ -1,20 +1,31 @@
 ---
-import { cn } from '@/lib/cn';
+/**
+ * GetStarted CTA Section
+ * Final call-to-action with oversized ghosted logomark backdrop,
+ * atmospheric brand glow, and confident typography.
+ */
 import Logo from '@/components/ui/marketing/Logo/Logo.astro';
 import NpmCopyButton from '@/components/ui/marketing/NpmCopyButton/NpmCopyButton.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 ---
 
-<section id="get-started" class="py-[var(--space-section)] relative overflow-hidden">
+<section id="get-started" class="relative overflow-hidden" style="padding-top: var(--space-section); padding-bottom: var(--space-section);">
   <!-- Orange radial gradient bloom (bookend with hero) -->
   <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
-    <div class="absolute inset-0" style="background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(249, 76, 16, 0.12) 0%, transparent 70%);"></div>
+    <div
+      class="absolute inset-0"
+      style="background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(249, 76, 16, 0.12) 0%, transparent 70%);"
+    ></div>
   </div>
 
   <div class="container relative text-center max-w-2xl mx-auto">
-    <Logo size="xl" forceDark={true} class="mx-auto mb-8" />
+    <!-- Foreground logo -->
+    <Logo size="2xl" forceDark={true} class="mx-auto mb-8" />
 
-    <h2 class="font-display font-bold tracking-tight text-foreground" style="font-size: var(--text-4xl);">
+    <h2
+      class="font-display font-bold tracking-tight text-foreground"
+      style="font-size: var(--text-4xl);"
+    >
       Start building today.
     </h2>
 
@@ -27,15 +38,30 @@ import Icon from '@/components/ui/primitives/Icon/Icon.astro';
     </div>
 
     <div class="mt-8 flex flex-wrap gap-6 justify-center">
-      <a href="https://docs.velocity.build" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-sm text-foreground-muted hover:text-foreground transition-colors">
+      <a
+        href="https://docs.deployvelocity.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-1.5 text-sm text-foreground-muted hover:text-foreground transition-colors duration-300"
+      >
         <Icon name="book-open" size="sm" />
         Documentation
       </a>
-      <a href="https://github.com/southwellmedia/velocity" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-sm text-foreground-muted hover:text-foreground transition-colors">
+      <a
+        href="https://github.com/southwellmedia/velocity"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-1.5 text-sm text-foreground-muted hover:text-foreground transition-colors duration-300"
+      >
         <Icon name="github" size="sm" />
         GitHub
       </a>
-      <a href="https://github.com/southwellmedia/velocity" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-sm text-foreground-muted hover:text-foreground transition-colors">
+      <a
+        href="https://github.com/southwellmedia/velocity"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-1.5 text-sm text-foreground-muted hover:text-foreground transition-colors duration-300"
+      >
         <Icon name="star" size="sm" />
         Star on GitHub
       </a>

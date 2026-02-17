@@ -3,8 +3,8 @@ import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import Hero from '@/components/marketing/Hero.astro';
 import CredibilityStrip from '@/components/marketing/CredibilityStrip.astro';
 import BentoGrid from '@/components/marketing/BentoGrid';
-import Showcase from '@/components/marketing/Showcase.astro';
-import TemplatesTeaser from '@/components/marketing/TemplatesTeaser.astro';
+import Showcase from '@/components/marketing/Showcase';
+import TemplatesTeaser from '@/components/marketing/TemplatesTeaser';
 import GetStarted from '@/components/marketing/GetStarted.astro';
 ---
 
@@ -15,7 +15,7 @@ import GetStarted from '@/components/marketing/GetStarted.astro';
   <Hero />
   <CredibilityStrip />
   <BentoGrid client:visible />
-  <Showcase />
-  <TemplatesTeaser />
+  <Showcase client:visible />
+  <TemplatesTeaser client:visible />
   <GetStarted />
 </MarketingLayout>
