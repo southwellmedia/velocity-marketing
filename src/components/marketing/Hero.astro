@@ -1,0 +1,409 @@
+---
+/**
+ * Hero Section
+ * Full-viewport dramatic dark hero with gradient bloom, staggered animations,
+ * and a large browser mockup that bleeds into the next section.
+ */
+import Badge from '@/components/ui/data-display/Badge/Badge.astro';
+import Button from '@/components/ui/form/Button/Button.astro';
+import NpmCopyButton from '@/components/ui/marketing/NpmCopyButton/NpmCopyButton.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import { cn } from '@/lib/cn';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+// IDE panel HTML stored as strings to avoid Astro parsing curly braces as expressions
+const indexPanelHtml = `
+<div class="flex"><span class="ide-ln">1</span><span class="text-foreground-muted">---</span></div>
+<div class="flex"><span class="ide-ln">2</span><span><span class="text-brand-400">import</span> <span class="text-foreground">MarketingLayout</span> <span class="text-brand-400">from</span> <span class="text-success">'@/layouts/MarketingLayout.astro'</span></span></div>
+<div class="flex"><span class="ide-ln">3</span><span><span class="text-brand-400">import</span> <span class="text-foreground">Hero</span> <span class="text-brand-400">from</span> <span class="text-success">'@/components/marketing/Hero.astro'</span></span></div>
+<div class="flex"><span class="ide-ln">4</span><span><span class="text-brand-400">import</span> <span class="text-foreground">CredibilityStrip</span> <span class="text-brand-400">from</span> <span class="text-success">'@/components/marketing/CredibilityStrip.astro'</span></span></div>
+<div class="flex"><span class="ide-ln">5</span><span><span class="text-brand-400">import</span> <span class="text-foreground">BentoGrid</span> <span class="text-brand-400">from</span> <span class="text-success">'@/components/marketing/BentoGrid'</span></span></div>
+<div class="flex"><span class="ide-ln">6</span><span><span class="text-brand-400">import</span> <span class="text-foreground">Showcase</span> <span class="text-brand-400">from</span> <span class="text-success">'@/components/marketing/Showcase.astro'</span></span></div>
+<div class="flex"><span class="ide-ln">7</span><span><span class="text-brand-400">import</span> <span class="text-foreground">TemplatesTeaser</span> <span class="text-brand-400">from</span> <span class="text-success">'@/components/marketing/TemplatesTeaser.astro'</span></span></div>
+<div class="flex"><span class="ide-ln">8</span><span><span class="text-brand-400">import</span> <span class="text-foreground">GetStarted</span> <span class="text-brand-400">from</span> <span class="text-success">'@/components/marketing/GetStarted.astro'</span></span></div>
+<div class="flex"><span class="ide-ln">9</span><span class="text-foreground-muted">---</span></div>
+<div class="flex"><span class="ide-ln">10</span><span>&nbsp;</span></div>
+<div class="flex"><span class="ide-ln">11</span><span><span class="text-brand-300">&lt;MarketingLayout</span></span></div>
+<div class="flex"><span class="ide-ln">12</span><span class="pl-4"><span class="text-brand-500">title</span>=<span class="text-success">"Velocity &mdash; The Astro 6 Starter Kit"</span></span></div>
+<div class="flex"><span class="ide-ln">13</span><span class="pl-4"><span class="text-brand-500">description</span>=<span class="text-success">"Production-ready Astro 6 starter..."</span></span></div>
+<div class="flex"><span class="ide-ln">14</span><span><span class="text-brand-300">&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">15</span><span class="pl-4"><span class="text-brand-300">&lt;Hero /&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">16</span><span class="pl-4"><span class="text-brand-300">&lt;CredibilityStrip /&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">17</span><span class="pl-4"><span class="text-brand-300">&lt;BentoGrid</span> <span class="text-brand-500">client:visible</span> <span class="text-brand-300">/&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">18</span><span class="pl-4"><span class="text-brand-300">&lt;Showcase /&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">19</span><span class="pl-4"><span class="text-brand-300">&lt;TemplatesTeaser /&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">20</span><span class="pl-4"><span class="text-brand-300">&lt;GetStarted /&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">21</span><span><span class="text-brand-300">&lt;/MarketingLayout&gt;</span></span></div>
+`;
+
+const tokensPanelHtml = `
+<div class="flex"><span class="ide-ln">1</span><span><span class="text-brand-300">:root</span> <span class="text-foreground">{</span></span></div>
+<div class="flex"><span class="ide-ln">2</span><span class="pl-4"><span class="text-foreground-muted">/* Semantic Tokens &mdash; Light Mode */</span></span></div>
+<div class="flex"><span class="ide-ln">3</span><span class="pl-4"><span class="text-brand-500">--background</span>: <span class="text-foreground">var(--gray-0)</span>;</span></div>
+<div class="flex"><span class="ide-ln">4</span><span class="pl-4"><span class="text-brand-500">--background-secondary</span>: <span class="text-foreground">var(--gray-50)</span>;</span></div>
+<div class="flex"><span class="ide-ln">5</span><span class="pl-4"><span class="text-brand-500">--background-tertiary</span>: <span class="text-foreground">var(--gray-100)</span>;</span></div>
+<div class="flex"><span class="ide-ln">6</span><span>&nbsp;</span></div>
+<div class="flex"><span class="ide-ln">7</span><span class="pl-4"><span class="text-brand-500">--foreground</span>: <span class="text-foreground">var(--gray-900)</span>;           <span class="text-foreground-muted">/* WCAG AAA */</span></span></div>
+<div class="flex"><span class="ide-ln">8</span><span class="pl-4"><span class="text-brand-500">--foreground-secondary</span>: <span class="text-foreground">var(--gray-700)</span>; <span class="text-foreground-muted">/* WCAG AAA */</span></span></div>
+<div class="flex"><span class="ide-ln">9</span><span class="pl-4"><span class="text-brand-500">--foreground-muted</span>: <span class="text-foreground">var(--gray-600)</span>;     <span class="text-foreground-muted">/* WCAG AA  */</span></span></div>
+<div class="flex"><span class="ide-ln">10</span><span class="pl-4"><span class="text-brand-500">--foreground-subtle</span>: <span class="text-foreground">var(--gray-500)</span>;</span></div>
+<div class="flex"><span class="ide-ln">11</span><span>&nbsp;</span></div>
+<div class="flex"><span class="ide-ln">12</span><span class="pl-4"><span class="text-brand-500">--primary</span>: <span class="text-foreground">var(--gray-900)</span>;</span></div>
+<div class="flex"><span class="ide-ln">13</span><span class="pl-4"><span class="text-brand-500">--primary-hover</span>: <span class="text-foreground">var(--gray-800)</span>;</span></div>
+<div class="flex"><span class="ide-ln">14</span><span class="pl-4"><span class="text-brand-500">--primary-foreground</span>: <span class="text-foreground">var(--gray-0)</span>;</span></div>
+<div class="flex"><span class="ide-ln">15</span><span>&nbsp;</span></div>
+<div class="flex"><span class="ide-ln">16</span><span class="pl-4"><span class="text-brand-500">--accent</span>: <span class="text-foreground">var(--brand-500)</span>;</span></div>
+<div class="flex"><span class="ide-ln">17</span><span class="pl-4"><span class="text-brand-500">--accent-hover</span>: <span class="text-foreground">var(--brand-600)</span>;</span></div>
+<div class="flex"><span class="ide-ln">18</span><span>&nbsp;</span></div>
+<div class="flex"><span class="ide-ln">19</span><span class="pl-4"><span class="text-brand-500">--card</span>: <span class="text-foreground">var(--gray-0)</span>;</span></div>
+<div class="flex"><span class="ide-ln">20</span><span class="pl-4"><span class="text-brand-500">--border</span>: <span class="text-foreground">var(--gray-200)</span>;</span></div>
+<div class="flex"><span class="ide-ln">21</span><span class="pl-4"><span class="text-brand-500">--ring</span>: <span class="text-foreground">var(--gray-900)</span>;</span></div>
+<div class="flex"><span class="ide-ln">22</span><span>&nbsp;</span></div>
+<div class="flex"><span class="ide-ln">23</span><span class="pl-4"><span class="text-brand-500">--input-bg</span>: <span class="text-foreground">var(--gray-0)</span>;</span></div>
+<div class="flex"><span class="ide-ln">24</span><span class="pl-4"><span class="text-brand-500">--input-border</span>: <span class="text-foreground">var(--gray-300)</span>;</span></div>
+<div class="flex"><span class="ide-ln">25</span><span><span class="text-foreground">}</span></span></div>
+`;
+
+const heroPanelHtml = `
+<div class="flex"><span class="ide-ln">1</span><span class="text-foreground-muted">---</span></div>
+<div class="flex"><span class="ide-ln">2</span><span><span class="text-brand-400">import</span> <span class="text-foreground">Badge</span> <span class="text-brand-400">from</span> <span class="text-success">'@/components/ui/data-display/Badge/Badge.astro'</span></span></div>
+<div class="flex"><span class="ide-ln">3</span><span><span class="text-brand-400">import</span> <span class="text-foreground">Button</span> <span class="text-brand-400">from</span> <span class="text-success">'@/components/ui/form/Button/Button.astro'</span></span></div>
+<div class="flex"><span class="ide-ln">4</span><span><span class="text-brand-400">import</span> <span class="text-foreground">NpmCopyButton</span> <span class="text-brand-400">from</span> <span class="text-success">'@/components/ui/marketing/NpmCopyButton/NpmCopyButton.astro'</span></span></div>
+<div class="flex"><span class="ide-ln">5</span><span><span class="text-brand-400">import</span> <span class="text-foreground">Icon</span> <span class="text-brand-400">from</span> <span class="text-success">'@/components/ui/primitives/Icon/Icon.astro'</span></span></div>
+<div class="flex"><span class="ide-ln">6</span><span><span class="text-brand-400">import</span> { <span class="text-foreground">cn</span> } <span class="text-brand-400">from</span> <span class="text-success">'@/lib/cn'</span></span></div>
+<div class="flex"><span class="ide-ln">7</span><span class="text-foreground-muted">---</span></div>
+<div class="flex"><span class="ide-ln">8</span><span>&nbsp;</span></div>
+<div class="flex"><span class="ide-ln">9</span><span><span class="text-brand-300">&lt;section</span> <span class="text-brand-500">class</span>=<span class="text-foreground">{cn(<span class="text-success">'relative min-h-screen flex flex-col'</span>, className)}</span><span class="text-brand-300">&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">10</span><span class="pl-4"><span class="text-brand-300">&lt;div</span> <span class="text-brand-500">class</span>=<span class="text-success">"container relative z-10 text-center max-w-4xl"</span><span class="text-brand-300">&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">11</span><span class="pl-8"><span class="text-brand-300">&lt;Badge</span> <span class="text-brand-500">variant</span>=<span class="text-success">"brand"</span><span class="text-brand-300">&gt;</span><span class="text-foreground">Astro 6 Starter Kit</span><span class="text-brand-300">&lt;/Badge&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">12</span><span>&nbsp;</span></div>
+<div class="flex"><span class="ide-ln">13</span><span class="pl-8"><span class="text-brand-300">&lt;h1</span> <span class="text-brand-500">class</span>=<span class="text-success">"font-display text-7xl font-bold mt-6 text-foreground"</span><span class="text-brand-300">&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">14</span><span class="pl-12"><span class="text-foreground">Ship </span><span class="text-brand-300">&lt;span</span> <span class="text-brand-500">class</span>=<span class="text-success">"text-brand-500"</span><span class="text-brand-300">&gt;</span><span class="text-foreground">faster.</span><span class="text-brand-300">&lt;/span&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">15</span><span class="pl-12"><span class="text-foreground">Look better.</span></span></div>
+<div class="flex"><span class="ide-ln">16</span><span class="pl-8"><span class="text-brand-300">&lt;/h1&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">17</span><span>&nbsp;</span></div>
+<div class="flex"><span class="ide-ln">18</span><span class="pl-8"><span class="text-brand-300">&lt;p</span> <span class="text-brand-500">class</span>=<span class="text-success">"text-foreground-muted text-xl max-w-2xl mx-auto mt-6"</span><span class="text-brand-300">&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">19</span><span class="pl-12"><span class="text-foreground">The production-ready Astro starter with 57+ components...</span></span></div>
+<div class="flex"><span class="ide-ln">20</span><span class="pl-8"><span class="text-brand-300">&lt;/p&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">21</span><span>&nbsp;</span></div>
+<div class="flex"><span class="ide-ln">22</span><span class="pl-8"><span class="text-brand-300">&lt;div</span> <span class="text-brand-500">class</span>=<span class="text-success">"flex gap-4 justify-center items-center mt-10"</span><span class="text-brand-300">&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">23</span><span class="pl-12"><span class="text-brand-300">&lt;NpmCopyButton /&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">24</span><span class="pl-12"><span class="text-brand-300">&lt;Button</span> <span class="text-brand-500">variant</span>=<span class="text-success">"outline"</span> <span class="text-brand-500">href</span>=<span class="text-success">"https://docs.velocity.build"</span><span class="text-brand-300">&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">25</span><span class="pl-16"><span class="text-foreground">View Documentation</span></span></div>
+<div class="flex"><span class="ide-ln">26</span><span class="pl-16"><span class="text-brand-300">&lt;Icon</span> <span class="text-brand-500">name</span>=<span class="text-success">"arrow-right"</span> <span class="text-brand-500">size</span>=<span class="text-success">"sm"</span> <span class="text-brand-300">/&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">27</span><span class="pl-12"><span class="text-brand-300">&lt;/Button&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">28</span><span class="pl-8"><span class="text-brand-300">&lt;/div&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">29</span><span class="pl-4"><span class="text-brand-300">&lt;/div&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">30</span><span><span class="text-brand-300">&lt;/section&gt;</span></span></div>
+`;
+
+const configPanelHtml = `
+<div class="flex"><span class="ide-ln">1</span><span><span class="text-brand-400">const</span> <span class="text-foreground">siteConfig</span>: <span class="text-brand-300">SiteConfig</span> = <span class="text-foreground">{</span></span></div>
+<div class="flex"><span class="ide-ln">2</span><span class="pl-4"><span class="text-brand-500">name</span>: <span class="text-success">'Velocity'</span>,</span></div>
+<div class="flex"><span class="ide-ln">3</span><span class="pl-4"><span class="text-brand-500">description</span>: <span class="text-success">'The production-ready Astro 6 starter...'</span>,</span></div>
+<div class="flex"><span class="ide-ln">4</span><span class="pl-4"><span class="text-brand-500">url</span>: <span class="text-foreground">SITE_URL</span> || <span class="text-success">'https://example.com'</span>,</span></div>
+<div class="flex"><span class="ide-ln">5</span><span class="pl-4"><span class="text-brand-500">ogImage</span>: <span class="text-success">'/og-default.png'</span>,</span></div>
+<div class="flex"><span class="ide-ln">6</span><span class="pl-4"><span class="text-brand-500">author</span>: <span class="text-success">'Southwell Media'</span>,</span></div>
+<div class="flex"><span class="ide-ln">7</span><span class="pl-4"><span class="text-brand-500">email</span>: <span class="text-success">'hello@velocity.build'</span>,</span></div>
+<div class="flex"><span class="ide-ln">8</span><span>&nbsp;</span></div>
+<div class="flex"><span class="ide-ln">9</span><span class="pl-4"><span class="text-brand-500">socialLinks</span>: <span class="text-foreground">[</span></span></div>
+<div class="flex"><span class="ide-ln">10</span><span class="pl-8"><span class="text-success">'https://github.com/southwellmedia'</span>,</span></div>
+<div class="flex"><span class="ide-ln">11</span><span class="pl-4"><span class="text-foreground">],</span></span></div>
+<div class="flex"><span class="ide-ln">12</span><span>&nbsp;</span></div>
+<div class="flex"><span class="ide-ln">13</span><span class="pl-4"><span class="text-brand-500">verification</span>: <span class="text-foreground">{</span></span></div>
+<div class="flex"><span class="ide-ln">14</span><span class="pl-8"><span class="text-brand-500">google</span>: <span class="text-foreground">GOOGLE_SITE_VERIFICATION</span>,</span></div>
+<div class="flex"><span class="ide-ln">15</span><span class="pl-8"><span class="text-brand-500">bing</span>: <span class="text-foreground">BING_SITE_VERIFICATION</span>,</span></div>
+<div class="flex"><span class="ide-ln">16</span><span class="pl-4"><span class="text-foreground">},</span></span></div>
+<div class="flex"><span class="ide-ln">17</span><span>&nbsp;</span></div>
+<div class="flex"><span class="ide-ln">18</span><span class="pl-4"><span class="text-brand-500">branding</span>: <span class="text-foreground">{</span></span></div>
+<div class="flex"><span class="ide-ln">19</span><span class="pl-8"><span class="text-brand-500">logo</span>: <span class="text-foreground">{ <span class="text-brand-500">alt</span>: <span class="text-success">'Velocity'</span> },</span></span></div>
+<div class="flex"><span class="ide-ln">20</span><span class="pl-8"><span class="text-brand-500">favicon</span>: <span class="text-foreground">{ <span class="text-brand-500">svg</span>: <span class="text-success">'/favicon.svg'</span> },</span></span></div>
+<div class="flex"><span class="ide-ln">21</span><span class="pl-8"><span class="text-brand-500">colors</span>: <span class="text-foreground">{</span></span></div>
+<div class="flex"><span class="ide-ln">22</span><span class="pl-12"><span class="text-brand-500">themeColor</span>: <span class="text-success">'#F94C10'</span>,</span></div>
+<div class="flex"><span class="ide-ln">23</span><span class="pl-12"><span class="text-brand-500">backgroundColor</span>: <span class="text-success">'#ffffff'</span>,</span></div>
+<div class="flex"><span class="ide-ln">24</span><span class="pl-8"><span class="text-foreground">},</span></span></div>
+<div class="flex"><span class="ide-ln">25</span><span class="pl-4"><span class="text-foreground">},</span></span></div>
+<div class="flex"><span class="ide-ln">26</span><span><span class="text-foreground">};</span></span></div>
+`;
+---
+
+<section
+  class={cn(
+    'relative min-h-screen flex flex-col',
+    className
+  )}
+>
+  <!-- Background effects (clipped to section) -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+    <div class="bg-glow-orange absolute inset-0"></div>
+    <div class="absolute inset-0 bg-grid-pattern opacity-30" style="mask-image: radial-gradient(ellipse 50% 50% at 50% 40%, black 0%, transparent 70%); -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 40%, black 0%, transparent 70%);"></div>
+  </div>
+
+  <!-- Main content — pushed up to make room for browser mockup -->
+  <div class="container relative z-10 text-center max-w-4xl mx-auto flex-1 flex flex-col justify-center" style="padding-top: var(--space-page-top); padding-bottom: var(--space-section-sm);">
+    <div>
+      <div class="opacity-0 animate-slide-up delay-0">
+        <Badge variant="brand">Astro 6 Starter Kit</Badge>
+      </div>
+
+      <h1
+        class="font-display tracking-tight font-bold mt-6 text-foreground opacity-0 animate-slide-up delay-1 text-balance"
+        style="font-size: var(--text-5xl);"
+      >
+        Your Next Site<br />
+        <span class="bg-brand-500 text-white px-3 py-1 rounded-lg inline-block mt-2">Starts Here</span>
+      </h1>
+
+      <p
+        class="text-foreground-muted max-w-2xl mx-auto mt-6 opacity-0 animate-slide-up delay-2"
+        style="font-size: var(--text-xl);"
+      >
+        The production-ready Astro 6 starter kit with 57+ components, design tokens,
+        and everything you need to launch.
+      </p>
+
+      <div
+        class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-10 opacity-0 animate-slide-up delay-3"
+      >
+        <NpmCopyButton />
+        <Button variant="outline" size="lg" href="https://docs.deployvelocity.com" target="_blank">
+          View Documentation
+          <Icon name="arrow-right" size="sm" />
+        </Button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Large IDE mockup — bleeds into next section -->
+  <div class="relative z-10 opacity-0 animate-slide-up delay-4 hidden md:block" style="animation-delay: 400ms;" aria-hidden="true">
+    <div class="container max-w-5xl mx-auto" style="perspective: 2000px;">
+      <div
+        class="rounded-t-xl border border-b-0 border-border bg-card overflow-hidden"
+        style="transform: rotateX(2deg); transform-origin: bottom center; box-shadow: 0 -8px 80px rgba(249, 76, 16, 0.08), 0 -2px 40px rgba(0, 0, 0, 0.3);"
+      >
+        <!-- Editor title bar -->
+        <div class="flex items-center px-4 h-10 bg-background-tertiary border-b border-border">
+          <div class="flex items-center gap-1.5">
+            <div class="w-3 h-3 rounded-full bg-foreground-subtle/20"></div>
+            <div class="w-3 h-3 rounded-full bg-foreground-subtle/20"></div>
+            <div class="w-3 h-3 rounded-full bg-foreground-subtle/20"></div>
+          </div>
+          <div class="flex-1 flex justify-center">
+            <span class="text-xs text-foreground-muted" data-ide-title>velocity &mdash; src/pages/index.astro</span>
+          </div>
+          <div class="w-16"></div>
+        </div>
+
+        <!-- Editor tab bar -->
+        <div class="flex items-end bg-background-tertiary/50 border-b border-border h-9 px-2 gap-px" data-ide-tabs>
+          <button data-ide-tab="index" class="ide-tab ide-tab-active flex items-center gap-1.5 px-3 h-8 text-xs rounded-t-md -mb-px relative z-10 cursor-pointer transition-colors">
+            <Icon name="brand-astro" size="xs" />
+            index.astro
+          </button>
+          <button data-ide-tab="hero" class="ide-tab flex items-center gap-1.5 px-3 h-8 text-xs rounded-t-md cursor-pointer transition-colors">
+            <Icon name="brand-astro" size="xs" />
+            Hero.astro
+          </button>
+          <button data-ide-tab="tokens" class="ide-tab flex items-center gap-1.5 px-3 h-8 text-xs rounded-t-md cursor-pointer transition-colors">
+            <Icon name="palette" size="xs" />
+            default.css
+          </button>
+          <button data-ide-tab="config" class="ide-tab flex items-center gap-1.5 px-3 h-8 text-xs rounded-t-md cursor-pointer transition-colors">
+            <Icon name="brand-typescript" size="xs" />
+            site.config.ts
+          </button>
+        </div>
+
+        <!-- Editor content area -->
+        <div class="flex h-[340px] lg:h-[400px]">
+          <!-- File explorer sidebar -->
+          <div class="w-48 lg:w-52 border-r border-border bg-background-secondary/30 text-xs shrink-0 overflow-hidden">
+            <div class="px-3 py-2 text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">Explorer</div>
+            <div class="space-y-px px-1">
+              <div class="flex items-center gap-1 px-2 py-1 text-foreground-muted">
+                <Icon name="chevron-down" size="xs" />
+                <span class="font-medium text-foreground-secondary">src</span>
+              </div>
+              <div class="flex items-center gap-1 px-5 py-1 text-foreground-muted">
+                <Icon name="chevron-down" size="xs" />
+                <span>components</span>
+              </div>
+              <div class="flex items-center gap-1 px-8 py-1 text-foreground-muted">
+                <Icon name="chevron-right" size="xs" />
+                <span>layout</span>
+              </div>
+              <div class="flex items-center gap-1 px-8 py-1 text-foreground-muted">
+                <Icon name="chevron-down" size="xs" />
+                <span>marketing</span>
+              </div>
+              <div class="flex items-center gap-1 px-11 py-1 text-foreground-muted" data-ide-explorer="hero">
+                <Icon name="brand-astro" size="xs" />
+                <span>Hero.astro</span>
+              </div>
+              <div class="flex items-center gap-1 px-8 py-1 text-foreground-muted">
+                <Icon name="chevron-right" size="xs" />
+                <span>ui</span>
+              </div>
+              <div class="flex items-center gap-1 px-5 py-1 text-foreground-muted">
+                <Icon name="chevron-down" size="xs" />
+                <span>config</span>
+              </div>
+              <div class="flex items-center gap-1 px-8 py-1 text-foreground-muted" data-ide-explorer="config">
+                <Icon name="brand-typescript" size="xs" />
+                <span>site.config.ts</span>
+              </div>
+              <div class="flex items-center gap-1 px-5 py-1 text-foreground-muted">
+                <Icon name="chevron-right" size="xs" />
+                <span>layouts</span>
+              </div>
+              <div class="flex items-center gap-1 px-5 py-1 text-foreground-muted">
+                <Icon name="chevron-down" size="xs" />
+                <span>pages</span>
+              </div>
+              <div class="flex items-center gap-1 px-8 py-1 rounded bg-brand-500/10 text-brand-500" data-ide-explorer="index">
+                <Icon name="brand-astro" size="xs" />
+                <span class="font-medium">index.astro</span>
+              </div>
+              <div class="flex items-center gap-1 px-5 py-1 text-foreground-muted">
+                <Icon name="chevron-down" size="xs" />
+                <span>styles</span>
+              </div>
+              <div class="flex items-center gap-1 px-8 py-1 text-foreground-muted">
+                <Icon name="chevron-down" size="xs" />
+                <span>themes</span>
+              </div>
+              <div class="flex items-center gap-1 px-11 py-1 text-foreground-muted" data-ide-explorer="tokens">
+                <Icon name="palette" size="xs" />
+                <span>default.css</span>
+              </div>
+              <div class="flex items-center gap-1 px-8 py-1 text-foreground-muted">
+                <Icon name="file-text" size="xs" />
+                <span>marketing.css</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Code editor panes — rendered via set:html to avoid Astro parsing curly braces -->
+          <div class="flex-1 overflow-hidden font-mono text-[13px] leading-[1.65] bg-card relative">
+            <div class="ide-panel p-4 lg:p-5 absolute inset-0 overflow-hidden" data-ide-panel="index" set:html={indexPanelHtml} />
+            <div class="ide-panel p-4 lg:p-5 absolute inset-0 overflow-hidden hidden" data-ide-panel="hero" set:html={heroPanelHtml} />
+            <div class="ide-panel p-4 lg:p-5 absolute inset-0 overflow-hidden hidden" data-ide-panel="tokens" set:html={tokensPanelHtml} />
+            <div class="ide-panel p-4 lg:p-5 absolute inset-0 overflow-hidden hidden" data-ide-panel="config" set:html={configPanelHtml} />
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Bottom gradient fade — masks the hard bottom edge into the next section -->
+    <div class="h-24 bg-gradient-to-t from-background to-transparent relative z-20 -mt-24"></div>
+  </div>
+</section>
+
+<script is:inline>
+  function initIdeTabs() {
+    var container = document.querySelector('[data-ide-tabs]');
+    if (!container || container.dataset.initialized) return;
+    container.dataset.initialized = 'true';
+
+    var tabs = container.querySelectorAll('[data-ide-tab]');
+    var panels = document.querySelectorAll('[data-ide-panel]');
+    var titleBar = container.closest('.rounded-t-xl');
+    var titleEl = titleBar ? titleBar.querySelector('[data-ide-title]') : null;
+    var explorerItems = document.querySelectorAll('[data-ide-explorer]');
+
+    var filePaths = {
+      index: 'src/pages/index.astro',
+      hero: 'src/components/marketing/Hero.astro',
+      tokens: 'src/styles/themes/default.css',
+      config: 'src/config/site.config.ts'
+    };
+
+    function activate(tabId) {
+      tabs.forEach(function(tab) {
+        var isActive = tab.dataset.ideTab === tabId;
+        if (isActive) {
+          tab.classList.add('ide-tab-active');
+        } else {
+          tab.classList.remove('ide-tab-active');
+        }
+      });
+
+      panels.forEach(function(panel) {
+        if (panel.dataset.idePanel === tabId) {
+          panel.classList.remove('hidden');
+        } else {
+          panel.classList.add('hidden');
+        }
+      });
+
+      if (titleEl) {
+        titleEl.textContent = 'velocity \u2014 ' + (filePaths[tabId] || '');
+      }
+
+      explorerItems.forEach(function(item) {
+        if (item.dataset.ideExplorer === tabId) {
+          item.className = item.className.replace('text-foreground-muted', '').trim();
+          item.classList.add('rounded', 'bg-brand-500/10', 'text-brand-500');
+        } else {
+          item.classList.remove('rounded', 'bg-brand-500/10', 'text-brand-500');
+          if (!item.classList.contains('text-foreground-muted')) {
+            item.classList.add('text-foreground-muted');
+          }
+        }
+      });
+    }
+
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        activate(tab.dataset.ideTab);
+      });
+    });
+  }
+
+  initIdeTabs();
+  document.addEventListener('astro:page-load', initIdeTabs);
+</script>
+
+<style>
+  .delay-4 {
+    animation-delay: 400ms;
+  }
+
+  /* IDE line numbers — :global() needed because set:html bypasses scoped styles */
+  :global(.ide-ln) {
+    display: inline-block;
+    width: 2.5rem;
+    text-align: right;
+    padding-right: 1rem;
+    color: var(--color-foreground-subtle);
+    user-select: none;
+    flex-shrink: 0;
+    font-size: 12px;
+    opacity: 0.4;
+  }
+
+  /* Tab states */
+  .ide-tab {
+    color: var(--color-foreground-muted);
+  }
+
+  .ide-tab:hover {
+    color: var(--color-foreground-secondary);
+  }
+
+  .ide-tab-active {
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-bottom-color: transparent;
+    color: var(--color-foreground);
+    font-weight: 500;
+  }
+
+  .ide-tab-active svg {
+    color: var(--color-brand-500);
+  }
+</style>

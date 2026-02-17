@@ -1,0 +1,75 @@
+---
+/**
+ * Marketing Layout
+ * Dedicated layout for marketing/landing pages with transparent header and columns footer.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import '@/styles/marketing.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  imageAlt?: string;
+}
+
+const { title, description, image, imageAlt } = Astro.props;
+
+const footerLinkGroups = [
+  {
+    title: 'Product',
+    links: [
+      { label: 'Features', href: '/#features' },
+      { label: 'Components', href: '/#features' },
+      { label: 'Themes', href: '/#features' },
+    ],
+  },
+  {
+    title: 'Resources',
+    links: [
+      { label: 'Documentation', href: 'https://docs.velocity.build', external: true },
+      { label: 'GitHub', href: 'https://github.com/southwellmedia/velocity', external: true },
+      { label: 'Blog', href: '/blog' },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { label: 'About', href: '/about' },
+      { label: 'Contact', href: 'mailto:hello@velocity.build' },
+    ],
+  },
+];
+---
+
+<BaseLayout title={title} description={description} image={image} imageAlt={imageAlt}>
+  <Header
+    slot="header"
+    shape="floating"
+    variant="transparent"
+    position="fixed"
+    colorScheme="invert"
+    showCta={true}
+    cta={{ label: 'Get Started', href: '#get-started' }}
+    actions={[{ icon: 'github', href: 'https://github.com/southwellmedia/velocity', label: 'GitHub', iconOnly: true, target: '_blank' }]}
+    showLanguageSwitcher={false}
+  />
+
+  <slot />
+
+  <Footer
+    slot="footer"
+    layout="columns"
+    background="invert"
+    columns={4}
+    linkGroups={footerLinkGroups}
+    socialLinks={[{ platform: 'github', href: 'https://github.com/southwellmedia/velocity' }]}
+    legalLinks={[
+      { label: 'Privacy Policy', href: '/privacy' },
+      { label: 'Terms', href: '/terms' },
+    ]}
+    tagline="The production-ready Astro 6 starter kit."
+  />
+</BaseLayout>

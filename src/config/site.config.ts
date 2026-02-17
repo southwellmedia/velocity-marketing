@@ -1,4 +1,6 @@
-import { SITE_URL, GOOGLE_SITE_VERIFICATION, BING_SITE_VERIFICATION } from 'astro:env/server';
+const SITE_URL = import.meta.env.SITE_URL || '';
+const GOOGLE_SITE_VERIFICATION = import.meta.env.GOOGLE_SITE_VERIFICATION || '';
+const BING_SITE_VERIFICATION = import.meta.env.BING_SITE_VERIFICATION || '';
 
 export interface SiteConfig {
   name: string;
@@ -50,20 +52,11 @@ export interface SiteConfig {
 
 const siteConfig: SiteConfig = {
   name: 'Velocity',
-  description: 'A modern website built with Astro and Tailwind CSS',
+  description: 'The production-ready Astro 6 starter kit with 57+ components, design tokens, and everything you need to ship faster.',
   url: SITE_URL || 'https://example.com',
   ogImage: '/og-default.png',
   author: 'Southwell Media',
-  // Demo contact info - replace with your actual business details
-  email: 'hello@example.com',
-  phone: '+1 (555) 123-4567',
-  address: {
-    street: '123 Main St',
-    city: 'Dallas',
-    state: 'TX',
-    zip: '75001',
-    country: 'US',
-  },
+  email: 'hello@velocity.build',
   socialLinks: [
     'https://github.com/southwellmedia',
   ],

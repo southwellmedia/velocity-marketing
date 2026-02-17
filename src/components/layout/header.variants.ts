@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
-export const headerVariants = cva('z-50 w-full', {
+export const headerVariants = cva('z-50', {
   variants: {
     position: {
       fixed: 'fixed top-0 left-0 right-0',
@@ -12,15 +12,34 @@ export const headerVariants = cva('z-50 w-full', {
       solid: 'bg-background border-b border-border',
       transparent: 'bg-transparent',
     },
+    shape: {
+      bar: 'w-full',
+      floating: 'rounded-2xl transition-[background,border-color,box-shadow] duration-300',
+    },
   },
+  compoundVariants: [
+    // Floating + fixed: centered with gap
+    { shape: 'floating', position: 'fixed', class: '!left-1/2 !right-auto -translate-x-1/2 w-[calc(100%-3rem)] max-w-6xl mt-4' },
+    // Floating + sticky: centered with gap
+    { shape: 'floating', position: 'sticky', class: '!top-4 mx-auto max-w-6xl' },
+    // Floating + static: centered
+    { shape: 'floating', position: 'static', class: 'mx-auto max-w-6xl' },
+    // Floating + transparent: glass effect
+    { shape: 'floating', variant: 'transparent', class: 'bg-white/[0.08] border border-white/[0.1]' },
+    // Floating + default: semi-transparent with blur
+    { shape: 'floating', variant: 'default', class: '!bg-background/80 backdrop-blur-xl !border border-border/50 !border-b-border/50' },
+    // Floating + solid: opaque
+    { shape: 'floating', variant: 'solid', class: '!bg-background !border border-border !border-b-border' },
+  ],
   defaultVariants: {
     position: 'sticky',
     variant: 'default',
+    shape: 'bar',
   },
 });
 
 export const headerInnerVariants = cva(
-  'mx-auto max-w-6xl px-6 flex items-center justify-between',
+  'flex items-center justify-between',
   {
     variants: {
       size: {
@@ -28,9 +47,14 @@ export const headerInnerVariants = cva(
         md: 'h-14',
         lg: 'h-16',
       },
+      shape: {
+        bar: 'mx-auto max-w-6xl px-6',
+        floating: 'px-6',
+      },
     },
     defaultVariants: {
       size: 'md',
+      shape: 'bar',
     },
   }
 );

@@ -6,12 +6,14 @@
  * Shows a banner with Accept/Decline + Customize settings panel using Dialog.
  * Only renders when PUBLIC_CONSENT_ENABLED is true.
  */
-import { PUBLIC_CONSENT_ENABLED, PUBLIC_PRIVACY_POLICY_URL } from 'astro:env/client';
 import consentConfig from '@/config/consent.config';
 import Dialog from '@/components/ui/overlay/Dialog';
 import Button from '@/components/ui/form/Button';
 import Switch from '@/components/ui/form/Switch';
 import type { ConsentUIText } from '@/lib/consent.types';
+
+const PUBLIC_CONSENT_ENABLED = import.meta.env.PUBLIC_CONSENT_ENABLED === 'true';
+const PUBLIC_PRIVACY_POLICY_URL = import.meta.env.PUBLIC_PRIVACY_POLICY_URL || '';
 
 interface Props {
   position?: 'top' | 'bottom';

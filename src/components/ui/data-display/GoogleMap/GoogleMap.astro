@@ -8,10 +8,12 @@
  * 3. API key + consent granted (or consent disabled) → iframe loads immediately
  */
 import type { HTMLAttributes } from 'astro/types';
-import { PUBLIC_GOOGLE_MAPS_API_KEY, PUBLIC_CONSENT_ENABLED } from 'astro:env/client';
 import siteConfig from '@/config/site.config';
 import { cn } from '@/lib/cn';
 import { googleMapVariants } from './googleMap.variants';
+
+const PUBLIC_GOOGLE_MAPS_API_KEY = import.meta.env.PUBLIC_GOOGLE_MAPS_API_KEY || '';
+const PUBLIC_CONSENT_ENABLED = import.meta.env.PUBLIC_CONSENT_ENABLED === 'true';
 
 interface Props extends HTMLAttributes<'div'> {
   lat?: number;

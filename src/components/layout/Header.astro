@@ -9,6 +9,7 @@
  * - size: 'sm' | 'md' | 'lg'
  * - variant: 'default' | 'solid' | 'transparent'
  * - colorScheme: 'default' | 'invert' (use 'invert' for dark backgrounds)
+ * - shape: 'bar' | 'floating' (use 'floating' for capsule header)
  *
  * Features:
  * - Dynamic navigation with translations
@@ -17,9 +18,11 @@
  * - Mobile menu with Escape key support
  * - Theme toggle
  * - Full slot support for customization
+ * - Floating capsule shape with scroll-reactive bg + color flip
  */
 import type { HTMLAttributes } from 'astro/types';
 import { cn } from '@/lib/cn';
+import { headerVariants, headerInnerVariants } from './header.variants';
 import Button from '@/components/ui/form/Button/Button.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import Logo from '@/components/ui/marketing/Logo/Logo.astro';
@@ -55,6 +58,8 @@ interface Props extends HTMLAttributes<'header'> {
   variant?: 'default' | 'solid' | 'transparent';
   /** Color scheme for text/icons - use 'invert' for dark backgrounds */
   colorScheme?: 'default' | 'invert';
+  /** Shape: 'bar' (full-width, default) or 'floating' (centered capsule) */
+  shape?: 'bar' | 'floating';
   /** Override default navigation */
   nav?: NavItem[];
   /** Additional navigation items (e.g., #features for landing pages) */
@@ -86,6 +91,7 @@ const {
   size = 'md',
   variant = 'default',
   colorScheme = 'default',
+  shape = 'bar',
   nav,
   extraNav = [],
   showCta = false,
@@ -105,7 +111,8 @@ const {
 const locale = localeProp || getLocaleFromPath(Astro.url.pathname);
 const t = useTranslations(locale);
 
-// Color scheme helpers
+// Shape + color scheme helpers
+const isFloating = shape === 'floating';
 const isInvert = colorScheme === 'invert';
 
 // Get navigation items from i18n routes or custom nav
@@ -132,48 +139,15 @@ const hasNavSlot = Astro.slots.has('nav');
 const hasActionsSlot = Astro.slots.has('actions');
 const hasMobileMenuSlot = Astro.slots.has('mobile-menu');
 
-// Position variants
-const positions: Record<NonNullable<Props['position']>, string> = {
-  fixed: 'fixed top-0 left-0 right-0',
-  sticky: 'sticky top-0',
-  static: 'relative',
-};
-
-// Size variants (height)
-const sizes: Record<NonNullable<Props['size']>, string> = {
-  sm: 'h-12',    // 48px - compact
-  md: 'h-14',    // 56px - balanced
-  lg: 'h-16',    // 64px - spacious
-};
-
-// Background variants
-const variants: Record<NonNullable<Props['variant']>, string> = {
-  default: 'bg-background/80 backdrop-blur-lg border-b border-border/50',
-  solid: 'bg-background border-b border-border',
-  transparent: 'bg-transparent',
-};
-
-// Layout-specific container classes
-const containerClasses: Record<NonNullable<Props['layout']>, string> = {
-  default: 'flex items-center justify-between',
-  centered: 'flex items-center justify-between',
-  minimal: 'flex items-center justify-between',
-};
-
-// Compute header classes
+// Compute header classes using CVA
 const headerClasses = cn(
-  'z-50 w-full',
-  positions[position],
-  variants[variant],
+  headerVariants({ position, variant, shape }),
+  isInvert && !isFloating && 'invert-section',
   className
 );
 
 // Compute inner container classes
-const innerClasses = cn(
-  'mx-auto max-w-6xl px-6',
-  sizes[size],
-  containerClasses[layout]
-);
+const innerClasses = headerInnerVariants({ size, shape });
 
 // Check if a nav item is active
 function isActive(href: string): boolean {
@@ -187,7 +161,13 @@ const menuId = `mobile-menu-${Math.random().toString(36).slice(2, 9)}`;
 const buttonId = `${menuId}-button`;
 ---
 
-<header class={headerClasses} {...attrs}>
+<header
+  class={headerClasses}
+  data-header-shape={shape}
+  data-header-variant={variant}
+  data-header-color-scheme={colorScheme}
+  {...attrs}
+>
   <div class={innerClasses}>
     {/* Logo */}
     {!hideLogo && (
@@ -195,10 +175,17 @@ const buttonId = `${menuId}-button`;
         <slot name="logo" />
       ) : (
         <a href={getLocalizedPath('home', locale)} class="flex items-center gap-2">
-          <Logo size={size === 'lg' ? 'md' : 'sm'} forceDark={isInvert} />
+          {isFloating && isInvert ? (
+            <>
+              <Logo size={size === 'lg' ? 'md' : 'sm'} forceDark={true} class="hdr-logo-inverted" />
+              <Logo size={size === 'lg' ? 'md' : 'sm'} forceDark={false} class="hdr-logo-normal" />
+            </>
+          ) : (
+            <Logo size={size === 'lg' ? 'md' : 'sm'} forceDark={isInvert} />
+          )}
           <span class={cn(
             'font-display text-xl font-bold tracking-tight',
-            isInvert ? 'text-on-invert' : 'text-brand-500'
+            isFloating ? 'hdr-logo-text' : (isInvert ? 'text-on-invert' : 'text-brand-500')
           )}>
             {logoText || siteConfig.name}
           </span>
@@ -218,11 +205,16 @@ const buttonId = `${menuId}-button`;
             <a
               href={href.startsWith('#') && !isLandingPage ? `/${href}` : href}
               class={cn(
-                'nav-link px-3 py-2 text-sm rounded-md',
+                'nav-link relative rounded-md px-3 py-2 text-sm',
                 'transition-all duration-(--transition-fast)',
-                isActive(href)
-                  ? cn('nav-link-active font-semibold', isInvert ? 'text-on-invert bg-white/10' : 'text-foreground bg-secondary')
-                  : cn('nav-link-inactive font-medium', isInvert ? 'text-on-invert-secondary hover:text-on-invert hover:bg-white/10' : 'text-foreground-muted hover:text-foreground hover:bg-secondary/70')
+                isFloating && 'hdr-invert-text',
+                isFloating
+                  ? (isActive(href)
+                      ? 'hdr-nav-active font-semibold'
+                      : 'font-medium opacity-80 hover:opacity-100')
+                  : (isActive(href)
+                      ? cn('nav-link-active font-semibold', isInvert ? 'text-on-invert bg-white/10' : 'text-foreground bg-secondary')
+                      : cn('nav-link-inactive font-medium', isInvert ? 'text-on-invert-secondary hover:text-on-invert hover:bg-white/10' : 'text-foreground-muted hover:text-foreground hover:bg-secondary/70'))
               )}
               aria-current={isActive(href) ? 'page' : undefined}
             >
@@ -240,17 +232,19 @@ const buttonId = `${menuId}-button`;
       ) : (
         <>
           {showLanguageSwitcher && <LanguageSwitcher />}
-          {showThemeToggle && <ThemeToggle />}
+          {showThemeToggle && (
+            <ThemeToggle class={isFloating ? 'hdr-invert-text' : undefined} />
+          )}
 
           {actions.map((action) => (
             <Button
               variant="ghost"
               size="sm"
-              colorScheme={colorScheme}
               icon={action.iconOnly}
               href={action.href}
               target={action.target}
               aria-label={action.label}
+              class={isFloating ? 'hdr-invert-text' : undefined}
             >
               <Icon name={action.icon} size="sm" />
               {!action.iconOnly && action.label}
@@ -258,7 +252,11 @@ const buttonId = `${menuId}-button`;
           ))}
 
           {showCta && (
-            <Button size="sm" colorScheme={colorScheme} href={ctaHref}>
+            <Button
+              size="sm"
+              href={ctaHref}
+              class={isFloating ? 'hdr-invert-cta rounded-full' : undefined}
+            >
               {cta.label}
             </Button>
           )}
@@ -272,11 +270,13 @@ const buttonId = `${menuId}-button`;
           id={buttonId}
           class={cn(
             'md:hidden inline-flex items-center justify-center rounded-md p-2',
-            isInvert
-              ? 'text-on-invert-secondary hover:text-on-invert hover:bg-white/10'
-              : 'text-foreground-muted hover:text-foreground hover:bg-secondary',
             'transition-colors',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+            isFloating
+              ? 'hdr-invert-text'
+              : (isInvert
+                  ? 'text-on-invert-secondary hover:text-on-invert hover:bg-white/10'
+                  : 'text-foreground-muted hover:text-foreground hover:bg-secondary')
           )}
           aria-expanded="false"
           aria-controls={menuId}
@@ -298,7 +298,12 @@ const buttonId = `${menuId}-button`;
     hasMobileMenuSlot ? (
       <div
         id={menuId}
-        class="md:hidden hidden border-t border-border bg-background shadow-[0_8px_24px_-12px_rgba(0,0,0,0.12)] opacity-0 origin-top scale-y-0"
+        class={cn(
+          'md:hidden hidden opacity-0 origin-top scale-y-0 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.12)]',
+          isFloating
+            ? 'rounded-b-2xl bg-background/95 backdrop-blur-xl'
+            : 'border-t border-border bg-background'
+        )}
         role="navigation"
         aria-label="Mobile navigation"
       >
@@ -307,11 +312,19 @@ const buttonId = `${menuId}-button`;
     ) : (
       <div
         id={menuId}
-        class="md:hidden hidden border-t border-border bg-background shadow-[0_8px_24px_-12px_rgba(0,0,0,0.12)] opacity-0 origin-top scale-y-0"
+        class={cn(
+          'md:hidden hidden opacity-0 origin-top scale-y-0 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.12)]',
+          isFloating
+            ? 'rounded-b-2xl bg-background/95 backdrop-blur-xl'
+            : 'border-t border-border bg-background'
+        )}
         role="navigation"
         aria-label="Mobile navigation"
       >
-        <div class="mx-auto max-w-6xl px-6 py-4 space-y-1">
+        <div class={cn(
+          'space-y-1 py-4',
+          isFloating ? 'px-6' : 'mx-auto max-w-6xl px-6'
+        )}>
           {navItems.map(({ label, href }) => (
             <a
               href={href.startsWith('#') && !isLandingPage ? `/${href}` : href}
@@ -350,7 +363,7 @@ const buttonId = `${menuId}-button`;
   />
 )}
 
-<script define:vars={{ menuId, buttonId }}>
+<script define:vars={{ menuId, buttonId, shape }}>
   function initMobileMenu() {
     const button = document.getElementById(buttonId);
     const menu = document.getElementById(menuId);
@@ -358,6 +371,7 @@ const buttonId = `${menuId}-button`;
     const header = button?.closest('header');
     const menuIcon = button?.querySelector('.menu-icon');
     const closeIcon = button?.querySelector('.close-icon');
+    const isFloating = shape === 'floating';
 
     if (!button || !menu || !menuIcon || !closeIcon) return;
 
@@ -373,8 +387,12 @@ const buttonId = `${menuId}-button`;
       menuIcon.classList.add('hidden');
       closeIcon.classList.remove('hidden');
 
-      // Add solid background to header
-      if (header) {
+      if (isFloating && header) {
+        // Force scrolled state + flatten bottom corners
+        header.setAttribute('data-scrolled', '');
+        header.classList.remove('rounded-2xl');
+        header.classList.add('rounded-t-2xl');
+      } else if (header) {
         header.classList.add('!bg-background');
       }
 
@@ -437,13 +455,20 @@ const buttonId = `${menuId}-button`;
         if (backdrop) {
           backdrop.classList.add('pointer-events-none');
         }
-        // Remove solid background from header
-        if (header) {
+
+        if (isFloating && header) {
+          header.classList.remove('rounded-t-2xl');
+          header.classList.add('rounded-2xl');
+          if (window.scrollY <= 60) {
+            header.removeAttribute('data-scrolled');
+          }
+        } else if (header) {
           header.classList.remove('!bg-background');
         }
+
         isOpen = false;
         isAnimating = false;
-      }, 200); // Match transition duration
+      }, 200);
     }
 
     function toggle() {
@@ -478,3 +503,214 @@ const buttonId = `${menuId}-button`;
   document.addEventListener('astro:page-load', initMobileMenu);
   document.addEventListener('astro:after-swap', initMobileMenu);
 </script>
+
+<script>
+  const SCROLL_THRESHOLD = 60;
+
+  function initScrollWatcher() {
+    document.querySelectorAll('header[data-header-shape="floating"]').forEach((header) => {
+      if (header.dataset.scrollInit) return;
+      header.dataset.scrollInit = 'true';
+
+      let ticking = false;
+
+      function onScroll() {
+        if (ticking) return;
+        ticking = true;
+
+        requestAnimationFrame(() => {
+          if (window.scrollY > SCROLL_THRESHOLD) {
+            header.setAttribute('data-scrolled', '');
+          } else {
+            // Don't remove if mobile menu is open
+            const menu = header.querySelector('[role="navigation"]');
+            const menuOpen = menu && !menu.classList.contains('hidden');
+            if (!menuOpen) {
+              header.removeAttribute('data-scrolled');
+            }
+          }
+          ticking = false;
+        });
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+
+      // Set initial state
+      onScroll();
+    });
+  }
+
+  initScrollWatcher();
+  document.addEventListener('astro:page-load', initScrollWatcher);
+  document.addEventListener('astro:after-swap', initScrollWatcher);
+</script>
+
+<style is:global>
+  /* ===== Floating header: frosted glass (all modes) ===== */
+  [data-header-shape="floating"] {
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(20px) saturate(180%);
+  }
+
+  /* ===== Light mode: glass tint on light background ===== */
+  [data-header-shape="floating"][data-header-color-scheme="invert"]:not([data-scrolled]) {
+    background: color-mix(in oklch, var(--color-background) 70%, transparent) !important;
+    border-color: var(--color-border) !important;
+  }
+
+  /* ===== Dark mode: glass tint on dark background ===== */
+  .dark [data-header-shape="floating"][data-header-color-scheme="invert"]:not([data-scrolled]) {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  /* ===== Scrolled state (both modes): solid frosted glass ===== */
+  [data-header-shape="floating"][data-scrolled] {
+    background: color-mix(in oklch, var(--color-background) 85%, transparent) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    backdrop-filter: blur(24px) saturate(180%);
+    border-color: var(--color-border) !important;
+    box-shadow:
+      0 4px 20px -6px rgba(0, 0, 0, 0.08),
+      0 0 0 1px color-mix(in oklch, var(--color-border) 40%, transparent);
+  }
+
+  /* ===== LIGHT MODE: normal design-system colors (hero bg is light) ===== */
+
+  /* Logo: show normal responsive variant */
+  [data-header-shape="floating"][data-header-color-scheme="invert"] .hdr-logo-inverted {
+    display: none;
+  }
+  [data-header-shape="floating"][data-header-color-scheme="invert"] .hdr-logo-normal {
+    display: inline-block;
+  }
+
+  /* Text: normal foreground */
+  [data-header-shape="floating"][data-header-color-scheme="invert"] .hdr-invert-text {
+    color: var(--color-foreground-muted) !important;
+    transition: color 300ms;
+  }
+  [data-header-shape="floating"][data-header-color-scheme="invert"] .hdr-invert-text:hover {
+    color: var(--color-foreground) !important;
+  }
+
+  /* Logo text: brand */
+  [data-header-shape="floating"][data-header-color-scheme="invert"] .hdr-logo-text {
+    color: var(--color-brand-500) !important;
+    transition: color 300ms;
+  }
+
+  /* CTA: normal primary */
+  [data-header-shape="floating"][data-header-color-scheme="invert"] .hdr-invert-cta {
+    background: var(--color-primary) !important;
+    color: var(--color-primary-foreground) !important;
+    border-color: transparent !important;
+    transition: background 300ms, color 300ms, border-color 300ms;
+  }
+
+  /* ===== DARK MODE at top: inverted colors (hero bg is dark) ===== */
+
+  /* Logo: show dark-bg variant, hide normal */
+  .dark [data-header-shape="floating"][data-header-color-scheme="invert"]:not([data-scrolled]) .hdr-logo-inverted {
+    display: inline-block;
+  }
+  .dark [data-header-shape="floating"][data-header-color-scheme="invert"]:not([data-scrolled]) .hdr-logo-normal {
+    display: none;
+  }
+
+  /* Text: white for dark hero */
+  .dark [data-header-shape="floating"][data-header-color-scheme="invert"]:not([data-scrolled]) .hdr-invert-text {
+    color: var(--color-on-invert) !important;
+  }
+  .dark [data-header-shape="floating"][data-header-color-scheme="invert"]:not([data-scrolled]) .hdr-invert-text:hover {
+    color: var(--color-on-invert) !important;
+  }
+
+  /* Logo text: white for dark hero */
+  .dark [data-header-shape="floating"][data-header-color-scheme="invert"]:not([data-scrolled]) .hdr-logo-text {
+    color: var(--color-on-invert) !important;
+  }
+
+  /* CTA: white pill on dark hero */
+  .dark [data-header-shape="floating"][data-header-color-scheme="invert"]:not([data-scrolled]) .hdr-invert-cta {
+    background: white !important;
+    color: #111 !important;
+    border-color: transparent !important;
+  }
+  .dark [data-header-shape="floating"][data-header-color-scheme="invert"]:not([data-scrolled]) .hdr-invert-cta:hover {
+    background: rgba(255, 255, 255, 0.9) !important;
+  }
+
+  /* ===== SCROLLED STATE (both modes): normal design-system colors ===== */
+
+  /* Logo: always show normal responsive variant */
+  [data-header-shape="floating"][data-header-color-scheme="invert"][data-scrolled] .hdr-logo-inverted {
+    display: none !important;
+  }
+  [data-header-shape="floating"][data-header-color-scheme="invert"][data-scrolled] .hdr-logo-normal {
+    display: inline-block !important;
+  }
+
+  /* Text: foreground */
+  [data-header-shape="floating"][data-header-color-scheme="invert"][data-scrolled] .hdr-invert-text,
+  [data-header-shape="floating"][data-header-color-scheme="invert"][data-scrolled] .hdr-invert-text:hover {
+    color: var(--color-foreground) !important;
+  }
+
+  /* Logo text: brand */
+  [data-header-shape="floating"][data-header-color-scheme="invert"][data-scrolled] .hdr-logo-text {
+    color: var(--color-brand-500) !important;
+  }
+
+  /* CTA: primary */
+  [data-header-shape="floating"][data-header-color-scheme="invert"][data-scrolled] .hdr-invert-cta {
+    background: var(--color-primary) !important;
+    color: var(--color-primary-foreground) !important;
+    border-color: transparent !important;
+  }
+  [data-header-shape="floating"][data-header-color-scheme="invert"][data-scrolled] .hdr-invert-cta:hover {
+    opacity: 0.9;
+  }
+
+  /* ===== Non-invert floating (shape only, no color flip) ===== */
+  [data-header-shape="floating"][data-header-color-scheme="default"] .hdr-logo-text {
+    color: var(--color-brand-500);
+  }
+  [data-header-shape="floating"][data-header-color-scheme="default"] .hdr-invert-text {
+    color: var(--color-foreground-muted);
+    transition: color 300ms;
+  }
+  [data-header-shape="floating"][data-header-color-scheme="default"] .hdr-invert-text:hover {
+    color: var(--color-foreground);
+  }
+
+  /* ===== Floating nav link underline indicators ===== */
+  [data-header-shape="floating"] .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    right: 50%;
+    height: 2px;
+    background: currentColor;
+    border-radius: 1px;
+    transition: left 200ms, right 200ms;
+  }
+
+  [data-header-shape="floating"] .nav-link:hover::after,
+  [data-header-shape="floating"] .nav-link.hdr-nav-active::after {
+    left: 12px;
+    right: 12px;
+  }
+
+  /* ===== Reduced motion ===== */
+  @media (prefers-reduced-motion: reduce) {
+    [data-header-shape="floating"],
+    [data-header-shape="floating"] .hdr-invert-text,
+    [data-header-shape="floating"] .hdr-logo-text,
+    [data-header-shape="floating"] .hdr-invert-cta,
+    [data-header-shape="floating"] .nav-link::after {
+      transition: none !important;
+    }
+  }
+</style>

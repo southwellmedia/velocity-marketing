@@ -40,26 +40,24 @@ export const routes = {
     nav: { show: false, order: 0, label: 'Home' },
   },
 
-  // Static pages
-  about: {
-    path: '/about',
-    nav: { show: true, order: 3, label: 'About' },
+  // Marketing nav — anchor links for homepage sections
+  features: {
+    path: '/#features',
+    nav: { show: true, order: 1, label: 'Features' },
   },
-  contact: {
-    path: '/contact',
-    nav: { show: true, order: 4, label: 'Contact' },
+  showcase: {
+    path: '/#showcase',
+    nav: { show: true, order: 2, label: 'Showcase' },
+  },
+  templates: {
+    path: '/#templates',
+    nav: { show: true, order: 3, label: 'Templates' },
   },
 
   // Blog section
   blog: {
     path: '/blog',
-    nav: { show: true, order: 2, label: 'Blog' },
-  },
-
-  // Components showcase
-  components: {
-    path: '/components',
-    nav: { show: true, order: 1, label: 'Components' },
+    nav: { show: true, order: 4, label: 'Blog' },
   },
 } as const satisfies Record<string, RouteDefinition>;
 

@@ -1,0 +1,179 @@
+---
+/**
+ * CredibilityStrip Section
+ * Stats displayed as glass-card tiles with count-up animations,
+ * accent lines, and paired icons.
+ */
+import { cn } from '@/lib/cn';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import Card from '@/components/ui/data-display/Card/Card.astro';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+const stats = [
+  { value: 57, suffix: '+', label: 'Production Components', icon: 'box', sublabel: 'Zero-JS by default' },
+  { value: 100, suffix: '', label: 'Lighthouse Score', icon: 'zap', sublabel: 'Every category, every page' },
+  { value: 0, suffix: 'kb', label: 'JavaScript Shipped', icon: 'code', sublabel: 'Until you need it', static: true },
+  { value: 3, suffix: '', label: 'Built-in Themes', icon: 'palette', sublabel: 'Light, dark, & custom' },
+];
+---
+
+<section
+  class={cn(
+    'relative py-[var(--space-section-sm)] overflow-hidden',
+    className
+  )}
+  data-credibility-strip
+>
+  <!-- Subtle top/bottom border lines -->
+  <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
+  <div class="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
+
+  <div class="container">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+      {stats.map((stat, i) => (
+        <Card
+          variant="default"
+          padding="md"
+          class={cn('credibility-card group relative opacity-0')}
+          style={`animation-delay: ${i * 100}ms;`}
+          data-credibility-card
+        >
+          <!-- Accent line -->
+          <div class="absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-brand-500/40 to-transparent"></div>
+
+          <!-- Icon -->
+          <div class="mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500/10 text-brand-500 transition-transform duration-300 group-hover:scale-110">
+            <Icon name={stat.icon} size="sm" />
+          </div>
+
+          <!-- Number -->
+          <span
+            class="font-display font-bold text-foreground block tracking-tight"
+            style="font-size: var(--text-4xl);"
+            data-stat-number
+            data-target={stat.value}
+            data-suffix={stat.suffix}
+            data-static={stat.static ? 'true' : undefined}
+          >
+            {stat.static ? `${stat.value}${stat.suffix}` : '0'}
+          </span>
+
+          <!-- Label -->
+          <span class="text-sm font-medium text-foreground-muted block mt-1">
+            {stat.label}
+          </span>
+
+          <!-- Sublabel -->
+          <span class="text-xs text-foreground-subtle block mt-0.5">
+            {stat.sublabel}
+          </span>
+        </Card>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  function initCredibilityStrip() {
+    var section = document.querySelector('[data-credibility-strip]');
+    if (!section) return;
+
+    var cards = section.querySelectorAll('[data-credibility-card]');
+    var numbers = section.querySelectorAll('[data-stat-number]');
+    var animated = false;
+
+    function animateCount(el) {
+      var target = parseInt(el.dataset.target, 10);
+      var suffix = el.dataset.suffix || '';
+      var isStatic = el.dataset.static === 'true';
+
+      if (isStatic) {
+        el.textContent = target + suffix;
+        return;
+      }
+
+      var duration = 1000;
+      var startTime = null;
+
+      function step(timestamp) {
+        if (!startTime) startTime = timestamp;
+        var progress = Math.min((timestamp - startTime) / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3);
+        var current = Math.round(eased * target);
+        el.textContent = current + suffix;
+
+        if (progress < 1) {
+          requestAnimationFrame(step);
+        } else {
+          el.textContent = target + suffix;
+        }
+      }
+
+      requestAnimationFrame(step);
+    }
+
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting && !animated) {
+            animated = true;
+            cards.forEach(function (card) {
+              card.classList.add('credibility-card-visible');
+            });
+            numbers.forEach(function (el) {
+              animateCount(el);
+            });
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(section);
+  }
+
+  initCredibilityStrip();
+  document.addEventListener('astro:page-load', initCredibilityStrip);
+</script>
+
+<style>
+  .credibility-card {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .credibility-card:hover {
+    border-color: var(--color-brand-500);
+    box-shadow: 0 0 30px rgba(249, 76, 16, 0.06);
+  }
+
+  .credibility-card-visible {
+    animation: credibility-reveal 0.6s ease-out forwards;
+  }
+
+  @keyframes credibility-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .credibility-card {
+      opacity: 1 !important;
+    }
+    .credibility-card-visible {
+      animation: none;
+      opacity: 1;
+    }
+  }
+</style>
