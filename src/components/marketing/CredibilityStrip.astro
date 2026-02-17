@@ -5,7 +5,7 @@
  * accent lines, and paired icons.
  */
 import { cn } from '@/lib/cn';
-import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import MarketingIcon from '@/components/ui/primitives/MarketingIcon/MarketingIcon.astro';
 import Card from '@/components/ui/data-display/Card/Card.astro';
 
 interface Props {
@@ -15,10 +15,10 @@ interface Props {
 const { class: className } = Astro.props;
 
 const stats = [
-  { value: 57, suffix: '+', label: 'Production Components', icon: 'box', sublabel: 'Zero-JS by default' },
-  { value: 100, suffix: '', label: 'Lighthouse Score', icon: 'zap', sublabel: 'Every category, every page' },
-  { value: 0, suffix: 'kb', label: 'JavaScript Shipped', icon: 'code', sublabel: 'Until you need it', static: true },
-  { value: 3, suffix: '', label: 'Built-in Themes', icon: 'palette', sublabel: 'Light, dark, & custom' },
+  { value: 57, suffix: '+', label: 'Production Components', icon: 'mkt-components', sublabel: 'Zero-JS by default' },
+  { value: 100, suffix: '', label: 'Lighthouse Score', icon: 'mkt-speed', sublabel: 'Every category, every page' },
+  { value: 0, suffix: 'kb', label: 'JavaScript Shipped', icon: 'mkt-code', sublabel: 'Until you need it', static: true },
+  { value: 3, suffix: '', label: 'Built-in Themes', icon: 'mkt-tokens', sublabel: 'Light, dark, & custom' },
 ];
 ---
 
@@ -48,7 +48,7 @@ const stats = [
 
           <!-- Icon -->
           <div class="mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500/10 text-brand-500 transition-transform duration-300 group-hover:scale-110">
-            <Icon name={stat.icon} size="sm" />
+            <MarketingIcon name={stat.icon} size="sm" />
           </div>
 
           <!-- Number -->
