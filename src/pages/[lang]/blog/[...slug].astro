@@ -1,10 +1,10 @@
 ---
 import BlogLayout from '@/layouts/BlogLayout.astro';
-import { getCollection, render } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 import { locales, defaultLocale, isValidLocale, type Locale } from '@/i18n/config';
 
 export async function getStaticPaths() {
-  const paths: { params: { lang: string; slug: string }; props: { post: any } }[] = [];
+  const paths: { params: { lang: string; slug: string }; props: { post: CollectionEntry<'blog'> } }[] = [];
 
   // Get all posts for non-default locales
   for (const locale of locales) {

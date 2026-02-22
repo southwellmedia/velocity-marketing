@@ -123,7 +123,7 @@ if (includeOrgSchema) {
     {consentEnabled && (
       <script is:inline define:vars={{ gcmDefaultsJson }}>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+        function gtag(...args){dataLayer.push(args);}
         gtag('consent', 'default', JSON.parse(gcmDefaultsJson));
       </script>
     )}
