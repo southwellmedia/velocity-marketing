@@ -9,7 +9,7 @@
  */
 
 import { type Locale, locales, defaultLocale, isValidLocale } from './config';
-import { routes, type RouteId, isValidRouteId } from './routes';
+import { routes, type RouteId } from './routes';
 
 /**
  * Get the localized URL path for a route
