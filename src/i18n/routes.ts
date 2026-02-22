@@ -91,5 +91,3 @@ export function isValidRouteId(id: string): id is RouteId {
   return id in routes;
 }
 
-// Export types
-export type { NavConfig };

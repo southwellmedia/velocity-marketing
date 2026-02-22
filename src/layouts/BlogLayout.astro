@@ -6,6 +6,7 @@ import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
 import ArticleHero from '@/components/blog/ArticleHero.astro';
 import ShareButtons from '@/components/blog/ShareButtons.astro';
 import RelatedPosts from '@/components/blog/RelatedPosts.astro';
+import type { ImageMetadata } from 'astro';
 import { defaultLocale, type Locale } from '@/i18n/config';
 import { useTranslations } from '@/i18n/index';
 
@@ -15,7 +16,7 @@ interface Props {
   publishedAt: Date;
   updatedAt?: Date;
   author?: string;
-  image?: string;
+  image?: ImageMetadata;
   imageAlt?: string;
   tags?: string[];
   slug?: string;
@@ -36,7 +37,7 @@ const {
 } = Astro.props;
 
 const t = useTranslations(locale);
-const ogImage = image || `/og${Astro.url.pathname}.png`;
+const ogImage = image?.src || `/og${Astro.url.pathname}.png`;
 
 // Build breadcrumbs with locale-aware URLs
 const blogUrl = locale === defaultLocale ? '/blog' : `/${locale}/blog`;
