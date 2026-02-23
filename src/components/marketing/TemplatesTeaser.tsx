@@ -1,10 +1,15 @@
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, type CSSProperties } from 'react';
 import {
   motion,
   useInView,
   useReducedMotion,
   useSpring,
 } from 'framer-motion';
+
+// ---------------------------------------------------------------------------
+// Coming Soon flag — set to false when templates launch
+// ---------------------------------------------------------------------------
+const COMING_SOON = true;
 
 // ---------------------------------------------------------------------------
 // Spring configs (shared across marketing sections)
@@ -28,8 +33,8 @@ interface Template {
 
 const TEMPLATES: Template[] = [
   {
-    name: 'SaaS Dashboard',
-    category: 'Admin & Analytics',
+    name: 'Medical Practice',
+    category: 'Healthcare & Wellness',
     accent: 'var(--color-brand-500)',
     gradient:
       'radial-gradient(ellipse at 30% 40%, rgba(249,76,16,0.18) 0%, var(--color-background-secondary) 70%)',
@@ -311,8 +316,8 @@ function TemplateCard({
     >
       <TiltCard
         className="group relative overflow-hidden rounded-xl h-full"
-        strength={10}
-        disabled={reducedMotion}
+        strength={COMING_SOON ? 0 : 10}
+        disabled={reducedMotion || COMING_SOON}
       >
         <div
           className="relative aspect-[4/3] lg:aspect-auto lg:h-full overflow-hidden"
@@ -382,8 +387,8 @@ function PricingCard({
     >
       <TiltCard
         className="relative overflow-hidden rounded-xl"
-        strength={4}
-        disabled={reducedMotion}
+        strength={COMING_SOON ? 0 : 4}
+        disabled={reducedMotion || COMING_SOON}
       >
         <div className="relative rounded-xl border border-border bg-card p-6 md:p-8 lg:p-10">
           {/* Subtle brand glow behind the card */}
@@ -449,31 +454,48 @@ function PricingCard({
             </ul>
 
             {/* CTA */}
-            <a
-              href="#"
-              className="mt-8 flex items-center justify-center gap-2 rounded-md h-12 px-6 text-sm font-medium bg-brand-500 text-white hover:bg-brand-600 transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            >
-              <span className="font-mono uppercase tracking-wider text-xs">
-                Get All Templates
-              </span>
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={1.5}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
-                />
-              </svg>
-            </a>
-
-            <p className="mt-4 text-center text-xs text-foreground-subtle">
-              30-day money-back guarantee
-            </p>
+            {COMING_SOON ? (
+              <>
+                <div
+                  className="mt-8 flex items-center justify-center gap-2 rounded-md h-12 px-6 text-sm font-medium border border-foreground/10 text-foreground-subtle cursor-not-allowed select-none"
+                  aria-disabled="true"
+                >
+                  <span className="font-mono uppercase tracking-wider text-xs">
+                    Coming Soon
+                  </span>
+                </div>
+                <p className="mt-4 text-center text-xs text-foreground-subtle">
+                  Join the waitlist to get notified at launch.
+                </p>
+              </>
+            ) : (
+              <>
+                <a
+                  href="#"
+                  className="mt-8 flex items-center justify-center gap-2 rounded-md h-12 px-6 text-sm font-medium bg-brand-500 text-white hover:bg-brand-600 transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  <span className="font-mono uppercase tracking-wider text-xs">
+                    Get All Templates
+                  </span>
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
+                    />
+                  </svg>
+                </a>
+                <p className="mt-4 text-center text-xs text-foreground-subtle">
+                  30-day money-back guarantee
+                </p>
+              </>
+            )}
           </div>
         </div>
 
@@ -487,11 +509,93 @@ function PricingCard({
 // ---------------------------------------------------------------------------
 // TemplatesTeaser — Main exported component
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// ComingSoonOverlay — Cinematic stamp over disabled section
+// ---------------------------------------------------------------------------
+function ComingSoonOverlay({
+  reducedMotion,
+  inView,
+}: {
+  reducedMotion: boolean;
+  inView: boolean;
+}) {
+  return (
+    <motion.div
+      className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
+      initial={reducedMotion ? { opacity: 1 } : { opacity: 0 }}
+      animate={inView || reducedMotion ? { opacity: 1 } : undefined}
+      transition={{ ...SPRINGS.ENTRANCE, delay: 0.4 }}
+      aria-hidden="true"
+    >
+      {/* Centered stamp container */}
+      <div className="relative">
+        {/* Outer glow ring */}
+        <div
+          className="absolute -inset-8 rounded-full"
+          style={{
+            background:
+              'radial-gradient(circle, rgba(249,76,16,0.08) 0%, transparent 70%)',
+          }}
+        />
+
+        {/* Stamp */}
+        <div
+          className="relative px-10 py-5 border-2 border-foreground/15 rounded-sm"
+          style={{
+            transform: 'rotate(-6deg)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            background: 'rgba(0, 0, 0, 0.55)',
+          }}
+        >
+          {/* Top rule */}
+          <div
+            className="absolute top-2 left-3 right-3 h-px"
+            style={{
+              background:
+                'linear-gradient(to right, transparent, var(--color-foreground)/0.15, transparent)',
+            }}
+          />
+
+          <div className="text-center">
+            <span
+              className="block font-display font-bold uppercase tracking-[0.25em] text-foreground/70"
+              style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)' }}
+            >
+              Coming Soon
+            </span>
+            <span className="block mt-1.5 font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/35">
+              Premium templates in development
+            </span>
+          </div>
+
+          {/* Bottom rule */}
+          <div
+            className="absolute bottom-2 left-3 right-3 h-px"
+            style={{
+              background:
+                'linear-gradient(to right, transparent, var(--color-foreground)/0.15, transparent)',
+            }}
+          />
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// TemplatesTeaser — Main exported component
+// ---------------------------------------------------------------------------
 export default function TemplatesTeaser() {
   const prefersReduced = useReducedMotion();
   const reducedMotion = prefersReduced ?? false;
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
+
+  // Grayscale + fade styles when coming soon
+  const comingSoonContentStyle: CSSProperties = COMING_SOON
+    ? { filter: 'grayscale(1) brightness(0.7)', opacity: 0.45, pointerEvents: 'none' }
+    : {};
 
   return (
     <section
@@ -513,8 +617,13 @@ export default function TemplatesTeaser() {
         aria-hidden="true"
       />
 
+      {/* Coming Soon overlay stamp */}
+      {COMING_SOON && (
+        <ComingSoonOverlay reducedMotion={reducedMotion} inView={inView} />
+      )}
+
       <div className="container relative">
-        {/* Section header */}
+        {/* Section header — always visible, not grayscaled */}
         <motion.header
           style={{ marginBottom: 'var(--space-section-header)' }}
           initial={reducedMotion ? { opacity: 1 } : { opacity: 0, y: 25 }}
@@ -546,7 +655,10 @@ export default function TemplatesTeaser() {
         </motion.header>
 
         {/* Two-column layout: templates grid + pricing card */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8 items-stretch">
+        <div
+          className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8 items-stretch"
+          style={comingSoonContentStyle}
+        >
           {/* Template previews — 3 columns on the left */}
           <div className="lg:col-span-3 grid grid-cols-2 grid-rows-2 gap-4 md:gap-5">
             {TEMPLATES.map((template, i) => (

@@ -7,12 +7,23 @@ import {
 } from 'framer-motion';
 
 // ---------------------------------------------------------------------------
-// Image import — Vite returns a URL string for static assets
+// Image imports — Vite eager glob at build time
 // ---------------------------------------------------------------------------
-import kirschImg from '../../assets/showcase/velocity-kirsch.jpg';
+const showcaseImages = import.meta.glob<string | { src?: string; default?: string }>(
+  '/src/assets/showcase/*.png',
+  { eager: true, import: 'default' },
+);
+
+function resolveImage(slug: string): string | undefined {
+  const key = `/src/assets/showcase/${slug}.png`;
+  const val = showcaseImages[key];
+  if (!val) return undefined;
+  if (typeof val === 'string') return val;
+  return val.src ?? val.default ?? undefined;
+}
 
 // ---------------------------------------------------------------------------
-// Spring configs (shared with BentoGrid)
+// Spring configs
 // ---------------------------------------------------------------------------
 const SPRINGS = {
   ENTRANCE: { stiffness: 80, damping: 14, mass: 0.8 },
@@ -24,49 +35,55 @@ const SPRINGS = {
 // Data
 // ---------------------------------------------------------------------------
 interface ShowcaseItem {
+  slug: string;
   name: string;
+  url: string;
   category: string;
-  description: string;
-  image?: string;
-  gradient?: string;
   accent: string;
 }
 
 const SHOWCASE_ITEMS: ShowcaseItem[] = [
   {
-    name: 'Paris VII',
+    slug: 'southwell-media',
+    name: 'Southwell Media',
+    url: 'http://southwellmedia.com',
+    category: 'Digital Agency',
+    accent: '#a0a0a0',
+  },
+  {
+    slug: 'kirsch-velocity',
+    name: 'Kirsch',
+    url: 'https://kirsch-velocity.vercel.app',
     category: 'Luxury Real Estate',
-    description:
-      'Allen Kirsch — Haussmannian apartment showcase with editorial typography and immersive scroll-driven gallery',
-    image: typeof kirschImg === 'string' ? kirschImg : (kirschImg as { src?: string }).src ?? '',
     accent: '#c4a265',
   },
   {
-    name: 'Acme SaaS',
-    category: 'B2B Platform',
-    description:
-      'Dashboard analytics with real-time data visualization and team collaboration tools',
-    gradient:
-      'radial-gradient(ellipse at 25% 50%, rgba(249,76,16,0.22) 0%, var(--color-background-deep) 65%)',
+    slug: 'deploy-velocity',
+    name: 'Deploy Velocity',
+    url: 'https://deployvelocity.com',
+    category: 'Developer Tools',
     accent: 'var(--color-brand-500)',
   },
   {
-    name: 'Studio Nova',
-    category: 'Creative Agency',
-    description:
-      'Portfolio and case studies with scroll-driven animations and dynamic page transitions',
-    gradient:
-      'radial-gradient(ellipse at 75% 30%, rgba(129,140,248,0.25) 0%, var(--color-background-deep) 65%)',
-    accent: '#818cf8',
+    slug: 'ridgecut',
+    name: 'Ridgecut',
+    url: 'https://ridgecut.vercel.app',
+    category: 'Roofing & Construction',
+    accent: '#c4a265',
   },
   {
-    name: 'CloudDash',
-    category: 'Developer Tools',
-    description:
-      'Infrastructure monitoring with real-time metrics, alerting, and intelligent anomaly detection',
-    gradient:
-      'radial-gradient(ellipse at 50% 70%, rgba(52,211,153,0.22) 0%, var(--color-background-deep) 65%)',
+    slug: 'the-haven-castle-hills',
+    name: 'The Haven',
+    url: 'https://thehavencastlehills.com',
+    category: 'Real Estate',
     accent: '#34d399',
+  },
+  {
+    slug: 'green-door-26',
+    name: 'Green Door',
+    url: 'https://greendoor26.vercel.app',
+    category: 'Waste Management',
+    accent: '#4ade80',
   },
 ];
 
@@ -104,7 +121,7 @@ function TiltCard({
   );
 
   const handleEnter = useCallback(() => {
-    if (!disabled) scale.set(1.012);
+    if (!disabled) scale.set(1.015);
   }, [disabled, scale]);
 
   const handleLeave = useCallback(() => {
@@ -133,188 +150,123 @@ function TiltCard({
 }
 
 // ---------------------------------------------------------------------------
-// FeaturedCard — Large hero showcase
-// ---------------------------------------------------------------------------
-function FeaturedCard({
-  item,
-  reducedMotion,
-  inView,
-}: {
-  item: ShowcaseItem;
-  reducedMotion: boolean;
-  inView: boolean;
-}) {
-  return (
-    <motion.div
-      initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-      animate={inView || reducedMotion ? { opacity: 1, y: 0 } : undefined}
-      transition={{ ...SPRINGS.ENTRANCE, delay: 0.15 }}
-    >
-      <TiltCard
-        className="group relative overflow-hidden rounded-xl"
-        strength={4}
-        disabled={reducedMotion}
-      >
-        <a href="#" className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-          <div className="relative aspect-[16/9] md:aspect-[21/9] overflow-hidden bg-background">
-            <img
-              src={item.image}
-              alt={`${item.name} — ${item.description}`}
-              className="h-full w-full object-cover object-top grayscale transition-all duration-700 ease-out group-hover:scale-[1.03] group-hover:grayscale-0"
-              loading="lazy"
-              decoding="async"
-            />
-
-            {/* Overlay gradients — rgba black is standard for image darkening */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.25) 45%, transparent 100%)',
-              }}
-            />
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  'linear-gradient(to right, rgba(0,0,0,0.45) 0%, transparent 60%)',
-              }}
-            />
-
-            {/* Content */}
-            <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-10 lg:p-14">
-              <div className="flex items-center gap-3 mb-3">
-                <span
-                  className="h-1.5 w-1.5 rounded-full"
-                  style={{ backgroundColor: item.accent }}
-                />
-                <span className="text-xs font-mono uppercase tracking-widest text-white/70">
-                  {item.category}
-                </span>
-                <span className="hidden sm:inline text-xs font-mono text-white/50">
-                  / Featured
-                </span>
-              </div>
-
-              <h3
-                className="font-display font-bold text-white tracking-tight leading-none"
-                style={{ fontSize: 'var(--text-4xl)' }}
-              >
-                {item.name}
-              </h3>
-
-              <p className="mt-3 max-w-lg text-sm md:text-base text-white/70 leading-relaxed">
-                {item.description}
-              </p>
-
-              {/* Hover link */}
-              <div className="mt-6 inline-flex items-center gap-2 text-white/50 group-hover:text-white/70 transition-colors duration-300">
-                <span className="text-xs font-mono uppercase tracking-wider">
-                  Visit Site
-                </span>
-                <svg
-                  className="w-4 h-4 translate-x-0 group-hover:translate-x-1.5 transition-transform duration-300"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          {/* Border */}
-          <div className="absolute inset-0 rounded-xl border border-border group-hover:border-border-strong transition-colors duration-300 pointer-events-none" />
-        </a>
-      </TiltCard>
-    </motion.div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// ShowcaseCard — Secondary showcase cards
+// ShowcaseCard — Image-forward card with hover-reveal text
 // ---------------------------------------------------------------------------
 function ShowcaseCard({
   item,
   index,
+  featured = false,
   reducedMotion,
   inView,
 }: {
   item: ShowcaseItem;
   index: number;
+  featured?: boolean;
   reducedMotion: boolean;
   inView: boolean;
 }) {
+  const image = resolveImage(item.slug);
+
   return (
     <motion.div
       className="h-full"
-      initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 35 }}
+      initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: featured ? 40 : 30 }}
       animate={inView || reducedMotion ? { opacity: 1, y: 0 } : undefined}
-      transition={{ ...SPRINGS.ENTRANCE, delay: 0.25 + index * 0.1 }}
+      transition={{ ...SPRINGS.ENTRANCE, delay: 0.1 + index * 0.08 }}
     >
       <TiltCard
-        className="group relative overflow-hidden rounded-xl h-full"
-        strength={10}
+        className="group relative h-full overflow-hidden rounded-lg"
+        strength={featured ? 3 : 8}
         disabled={reducedMotion}
       >
-        <a href="#" className="block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-          <div
-            className="relative aspect-[4/3] overflow-hidden"
-            style={{ background: item.gradient }}
-          >
-            {/* Faux wireframe UI elements */}
-            <div className="absolute inset-0 opacity-[0.06]" aria-hidden="true">
-              <div className="absolute top-5 left-5 right-5 flex items-center gap-1.5">
-                <div className="h-[5px] w-[5px] rounded-full bg-foreground" />
-                <div className="h-[5px] w-[5px] rounded-full bg-foreground" />
-                <div className="h-[5px] w-[5px] rounded-full bg-foreground" />
-                <div className="ml-3 h-[3px] flex-1 max-w-24 rounded-full bg-foreground/50" />
-              </div>
-              <div className="absolute top-16 left-5 space-y-2.5">
-                <div className="h-[3px] w-28 rounded bg-foreground" />
-                <div className="h-[3px] w-20 rounded bg-foreground/60" />
-                <div className="h-[3px] w-24 rounded bg-foreground/40" />
-              </div>
-              <div className="absolute bottom-5 right-5 h-16 w-16 rounded-lg border border-foreground/30" />
-            </div>
+        <a
+          href={item.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background-deep"
+        >
+          <div className="relative h-full min-h-[240px] overflow-hidden">
+            {/* Screenshot — full bleed, grayscale by default */}
+            {image && (
+              <img
+                src={image}
+                alt={item.name}
+                className="absolute inset-0 h-full w-full object-cover object-top transition-all duration-700 ease-out grayscale group-hover:grayscale-0 group-hover:scale-[1.04]"
+                loading="lazy"
+                decoding="async"
+              />
+            )}
 
-            {/* Bottom fade to section bg */}
+            {/* Subtle permanent vignette at edges — defines card boundary */}
             <div
-              className="absolute inset-x-0 bottom-0 h-3/4"
+              className="absolute inset-0 pointer-events-none"
               style={{
-                background:
-                  'linear-gradient(to top, var(--color-background-deep) 0%, transparent 100%)',
+                boxShadow: 'inset 0 -1px 0 rgba(255,255,255,0.04)',
+                background: 'linear-gradient(to top, rgba(0,0,0,0.2) 0%, transparent 30%)',
               }}
             />
 
-            {/* Content */}
-            <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-6">
-              <div className="flex items-center gap-2 mb-2">
+            {/* Hover overlay — dark curtain rising from bottom */}
+            <div
+              className="showcase-card-overlay absolute inset-0 pointer-events-none"
+              style={{
+                background:
+                  'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0.25) 80%, transparent 100%)',
+              }}
+            />
+
+            {/* Text content — revealed on hover with stagger */}
+            <div className={`absolute inset-0 flex flex-col justify-end ${featured ? 'p-7 md:p-10' : 'p-5'}`}>
+              {/* Category label */}
+              <div className="showcase-card-text showcase-stagger-1 flex items-center gap-2.5 mb-2.5">
                 <span
                   className="h-1 w-1 rounded-full"
                   style={{ backgroundColor: item.accent }}
                 />
-                <span className="text-xs font-mono uppercase tracking-widest text-foreground-subtle">
+                <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/55">
                   {item.category}
                 </span>
               </div>
-              <h3 className="font-display text-lg font-semibold text-foreground tracking-tight">
+
+              {/* Site name */}
+              <h3
+                className="showcase-card-text showcase-stagger-2 font-display font-bold text-white tracking-tight leading-[1.1]"
+                style={{ fontSize: featured ? 'clamp(1.5rem, 3vw, 2.5rem)' : 'var(--text-lg)' }}
+              >
                 {item.name}
               </h3>
-              <p className="mt-1.5 text-xs text-foreground-subtle leading-relaxed line-clamp-2">
-                {item.description}
-              </p>
+
+              {/* Arrow indicator */}
+              <div className="showcase-card-text showcase-stagger-3 mt-3 inline-flex items-center gap-2 text-white/40 group-hover:text-white/70 transition-colors duration-300">
+                <span className="text-[10px] font-mono uppercase tracking-[0.15em]">
+                  View
+                </span>
+                <svg
+                  className="w-3 h-3 -translate-x-1 group-hover:translate-x-0 transition-transform duration-300"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
+                </svg>
+              </div>
             </div>
           </div>
 
-          {/* Border */}
-          <div className="absolute inset-0 rounded-xl border border-border group-hover:border-border-strong transition-colors duration-300 pointer-events-none" />
+          {/* Border — subtle, brightens on hover */}
+          <div
+            className="absolute inset-0 rounded-lg pointer-events-none transition-all duration-500"
+            style={{
+              boxShadow: '0 0 0 1px rgba(255,255,255,0.06), inset 0 0 0 1px rgba(255,255,255,0.04)',
+            }}
+          />
+          <div
+            className="absolute inset-0 rounded-lg pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            style={{
+              boxShadow: '0 0 0 1px rgba(255,255,255,0.12), 0 0 30px rgba(0,0,0,0.3)',
+            }}
+          />
         </a>
       </TiltCard>
     </motion.div>
@@ -338,7 +290,6 @@ function SubmitCTA({
       animate={inView || reducedMotion ? { opacity: 1, y: 0 } : undefined}
       transition={{ ...SPRINGS.ENTRANCE, delay: 0.5 }}
     >
-      {/* Separator */}
       <div className="h-px mb-12 md:mb-14 bg-border" aria-hidden="true" />
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
@@ -354,7 +305,6 @@ function SubmitCTA({
           </p>
         </div>
 
-        {/* Brand ghost button — CSS-only hover, uses design system tokens */}
         <a
           href="#"
           className="group inline-flex items-center gap-2.5 shrink-0 rounded-md h-10 px-5 text-sm font-medium border border-brand-500 text-brand-500 bg-transparent hover:bg-brand-500 hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -390,8 +340,6 @@ export default function Showcase() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
 
-  const [featured, ...rest] = SHOWCASE_ITEMS;
-
   return (
     <section
       id="showcase"
@@ -403,7 +351,7 @@ export default function Showcase() {
         paddingBottom: 'var(--space-section)',
       }}
     >
-      {/* Atmospheric glow — subtle brand accent at top */}
+      {/* Atmospheric glow */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -442,24 +390,18 @@ export default function Showcase() {
           </h2>
           <p className="mt-4 text-lg max-w-xl text-foreground-muted">
             Real sites shipped by developers using Velocity. From luxury real estate
-            to SaaS dashboards — all built on the same starter kit.
+            to digital agencies — all built on the same starter kit.
           </p>
         </motion.header>
 
-        {/* Featured item */}
-        <FeaturedCard
-          item={featured}
-          reducedMotion={reducedMotion}
-          inView={inView}
-        />
-
-        {/* Secondary items grid */}
-        <div className="mt-5 md:mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
-          {rest.map((item, i) => (
+        {/* Bento grid */}
+        <div className="showcase-grid">
+          {SHOWCASE_ITEMS.map((item, i) => (
             <ShowcaseCard
-              key={item.name}
+              key={item.slug}
               item={item}
               index={i}
+              featured={i === 0}
               reducedMotion={reducedMotion}
               inView={inView}
             />
