@@ -302,51 +302,6 @@ function useParallaxLayers(relX: MotionValue<number>, relY: MotionValue<number>)
   return { bg: { x: bgX, y: bgY }, mid: { x: midX, y: midY }, fg: { x: fgX, y: fgY } };
 }
 
-function useMagneticHover(
-  elementRef: React.RefObject<HTMLElement | null>,
-  { strength = 0.3, radius = 60 } = {},
-) {
-  const x = useSpring(0, SPRINGS.MAGNETIC);
-  const y = useSpring(0, SPRINGS.MAGNETIC);
-
-  useEffect(() => {
-    const el = elementRef.current;
-    if (!el) return;
-    const parent = el.closest('[data-bento-card]') as HTMLElement | null;
-    if (!parent) return;
-
-    const move = (e: PointerEvent) => {
-      const rect = el.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const dx = e.clientX - cx;
-      const dy = e.clientY - cy;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < radius) {
-        x.set(dx * strength);
-        y.set(dy * strength);
-      } else {
-        x.set(0);
-        y.set(0);
-      }
-    };
-
-    const leave = () => {
-      x.set(0);
-      y.set(0);
-    };
-
-    parent.addEventListener('pointermove', move);
-    parent.addEventListener('pointerleave', leave);
-    return () => {
-      parent.removeEventListener('pointermove', move);
-      parent.removeEventListener('pointerleave', leave);
-    };
-  }, [elementRef, strength, radius, x, y]);
-
-  return { x, y };
-}
-
 // ---------------------------------------------------------------------------
 // Spotlight Overlay
 // ---------------------------------------------------------------------------

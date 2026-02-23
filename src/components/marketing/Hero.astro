@@ -364,17 +364,17 @@ const configPanelHtml = `
 
 <script is:inline>
   function initIdeTabs() {
-    var container = document.querySelector('[data-ide-tabs]');
+    const container = document.querySelector('[data-ide-tabs]');
     if (!container || container.dataset.initialized) return;
     container.dataset.initialized = 'true';
 
-    var tabs = container.querySelectorAll('[data-ide-tab]');
-    var panels = document.querySelectorAll('[data-ide-panel]');
-    var titleBar = container.closest('.rounded-t-xl');
-    var titleEl = titleBar ? titleBar.querySelector('[data-ide-title]') : null;
-    var explorerItems = document.querySelectorAll('[data-ide-explorer]');
+    const tabs = container.querySelectorAll('[data-ide-tab]');
+    const panels = document.querySelectorAll('[data-ide-panel]');
+    const titleBar = container.closest('.rounded-t-xl');
+    const titleEl = titleBar ? titleBar.querySelector('[data-ide-title]') : null;
+    const explorerItems = document.querySelectorAll('[data-ide-explorer]');
 
-    var filePaths = {
+    const filePaths = {
       index: 'src/pages/index.astro',
       hero: 'src/components/marketing/Hero.astro',
       tokens: 'src/styles/themes/default.css',
@@ -383,7 +383,7 @@ const configPanelHtml = `
 
     function activate(tabId) {
       tabs.forEach(function (tab) {
-        var isActive = tab.dataset.ideTab === tabId;
+        const isActive = tab.dataset.ideTab === tabId;
         if (isActive) {
           tab.classList.add('ide-tab-active');
         } else {

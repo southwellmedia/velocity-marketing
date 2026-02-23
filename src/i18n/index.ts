@@ -3,7 +3,7 @@
  * Translation functions and helpers
  */
 
-import { type Locale, defaultLocale, locales } from './config';
+import { type Locale, defaultLocale } from './config';
 import { en } from './translations/en';
 import { es } from './translations/es';
 import { fr } from './translations/fr';

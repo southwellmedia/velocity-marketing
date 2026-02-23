@@ -80,31 +80,31 @@ const stats = [
 
 <script is:inline>
   function initCredibilityStrip() {
-    var section = document.querySelector('[data-credibility-strip]');
+    const section = document.querySelector('[data-credibility-strip]');
     if (!section) return;
 
-    var cards = section.querySelectorAll('[data-credibility-card]');
-    var numbers = section.querySelectorAll('[data-stat-number]');
-    var animated = false;
+    const cards = section.querySelectorAll('[data-credibility-card]');
+    const numbers = section.querySelectorAll('[data-stat-number]');
+    let animated = false;
 
     function animateCount(el) {
-      var target = parseInt(el.dataset.target, 10);
-      var suffix = el.dataset.suffix || '';
-      var isStatic = el.dataset.static === 'true';
+      const target = parseInt(el.dataset.target, 10);
+      const suffix = el.dataset.suffix || '';
+      const isStatic = el.dataset.static === 'true';
 
       if (isStatic) {
         el.textContent = target + suffix;
         return;
       }
 
-      var duration = 1000;
-      var startTime = null;
+      const duration = 1000;
+      let startTime = null;
 
       function step(timestamp) {
         if (!startTime) startTime = timestamp;
-        var progress = Math.min((timestamp - startTime) / duration, 1);
-        var eased = 1 - Math.pow(1 - progress, 3);
-        var current = Math.round(eased * target);
+        const progress = Math.min((timestamp - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(eased * target);
         el.textContent = current + suffix;
 
         if (progress < 1) {
@@ -117,7 +117,7 @@ const stats = [
       requestAnimationFrame(step);
     }
 
-    var observer = new IntersectionObserver(
+    const observer = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting && !animated) {

@@ -29,8 +29,8 @@ import Logo from '@/components/ui/marketing/Logo/Logo.astro';
 import ThemeToggle from '@/components/layout/ThemeToggle.astro';
 import LanguageSwitcher from '@/components/i18n/LanguageSwitcher.astro';
 import siteConfig from '@/config/site.config';
-import { type Locale, defaultLocale, getLocaleFromPath } from '@/i18n/config';
-import { useTranslations, getLocalizedPath, getNavRoutes } from '@/i18n/index';
+import { type Locale, getLocaleFromPath } from '@/i18n/config';
+import { useTranslations, getLocalizedPath, getNavRoutes, type TranslationKey } from '@/i18n/index';
 
 export interface NavItem {
   label: string;
@@ -95,7 +95,7 @@ const {
   nav,
   extraNav = [],
   showCta = false,
-  cta = { label: 'Get Started', href: '#cta' },
+  cta = { label: 'View Demo', href: 'https://demo.deployvelocity.com' },
   actions = [],
   showThemeToggle = true,
   showLanguageSwitcher = true,
@@ -118,7 +118,7 @@ const isInvert = colorScheme === 'invert';
 // Get navigation items from i18n routes or custom nav
 const defaultNav = getNavRoutes(locale);
 const navItems: NavItem[] = nav || [...extraNav, ...defaultNav.map(route => ({
-  label: t(route.label as any) || route.label,
+  label: t(route.label as TranslationKey) || route.label,
   href: route.path,
 }))];
 
@@ -363,7 +363,7 @@ const buttonId = `${menuId}-button`;
   />
 )}
 
-<script define:vars={{ menuId, buttonId, shape }}>
+<script is:inline define:vars={{ menuId, buttonId, shape }}>
   function initMobileMenu() {
     const button = document.getElementById(buttonId);
     const menu = document.getElementById(menuId);
@@ -508,7 +508,7 @@ const buttonId = `${menuId}-button`;
   const SCROLL_THRESHOLD = 60;
 
   function initScrollWatcher() {
-    document.querySelectorAll('header[data-header-shape="floating"]').forEach((header) => {
+    document.querySelectorAll<HTMLElement>('header[data-header-shape="floating"]').forEach((header) => {
       if (header.dataset.scrollInit) return;
       header.dataset.scrollInit = 'true';
 

@@ -38,7 +38,7 @@ const gtmId = import.meta.env.PUBLIC_GTM_ID;
 {
   gaId && !gtmId && (
     <>
-      <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
       <script is:inline define:vars={{ gaId }}>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}

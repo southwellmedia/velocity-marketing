@@ -50,6 +50,18 @@ const authors = defineCollection({
     }),
 });
 
+// Showcase collection for sites built with Velocity
+const showcase = defineCollection({
+  loader: glob({ pattern: '**/*.json', base: './src/content/showcase' }),
+  schema: z.object({
+    url: z.string().url(),
+    title: z.string().max(100),
+    description: z.string().max(300),
+    tags: z.array(z.string()).default([]),
+    featured: z.boolean().default(false),
+  }),
+});
+
 // FAQs collection (for JSON-LD FAQ schema)
 const faqs = defineCollection({
   loader: glob({ pattern: '**/*.json', base: './src/content/faqs' }),
@@ -67,4 +79,5 @@ export const collections = {
   pages,
   authors,
   faqs,
+  showcase,
 };

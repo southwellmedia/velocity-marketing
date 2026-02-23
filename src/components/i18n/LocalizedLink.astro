@@ -15,10 +15,11 @@
  * // → /fr/blogue (always French)
  */
 
+import type { HTMLAttributes } from 'astro/types';
 import { getLocalizedPath, type RouteId } from '@/i18n/helpers';
 import { type Locale, getLocaleFromPath } from '@/i18n/config';
 
-type AnchorProps = Omit<astroHTML.JSX.AnchorHTMLAttributes, 'href'>;
+type AnchorProps = Omit<HTMLAttributes<'a'>, 'href'>;
 
 interface Props extends AnchorProps {
   /**
