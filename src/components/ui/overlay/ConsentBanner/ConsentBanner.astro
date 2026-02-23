@@ -201,7 +201,7 @@ const configJson = JSON.stringify(consentConfig);
           if (typeof w.gtag !== 'function') {
             w.dataLayer = w.dataLayer || [];
             if (typeof w.gtag !== 'function') {
-              w.gtag = function(...args: unknown[]) { w.dataLayer.push(args as unknown as Record<string, unknown>); };
+              w.gtag = function() { w.dataLayer.push(arguments as unknown as Record<string, unknown>); };
             }
           }
 
