@@ -72,11 +72,11 @@ const SHOWCASE_ITEMS: ShowcaseItem[] = [
     accent: '#c4a265',
   },
   {
-    slug: 'the-haven-castle-hills',
-    name: 'The Haven',
-    url: 'https://thehavencastlehills.com',
-    category: 'Real Estate',
-    accent: '#34d399',
+    slug: 'bigjunk',
+    name: 'Big Junk',
+    url: 'http://bigjunk.vercel.app',
+    category: 'Junk Removal',
+    accent: '#f59e0b',
   },
   {
     slug: 'green-door-26',
