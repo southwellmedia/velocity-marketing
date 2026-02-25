@@ -43,21 +43,21 @@ export const routes = {
   // Marketing nav — anchor links for homepage sections
   features: {
     path: '/#features',
-    nav: { show: true, order: 1, label: 'Features' },
+    nav: { show: false, order: 1, label: 'Features' },
   },
   showcase: {
     path: '/#showcase',
-    nav: { show: true, order: 2, label: 'Showcase' },
+    nav: { show: false, order: 2, label: 'Showcase' },
   },
   templates: {
     path: '/#templates',
-    nav: { show: true, order: 3, label: 'Templates' },
+    nav: { show: false, order: 3, label: 'Templates' },
   },
 
   // Blog section
   blog: {
     path: '/blog',
-    nav: { show: true, order: 4, label: 'Blog' },
+    nav: { show: false, order: 4, label: 'Blog' },
   },
 } as const satisfies Record<string, RouteDefinition>;
 
