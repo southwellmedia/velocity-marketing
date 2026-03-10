@@ -53,7 +53,7 @@ const SHOWCASE_ITEMS: ShowcaseItem[] = [
   {
     slug: 'kirsch-velocity',
     name: 'Kirsch',
-    url: 'https://kirsch-velocity.vercel.app',
+    url: 'https://kirsch-refresh.vercel.app/',
     category: 'Luxury Real Estate',
     accent: '#c4a265',
   },
