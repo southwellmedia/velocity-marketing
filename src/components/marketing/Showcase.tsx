@@ -52,7 +52,7 @@ const SHOWCASE_ITEMS: ShowcaseItem[] = [
   },
   {
     slug: 'kirsch-velocity',
-    name: 'Kirsch',
+    name: 'Allen Kirsch',
     url: 'https://kirsch-refresh.vercel.app/',
     category: 'Luxury Real Estate',
     accent: '#c4a265',
@@ -66,7 +66,7 @@ const SHOWCASE_ITEMS: ShowcaseItem[] = [
   },
   {
     slug: 'ridgecut',
-    name: 'Ridgecut',
+    name: 'Ridge Cut Roofing',
     url: 'https://ridgecut.vercel.app',
     category: 'Roofing & Construction',
     accent: '#c4a265',
