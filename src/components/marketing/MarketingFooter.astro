@@ -31,15 +31,6 @@ const linkGroups = [
       { label: 'Changelog', href: '/blog' },
     ],
   },
-  {
-    title: 'Company',
-    links: [
-      { label: 'About', href: '/about' },
-      { label: 'Contact', href: 'mailto:hello@velocity.build' },
-      { label: 'Privacy', href: '/privacy' },
-      { label: 'Terms', href: '/terms' },
-    ],
-  },
 ];
 
 const socialLinks = [
@@ -98,7 +89,7 @@ const socialLinks = [
       </div>
 
       {/* Link columns */}
-      <div class="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
+      <div class="lg:col-span-7 grid grid-cols-2 gap-8">
         {linkGroups.map((group) => (
           <div>
             <h3 class="text-xs font-mono uppercase tracking-widest text-foreground-subtle mb-4">
