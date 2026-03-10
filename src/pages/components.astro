@@ -1,0 +1,25 @@
+---
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import ComponentsHero from '@/components/marketing/components/ComponentsHero.astro';
+import ComponentStatsStrip from '@/components/marketing/components/ComponentStatsStrip.astro';
+import ThemePlayground from '@/components/marketing/components/ThemePlayground';
+import CategoryBento from '@/components/marketing/components/CategoryBento';
+import ComponentWall from '@/components/marketing/components/ComponentWall';
+import VariantExplorer from '@/components/marketing/components/VariantExplorer';
+import AccessibilitySection from '@/components/marketing/components/AccessibilitySection.astro';
+import ComponentsCTA from '@/components/marketing/components/ComponentsCTA.astro';
+---
+
+<MarketingLayout
+  title="Components — Velocity"
+  description="57+ production-ready components with zero JavaScript by default. Accessible, themeable, and built on Astro with progressive React hydration."
+>
+  <ComponentsHero />
+  <ComponentStatsStrip />
+  <ThemePlayground client:visible />
+  <CategoryBento client:visible />
+  <ComponentWall client:visible />
+  <VariantExplorer client:visible />
+  <AccessibilitySection />
+  <ComponentsCTA />
+</MarketingLayout>

@@ -1,0 +1,106 @@
+---
+/**
+ * ComponentsHero Section
+ * Giant "57+" as dominant visual with floating component silhouettes,
+ * bg-glow-orange + bg-grid-pattern backdrop, badge, heading, dual CTAs.
+ */
+import Badge from '@/components/ui/data-display/Badge/Badge.astro';
+import Button from '@/components/ui/form/Button/Button.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import { cn } from '@/lib/cn';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<section class={cn('relative min-h-[85vh] flex flex-col items-center justify-center overflow-hidden', className)}>
+  <!-- Background effects -->
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div class="bg-glow-orange absolute inset-0"></div>
+    <div
+      class="bg-grid-pattern absolute inset-0 opacity-30"
+      style="mask-image: radial-gradient(ellipse 60% 50% at 50% 40%, black 0%, transparent 70%); -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 40%, black 0%, transparent 70%);"
+    ></div>
+  </div>
+
+  <!-- Floating component silhouettes -->
+  <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+    <!-- Button silhouette -->
+    <svg class="absolute top-[15%] left-[8%] h-12 w-24 text-brand-500/10 animate-float float-delay-1" viewBox="0 0 96 48" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="1" y="8" width="94" height="32" rx="6" />
+    </svg>
+    <!-- Card silhouette -->
+    <svg class="absolute top-[20%] right-[10%] h-20 w-16 text-brand-500/10 animate-float float-delay-3" viewBox="0 0 64 80" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="1" y="1" width="62" height="78" rx="8" />
+      <line x1="10" y1="16" x2="54" y2="16" />
+      <line x1="10" y1="30" x2="40" y2="30" />
+    </svg>
+    <!-- Switch silhouette -->
+    <svg class="absolute bottom-[25%] left-[12%] h-8 w-16 text-brand-500/10 animate-float float-delay-2" viewBox="0 0 64 32" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="1" y="1" width="62" height="30" rx="15" />
+      <circle cx="47" cy="16" r="10" />
+    </svg>
+    <!-- Input silhouette -->
+    <svg class="absolute bottom-[30%] right-[8%] h-10 w-28 text-brand-500/10 animate-float float-delay-4" viewBox="0 0 112 40" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="1" y="1" width="110" height="38" rx="6" />
+      <line x1="12" y1="20" x2="12" y2="20" stroke-linecap="round" stroke-width="2" />
+    </svg>
+    <!-- Badge silhouette -->
+    <svg class="absolute top-[40%] left-[5%] h-6 w-14 text-brand-500/8 animate-float float-delay-5" viewBox="0 0 56 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="1" y="1" width="54" height="22" rx="11" />
+    </svg>
+    <!-- Checkbox silhouette -->
+    <svg class="absolute top-[55%] right-[6%] h-8 w-8 text-brand-500/8 animate-float float-delay-1" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="2" y="2" width="28" height="28" rx="4" />
+      <polyline points="8,16 14,22 24,10" />
+    </svg>
+  </div>
+
+  <!-- Main content -->
+  <div
+    class="relative z-10 container mx-auto flex max-w-4xl flex-col items-center text-center"
+    style="padding-top: var(--space-page-top); padding-bottom: var(--space-section-sm);"
+  >
+    <div class="animate-slide-up opacity-0 delay-0">
+      <Badge variant="brand">Component Library</Badge>
+    </div>
+
+    <!-- Giant "57+" number -->
+    <div class="animate-slide-up opacity-0 delay-1 mt-8">
+      <span
+        class="font-display font-bold tracking-tighter text-foreground block"
+        style="font-size: clamp(6rem, 15vw, 12rem); line-height: 0.9;"
+      >
+        57<span class="text-brand-500">+</span>
+      </span>
+    </div>
+
+    <h1
+      class="font-display text-foreground animate-slide-up mt-4 font-bold tracking-tight text-balance opacity-0 delay-2"
+      style="font-size: var(--text-4xl);"
+    >
+      Production-Ready Components
+    </h1>
+
+    <p
+      class="text-foreground-muted animate-slide-up mx-auto mt-4 max-w-2xl opacity-0 delay-2"
+      style="font-size: var(--text-lg);"
+    >
+      Accessible, themeable, zero-JS by default. Built on Astro with progressive React hydration when you need it.
+    </p>
+
+    <div class="animate-slide-up mt-10 flex flex-col items-center justify-center gap-4 opacity-0 delay-3 sm:flex-row">
+      <Button variant="primary" size="lg" href="#categories">
+        Explore Components
+        <Icon name="arrow-down" size="sm" />
+      </Button>
+      <Button variant="outline" size="lg" href="https://docs.deployvelocity.com" target="_blank">
+        View Demo
+        <Icon name="arrow-right" size="sm" />
+      </Button>
+    </div>
+  </div>
+</section>

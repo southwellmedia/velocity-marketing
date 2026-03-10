@@ -1,0 +1,190 @@
+---
+/**
+ * AccessibilitySection
+ * Dark invert-section with two-column layout:
+ * Left: "Accessible by Default" checklist
+ * Right: "Zero JavaScript by Default" comparison
+ */
+import { cn } from '@/lib/cn';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+const accessibilityFeatures = [
+  'WCAG AAA contrast ratios',
+  'Full keyboard navigation',
+  'Screen reader tested',
+  'Reduced motion support',
+  'Semantic HTML throughout',
+];
+
+const jsComparisons = [
+  { component: 'Button.astro', size: '0kb JS', highlight: true },
+  { component: 'Card.astro', size: '0kb JS', highlight: true },
+  { component: 'Badge.astro', size: '0kb JS', highlight: true },
+  { component: 'Button.tsx', size: '2.1kb', highlight: false },
+  { component: 'Toast.tsx', size: '3.4kb', highlight: false },
+];
+---
+
+<section
+  class={cn(
+    'invert-section relative overflow-hidden',
+    className
+  )}
+  style="padding-top: var(--space-section); padding-bottom: var(--space-section);"
+  data-a11y-section
+>
+  <div class="bg-noise pointer-events-none absolute inset-0" aria-hidden="true"></div>
+
+  <div class="container relative z-10">
+    <div class="mx-auto max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+      <!-- Left: Accessible by Default -->
+      <div>
+        <span
+          class="text-brand-500 font-mono text-sm font-medium uppercase tracking-wider"
+        >
+          Built Right
+        </span>
+
+        <h2
+          class="font-display font-bold tracking-tight text-on-invert mt-4"
+          style="font-size: var(--text-3xl);"
+        >
+          Accessible by Default
+        </h2>
+
+        <p class="text-on-invert-muted mt-4" style="font-size: var(--text-base);">
+          Every component meets or exceeds WCAG 2.1 AA standards. No extra configuration needed.
+        </p>
+
+        <ul class="mt-8 space-y-4" data-a11y-list>
+          {accessibilityFeatures.map((feature, i) => (
+            <li
+              class="a11y-list-item flex items-center gap-3 opacity-0"
+              style={`animation-delay: ${i * 100}ms;`}
+            >
+              <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-500/20">
+                <Icon name="check" size="xs" class="text-brand-500" />
+              </div>
+              <span class="text-on-invert-secondary" style="font-size: var(--text-base);">
+                {feature}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Right: Zero JavaScript by Default -->
+      <div>
+        <span
+          class="text-brand-500 font-mono text-sm font-medium uppercase tracking-wider"
+        >
+          Progressive Enhancement
+        </span>
+
+        <h2
+          class="font-display font-bold tracking-tight text-on-invert mt-4"
+          style="font-size: var(--text-3xl);"
+        >
+          Zero JS by Default
+        </h2>
+
+        <p class="text-on-invert-muted mt-4" style="font-size: var(--text-base);">
+          Astro components ship zero JavaScript. Opt into React hydration only when interactivity demands it.
+        </p>
+
+        <div class="mt-8 space-y-3" data-a11y-pills>
+          {jsComparisons.map((item, i) => (
+            <div
+              class={cn(
+                'a11y-pill-item flex items-center justify-between rounded-lg border px-4 py-3 opacity-0',
+                item.highlight
+                  ? 'border-brand-500/30 bg-brand-500/5'
+                  : 'border-border-invert bg-surface-invert-secondary'
+              )}
+              style={`animation-delay: ${i * 100 + 200}ms;`}
+            >
+              <span class="font-mono text-sm text-on-invert-secondary">{item.component}</span>
+              <span
+                class={cn(
+                  'font-mono text-sm font-medium',
+                  item.highlight ? 'text-brand-500' : 'text-on-invert-muted'
+                )}
+              >
+                {item.size}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <p class="text-on-invert-muted text-sm mt-4">
+          <span class="text-brand-500 font-medium">Astro Islands</span> — hydrate React components only where needed with <code class="font-mono text-xs bg-surface-invert-tertiary px-1.5 py-0.5 rounded">client:visible</code>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  function initA11ySection() {
+    const section = document.querySelector('[data-a11y-section]');
+    if (!section || section.dataset.initialized) return;
+    section.dataset.initialized = 'true';
+
+    const items = section.querySelectorAll('.a11y-list-item, .a11y-pill-item');
+    let animated = false;
+
+    const observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting && !animated) {
+            animated = true;
+            items.forEach(function (item) {
+              item.classList.add('a11y-item-visible');
+            });
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(section);
+  }
+
+  initA11ySection();
+  document.addEventListener('astro:page-load', initA11ySection);
+</script>
+
+<style>
+  .a11y-item-visible {
+    animation: a11y-reveal 0.5s ease-out forwards;
+  }
+
+  @keyframes a11y-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .a11y-list-item,
+    .a11y-pill-item {
+      opacity: 1 !important;
+    }
+    .a11y-item-visible {
+      animation: none;
+      opacity: 1;
+    }
+  }
+</style>

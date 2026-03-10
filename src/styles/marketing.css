@@ -291,6 +291,60 @@
   .float-delay-4 { animation-delay: 0.8s; }
   .float-delay-5 { animation-delay: 1.0s; }
 
+  /* Marquee for ComponentWall */
+  .marquee-row {
+    display: flex;
+    gap: 0.75rem;
+    animation: marquee 40s linear infinite;
+  }
+
+  .marquee-row-reverse {
+    animation-direction: reverse;
+  }
+
+  .marquee-container:hover .marquee-row {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* Theme playground smooth transitions */
+  .theme-playground-preview * {
+    transition: color 0.4s ease, background-color 0.4s ease,
+                border-color 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  /* Code highlight line */
+  .code-highlight-line {
+    background: rgba(249, 76, 16, 0.08);
+    border-left: 2px solid var(--color-brand-500);
+  }
+
+  /* Category bento grid */
+  .category-bento-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .category-bento-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .category-bento-grid {
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto auto;
+      gap: 1.5rem;
+    }
+  }
+
   /* Reduced motion: disable marketing animations */
   @media (prefers-reduced-motion: reduce) {
     .animate-float {
@@ -299,6 +353,9 @@
     .animate-count-up {
       animation: none;
       opacity: 1;
+    }
+    .marquee-row {
+      animation: none;
     }
   }
 }

@@ -1,0 +1,163 @@
+---
+/**
+ * ComponentStatsStrip Section
+ * Four glass-card stat tiles following CredibilityStrip pattern.
+ * Stats: 8 Categories | 57+ Components | 3 Themes | 100 Lighthouse
+ */
+import { cn } from '@/lib/cn';
+import MarketingIcon from '@/components/ui/primitives/MarketingIcon/MarketingIcon.astro';
+import Card from '@/components/ui/data-display/Card/Card.astro';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+const stats = [
+  { value: 8, suffix: '', label: 'Categories', icon: 'mkt-components', sublabel: 'Form, Data, Feedback & more' },
+  { value: 57, suffix: '+', label: 'Components', icon: 'mkt-code', sublabel: 'Zero-JS by default' },
+  { value: 3, suffix: '', label: 'Themes', icon: 'mkt-tokens', sublabel: 'Default, Midnight & Ocean' },
+  { value: 100, suffix: '', label: 'Lighthouse', icon: 'mkt-speed', sublabel: 'Every category, every page' },
+];
+---
+
+<section
+  class={cn('relative py-[var(--space-section-sm)] overflow-hidden', className)}
+  data-component-stats-strip
+>
+  <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
+  <div class="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
+
+  <div class="container">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+      {stats.map((stat, i) => (
+        <Card
+          variant="default"
+          padding="md"
+          class={cn('comp-stats-card group relative opacity-0')}
+          style={`animation-delay: ${i * 100}ms;`}
+          data-comp-stats-card
+        >
+          <div class="absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-brand-500/40 to-transparent"></div>
+
+          <div class="mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500/10 text-brand-500 transition-transform duration-300 group-hover:scale-110">
+            <MarketingIcon name={stat.icon} size="sm" />
+          </div>
+
+          <span
+            class="font-display font-bold text-foreground block tracking-tight"
+            style="font-size: var(--text-4xl);"
+            data-comp-stat-number
+            data-target={stat.value}
+            data-suffix={stat.suffix}
+          >
+            0
+          </span>
+
+          <span class="text-sm font-medium text-foreground-muted block mt-1">
+            {stat.label}
+          </span>
+
+          <span class="text-xs text-foreground-subtle block mt-0.5">
+            {stat.sublabel}
+          </span>
+        </Card>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  function initComponentStatsStrip() {
+    const section = document.querySelector('[data-component-stats-strip]');
+    if (!section || section.dataset.initialized) return;
+    section.dataset.initialized = 'true';
+
+    const cards = section.querySelectorAll('[data-comp-stats-card]');
+    const numbers = section.querySelectorAll('[data-comp-stat-number]');
+    let animated = false;
+
+    function animateCount(el) {
+      const target = parseInt(el.dataset.target, 10);
+      const suffix = el.dataset.suffix || '';
+      const duration = 1000;
+      let startTime = null;
+
+      function step(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const progress = Math.min((timestamp - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(eased * target);
+        el.textContent = current + suffix;
+
+        if (progress < 1) {
+          requestAnimationFrame(step);
+        } else {
+          el.textContent = target + suffix;
+        }
+      }
+
+      requestAnimationFrame(step);
+    }
+
+    const observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting && !animated) {
+            animated = true;
+            cards.forEach(function (card) {
+              card.classList.add('comp-stats-card-visible');
+            });
+            numbers.forEach(function (el) {
+              animateCount(el);
+            });
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(section);
+  }
+
+  initComponentStatsStrip();
+  document.addEventListener('astro:page-load', initComponentStatsStrip);
+</script>
+
+<style>
+  .comp-stats-card {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .comp-stats-card:hover {
+    border-color: var(--color-brand-500);
+    box-shadow: 0 0 30px rgba(249, 76, 16, 0.06);
+  }
+
+  .comp-stats-card-visible {
+    animation: comp-stats-reveal 0.6s ease-out forwards;
+  }
+
+  @keyframes comp-stats-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .comp-stats-card {
+      opacity: 1 !important;
+    }
+    .comp-stats-card-visible {
+      animation: none;
+      opacity: 1;
+    }
+  }
+</style>
