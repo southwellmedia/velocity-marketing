@@ -2,16 +2,12 @@
 import '@/styles/global.css';
 import SEO from '@/components/seo/SEO.astro';
 import JsonLd from '@/components/seo/JsonLd.astro';
-import Hreflang from '@/components/i18n/Hreflang.astro';
 import Analytics from '@/components/layout/Analytics.astro';
 import ConsentBanner from '@/components/ui/overlay/ConsentBanner';
-import consentConfig from '@/config/consent.config';
+import { ClientRouter } from 'astro:transitions';
 import { createWebsiteSchema, createOrganizationSchema } from '@/lib/schema';
 import type { WebSite, Organization, WithContext } from 'schema-dts';
 import siteConfig from '@/config/site.config';
-import { type Locale, getLocaleFromPath } from '@/i18n/config';
-import { useTranslations } from '@/i18n/index';
-import type { RouteId } from '@/i18n/routes';
 
 interface Props {
   title?: string;
@@ -27,12 +23,6 @@ interface Props {
   noindex?: boolean;
   nofollow?: boolean;
   includeOrgSchema?: boolean;
-  lang?: Locale;
-  /**
-   * Route ID for generating proper hreflang tags.
-   * If provided, uses translated URLs; otherwise falls back to path-based hreflang.
-   */
-  routeId?: RouteId;
 }
 
 const {
@@ -44,37 +34,7 @@ const {
   noindex = false,
   nofollow = false,
   includeOrgSchema = false,
-  lang,
-  routeId,
 } = Astro.props;
-
-// Get locale from props or URL path
-const currentLocale = lang || getLocaleFromPath(Astro.url.pathname);
-
-// Build translated consent UI text
-const tc = useTranslations(currentLocale);
-const consentUi = {
-  heading: tc('consent.heading'),
-  description: tc('consent.description'),
-  acceptAll: tc('consent.acceptAll'),
-  declineAll: tc('consent.declineAll'),
-  customize: tc('consent.customize'),
-  savePreferences: tc('consent.savePreferences'),
-  settingsHeading: tc('consent.settingsHeading'),
-  privacyPolicyLabel: tc('consent.privacyPolicyLabel'),
-};
-const consentAlwaysOnLabel = tc('consent.alwaysOn');
-
-// Build GCM v2 default consent state from consent config
-// All non-required categories default to 'denied', required ones to 'granted'
-const gcmDefaults: Record<string, string> = {};
-for (const [, cat] of Object.entries(consentConfig.categories)) {
-  for (const gcmType of cat.gcmTypes) {
-    gcmDefaults[gcmType] = cat.required ? 'granted' : 'denied';
-  }
-}
-const gcmDefaultsJson = JSON.stringify(gcmDefaults);
-const consentEnabled = import.meta.env.PUBLIC_CONSENT_ENABLED === 'true';
 
 // Build JSON-LD schemas
 const schemas: Array<WithContext<WebSite> | WithContext<Organization>> = [createWebsiteSchema()];
@@ -84,18 +44,14 @@ if (includeOrgSchema) {
 ---
 
 <!doctype html>
-<html lang={currentLocale} class="scroll-smooth">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- Velocity Fonts: Outfit (display), Manrope (body), JetBrains Mono (code) -->
-    <!-- Self-hosted via Fontsource — no external requests, CSP-safe -->
-
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href={siteConfig.branding.favicon.svg} />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="theme-color" content={siteConfig.branding.colors.themeColor} />
 
@@ -113,33 +69,25 @@ if (includeOrgSchema) {
     <!-- RSS Feed -->
     <link rel="alternate" type="application/rss+xml" title={`${siteConfig.name} RSS Feed`} href="/rss.xml" />
 
-    <!-- Alternate language links for SEO (uses translated URLs when routeId provided) -->
-    <Hreflang routeId={routeId} />
-
     <!-- JSON-LD Structured Data -->
     <JsonLd schema={schemas} />
 
-    <!-- Google Consent Mode v2 defaults — MUST run before any gtag/GTM scripts -->
-    {consentEnabled && (
-      <script is:inline define:vars={{ gcmDefaultsJson }}>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(...args){dataLayer.push(args);}
-        gtag('consent', 'default', JSON.parse(gcmDefaultsJson));
-      </script>
-    )}
-
     <!-- Analytics (loads if PUBLIC_GA_MEASUREMENT_ID or PUBLIC_GTM_ID is set) -->
     <Analytics />
+
+    <!-- Client-side routing for view transitions -->
+    <ClientRouter />
 
     <!-- Theme script (runs before render to prevent flash) -->
     <script is:inline>
       (function () {
         const theme = localStorage.getItem('theme');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-        if (theme === 'light') {
-          document.documentElement.classList.remove('dark');
-        } else {
+        if (theme === 'dark' || (!theme && systemDark)) {
           document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
         }
       })();
     </script>
@@ -162,6 +110,6 @@ if (includeOrgSchema) {
 
     <slot name="footer" />
 
-    <ConsentBanner fullWidth ui={consentUi} alwaysOnLabel={consentAlwaysOnLabel} />
+    <ConsentBanner />
   </body>
 </html>

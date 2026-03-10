@@ -386,7 +386,7 @@ export default function Showcase() {
             className="font-display font-bold tracking-tight text-foreground"
             style={{ fontSize: 'var(--text-4xl)' }}
           >
-            Built with Velocity
+            Sites Built on the Velocity Astro Starter Kit
           </h2>
           <p className="mt-4 text-lg max-w-xl text-foreground-muted">
             Real sites shipped by developers using Velocity. From luxury real estate

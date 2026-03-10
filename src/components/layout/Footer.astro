@@ -1,7 +1,7 @@
 ---
 /**
- * Footer Component (i18n-aware)
- * Flexible footer with variant-based configuration and translations
+ * Footer Component
+ * Flexible footer with variant-based configuration
  *
  * Layouts:
  * - simple: Single row with logo, nav links, and social
@@ -10,19 +10,19 @@
  * - stacked: Vertically stacked logo, nav, copyright
  *
  * Features:
- * - Dynamic navigation with translations
+ * - Dynamic navigation from nav.config.ts (default) or custom nav prop
  * - Social links with icon support
- * - Copyright with {year} and {siteName} placeholders
+ * - Copyright with {year} placeholder
  * - Legal links section
  * - Full slot support for customization
  */
 import type { HTMLAttributes } from 'astro/types';
 import { cn } from '@/lib/cn';
+import { getNavItems, type NavItem as NavConfigItem } from '@/config/nav.config';
+import { footerVariants, footerColumnGridVariants } from './footer.variants';
 import Logo from '@/components/ui/marketing/Logo/Logo.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import siteConfig from '@/config/site.config';
-import { type Locale, getLocaleFromPath } from '@/i18n/config';
-import { useTranslations, getLocalizedPath, getNavRoutes, type TranslationKey } from '@/i18n/index';
 
 export interface NavItem {
   label: string;
@@ -47,8 +47,6 @@ export interface LegalLink {
 }
 
 interface Props extends HTMLAttributes<'footer'> {
-  /** Locale for translations */
-  locale?: Locale;
   /** Layout style */
   layout?: 'simple' | 'columns' | 'minimal' | 'stacked';
   /** Number of columns (only for columns layout) */
@@ -76,7 +74,6 @@ interface Props extends HTMLAttributes<'footer'> {
 }
 
 const {
-  locale: localeProp,
   layout = 'simple',
   columns = 3,
   background = 'default',
@@ -85,7 +82,7 @@ const {
   socialLinks = [],
   showSocial = true,
   showCopyright = true,
-  copyright,
+  copyright = '© {year} {siteName}. All rights reserved.',
   legalLinks = [],
   hideLogo = false,
   tagline,
@@ -93,20 +90,17 @@ const {
   ...attrs
 } = Astro.props;
 
-// Get locale from prop or infer from URL
-const locale = localeProp || getLocaleFromPath(Astro.url.pathname);
-const t = useTranslations(locale);
-
-// Get navigation items from i18n routes or custom nav
-const defaultNav = getNavRoutes(locale);
-const navItems: NavItem[] = nav || defaultNav.map(route => ({
-  label: t(route.label as TranslationKey) || route.label,
-  href: route.path,
+// Get navigation items
+const defaultNav: NavItem[] = getNavItems().map((item: NavConfigItem) => ({
+  label: item.label,
+  href: item.href,
 }));
+const navItems: NavItem[] = nav || defaultNav;
 
 // Default external links if none provided via nav
 const defaultExternalLinks: NavItem[] = [
-  { label: t('footer.links.github'), href: 'https://github.com/southwellmedia/velocity', external: true },
+  { label: 'GitHub', href: 'https://github.com/southwellmedia/velocity', external: true },
+  { label: 'License', href: 'https://github.com/southwellmedia/velocity/blob/main/LICENSE', external: true },
 ];
 
 // Add external links to nav if using default nav
@@ -114,8 +108,7 @@ const allNavItems: NavItem[] = nav ? navItems : [...navItems, ...defaultExternal
 
 // Process copyright text
 const currentYear = new Date().getFullYear();
-const defaultCopyright = copyright || t('footer.copyright', { year: currentYear });
-const processedCopyright = defaultCopyright
+const processedCopyright = copyright
   .replace('{year}', String(currentYear))
   .replace('{siteName}', siteConfig.name);
 
@@ -126,26 +119,8 @@ const hasColumnsSlot = Astro.slots.has('columns');
 const hasSocialSlot = Astro.slots.has('social');
 const hasBottomSlot = Astro.slots.has('bottom');
 
-// Background variants
-const backgrounds: Record<NonNullable<Props['background']>, string> = {
-  default: 'bg-background border-t border-border',
-  secondary: 'bg-surface-secondary border-t border-border',
-  invert: 'bg-surface-invert text-on-invert border-t border-border',
-};
-
-// Column grid classes
-const columnGrids: Record<NonNullable<Props['columns']>, string> = {
-  2: 'md:grid-cols-2',
-  3: 'md:grid-cols-3',
-  4: 'md:grid-cols-4',
-};
-
 // Compute footer classes
-const footerClasses = cn(
-  'py-12',
-  backgrounds[background],
-  className
-);
+const footerClasses = cn(footerVariants({ background }), className);
 
 // Social platform to icon mapping
 const socialIcons: Record<string, string> = {
@@ -158,51 +133,39 @@ const socialIcons: Record<string, string> = {
 function getSocialIcon(platform: string): string {
   return socialIcons[platform] || platform;
 }
-
-// Use tagline from props or translation
-const displayTagline = tagline || t('site.description');
 ---
 
 <footer class={footerClasses} {...attrs}>
   <div class="mx-auto max-w-6xl px-6">
     {layout === 'simple' && (
-      <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-[var(--space-stack-lg)]">
         {/* Logo & Tagline */}
         {!hideLogo && (
           <div class="flex flex-col items-center md:items-start gap-2">
             {hasLogoSlot ? (
               <slot name="logo" />
             ) : (
-              <a href={getLocalizedPath('home', locale)} class="flex items-center gap-2">
+              <a href="/" class="flex items-center gap-2">
                 <Logo size="sm" />
                 <span class="font-display text-lg font-bold text-brand-500">
                   {siteConfig.name}
                 </span>
               </a>
             )}
-            {(hasTaglineSlot || displayTagline) && (
-              <p class={cn(
-                'text-sm',
-                background === 'invert' ? 'text-on-invert/60' : 'text-foreground-muted'
-              )}>
-                {hasTaglineSlot ? <slot name="tagline" /> : displayTagline}
+            {(hasTaglineSlot || tagline) && (
+              <p class="text-sm text-foreground-muted">
+                {hasTaglineSlot ? <slot name="tagline" /> : tagline}
               </p>
             )}
           </div>
         )}
 
         {/* Navigation Links */}
-        <nav class={cn(
-          'flex flex-wrap justify-center gap-6 md:gap-8 text-sm font-medium',
-          background === 'invert' ? 'text-on-invert/70' : 'text-foreground-muted'
-        )}>
+        <nav class="flex flex-wrap justify-center gap-[var(--space-inline-lg)] md:gap-[var(--space-stack-lg)] text-sm font-medium text-foreground-muted">
           {allNavItems.map((item) => (
             <a
               href={item.href}
-              class={cn(
-                'transition-colors',
-                background === 'invert' ? 'hover:text-on-invert' : 'hover:text-foreground'
-              )}
+              class="transition-colors hover:text-foreground"
               target={item.external || item.href.startsWith('http') ? '_blank' : undefined}
               rel={item.external || item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
             >
@@ -216,16 +179,11 @@ const displayTagline = tagline || t('site.description');
           hasSocialSlot ? (
             <slot name="social" />
           ) : (
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-[var(--space-stack-md)]">
               {socialLinks.map((social) => (
                 <a
                   href={social.href}
-                  class={cn(
-                    'transition-colors',
-                    background === 'invert'
-                      ? 'text-on-invert/60 hover:text-on-invert'
-                      : 'text-foreground-muted hover:text-foreground'
-                  )}
+                  class="transition-colors text-foreground-muted hover:text-foreground"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label || `Follow us on ${social.platform}`}
@@ -241,40 +199,32 @@ const displayTagline = tagline || t('site.description');
 
     {layout === 'columns' && (
       <>
-        <div class={cn('grid grid-cols-1 gap-8', columnGrids[columns])}>
+        <div class={footerColumnGridVariants({ columns })}>
           {/* Logo Column */}
           {!hideLogo && (
-            <div class="space-y-4">
+            <div class="space-y-[var(--space-stack-md)]">
               {hasLogoSlot ? (
                 <slot name="logo" />
               ) : (
-                <a href={getLocalizedPath('home', locale)} class="flex items-center gap-2">
+                <a href="/" class="flex items-center gap-2">
                   <Logo size="sm" />
                   <span class="font-display text-lg font-bold text-brand-500">
                     {siteConfig.name}
                   </span>
                 </a>
               )}
-              {(hasTaglineSlot || displayTagline) && (
-                <p class={cn(
-                  'text-sm max-w-xs',
-                  background === 'invert' ? 'text-on-invert/60' : 'text-foreground-muted'
-                )}>
-                  {hasTaglineSlot ? <slot name="tagline" /> : displayTagline}
+              {(hasTaglineSlot || tagline) && (
+                <p class="text-sm max-w-xs text-foreground-muted">
+                  {hasTaglineSlot ? <slot name="tagline" /> : tagline}
                 </p>
               )}
               {/* Social Links in columns layout */}
               {showSocial && socialLinks.length > 0 && (
-                <div class="flex items-center gap-4 pt-2">
+                <div class="flex items-center gap-[var(--space-stack-md)] pt-2">
                   {socialLinks.map((social) => (
                     <a
                       href={social.href}
-                      class={cn(
-                        'transition-colors',
-                        background === 'invert'
-                          ? 'text-on-invert/60 hover:text-on-invert'
-                          : 'text-foreground-muted hover:text-foreground'
-                      )}
+                      class="transition-colors text-foreground-muted hover:text-foreground"
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={social.label || `Follow us on ${social.platform}`}
@@ -292,11 +242,8 @@ const displayTagline = tagline || t('site.description');
             <slot name="columns" />
           ) : (
             linkGroups.map((group) => (
-              <div class="space-y-4">
-                <h3 class={cn(
-                  'font-semibold text-sm',
-                  background === 'invert' ? 'text-on-invert' : 'text-foreground'
-                )}>
+              <div class="space-y-[var(--space-stack-md)]">
+                <h3 class="font-semibold text-sm text-foreground">
                   {group.title}
                 </h3>
                 <ul class="space-y-2">
@@ -304,12 +251,7 @@ const displayTagline = tagline || t('site.description');
                     <li>
                       <a
                         href={link.href}
-                        class={cn(
-                          'text-sm transition-colors',
-                          background === 'invert'
-                            ? 'text-on-invert/70 hover:text-on-invert'
-                            : 'text-foreground-muted hover:text-foreground'
-                        )}
+                        class="text-sm transition-colors text-foreground-muted hover:text-foreground"
                         target={link.external || link.href.startsWith('http') ? '_blank' : undefined}
                         rel={link.external || link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                       >
@@ -325,33 +267,22 @@ const displayTagline = tagline || t('site.description');
 
         {/* Bottom section */}
         {(showCopyright || legalLinks.length > 0) && (
-          <div class={cn(
-            'mt-12 pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-4',
-            background === 'invert' ? 'border-on-invert/10' : 'border-border'
-          )}>
+          <div class="mt-[var(--space-section-header)] pt-[var(--space-stack-lg)] border-t border-border flex flex-col md:flex-row justify-between items-center gap-[var(--space-stack-md)]">
             {hasBottomSlot ? (
               <slot name="bottom" />
             ) : (
               <>
                 {showCopyright && (
-                  <p class={cn(
-                    'text-sm',
-                    background === 'invert' ? 'text-on-invert/60' : 'text-foreground-muted'
-                  )}>
+                  <p class="text-sm text-foreground-muted">
                     {processedCopyright}
                   </p>
                 )}
                 {legalLinks.length > 0 && (
-                  <div class="flex items-center gap-6">
+                  <div class="flex items-center gap-[var(--space-inline-lg)]">
                     {legalLinks.map((link) => (
                       <a
                         href={link.href}
-                        class={cn(
-                          'text-sm transition-colors',
-                          background === 'invert'
-                            ? 'text-on-invert/60 hover:text-on-invert'
-                            : 'text-foreground-muted hover:text-foreground'
-                        )}
+                        class="text-sm transition-colors text-foreground-muted hover:text-foreground"
                       >
                         {link.label}
                       </a>
@@ -368,10 +299,7 @@ const displayTagline = tagline || t('site.description');
     {layout === 'minimal' && (
       <div class="text-center">
         {showCopyright && (
-          <p class={cn(
-            'text-sm',
-            background === 'invert' ? 'text-on-invert/60' : 'text-foreground-muted'
-          )}>
+          <p class="text-sm text-foreground-muted">
             {processedCopyright}
           </p>
         )}
@@ -379,13 +307,13 @@ const displayTagline = tagline || t('site.description');
     )}
 
     {layout === 'stacked' && (
-      <div class="flex flex-col items-center gap-8 text-center">
+      <div class="flex flex-col items-center gap-[var(--space-stack-lg)] text-center">
         {/* Logo */}
         {!hideLogo && (
           hasLogoSlot ? (
             <slot name="logo" />
           ) : (
-            <a href={getLocalizedPath('home', locale)} class="flex items-center gap-2">
+            <a href="/" class="flex items-center gap-2">
               <Logo size="md" />
               <span class="font-display text-xl font-bold text-brand-500">
                 {siteConfig.name}
@@ -395,27 +323,18 @@ const displayTagline = tagline || t('site.description');
         )}
 
         {/* Tagline */}
-        {(hasTaglineSlot || displayTagline) && (
-          <p class={cn(
-            'text-sm max-w-md',
-            background === 'invert' ? 'text-on-invert/60' : 'text-foreground-muted'
-          )}>
-            {hasTaglineSlot ? <slot name="tagline" /> : displayTagline}
+        {(hasTaglineSlot || tagline) && (
+          <p class="text-sm max-w-md text-foreground-muted">
+            {hasTaglineSlot ? <slot name="tagline" /> : tagline}
           </p>
         )}
 
         {/* Navigation Links */}
-        <nav class={cn(
-          'flex flex-wrap justify-center gap-6 text-sm font-medium',
-          background === 'invert' ? 'text-on-invert/70' : 'text-foreground-muted'
-        )}>
+        <nav class="flex flex-wrap justify-center gap-[var(--space-inline-lg)] text-sm font-medium text-foreground-muted">
           {allNavItems.map((item) => (
             <a
               href={item.href}
-              class={cn(
-                'transition-colors',
-                background === 'invert' ? 'hover:text-on-invert' : 'hover:text-foreground'
-              )}
+              class="transition-colors hover:text-foreground"
               target={item.external || item.href.startsWith('http') ? '_blank' : undefined}
               rel={item.external || item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
             >
@@ -426,16 +345,11 @@ const displayTagline = tagline || t('site.description');
 
         {/* Social Links */}
         {showSocial && socialLinks.length > 0 && (
-          <div class="flex items-center gap-4">
+          <div class="flex items-center gap-[var(--space-stack-md)]">
             {socialLinks.map((social) => (
               <a
                 href={social.href}
-                class={cn(
-                  'transition-colors',
-                  background === 'invert'
-                    ? 'text-on-invert/60 hover:text-on-invert'
-                    : 'text-foreground-muted hover:text-foreground'
-                )}
+                class="transition-colors text-foreground-muted hover:text-foreground"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={social.label || `Follow us on ${social.platform}`}
@@ -448,29 +362,18 @@ const displayTagline = tagline || t('site.description');
 
         {/* Copyright & Legal */}
         {(showCopyright || legalLinks.length > 0) && (
-          <div class={cn(
-            'pt-8 border-t w-full flex flex-col items-center gap-4',
-            background === 'invert' ? 'border-on-invert/10' : 'border-border'
-          )}>
+          <div class="pt-[var(--space-stack-lg)] border-t border-border w-full flex flex-col items-center gap-[var(--space-stack-md)]">
             {showCopyright && (
-              <p class={cn(
-                'text-sm',
-                background === 'invert' ? 'text-on-invert/60' : 'text-foreground-muted'
-              )}>
+              <p class="text-sm text-foreground-muted">
                 {processedCopyright}
               </p>
             )}
             {legalLinks.length > 0 && (
-              <div class="flex items-center gap-6">
+              <div class="flex items-center gap-[var(--space-inline-lg)]">
                 {legalLinks.map((link) => (
                   <a
                     href={link.href}
-                    class={cn(
-                      'text-sm transition-colors',
-                      background === 'invert'
-                        ? 'text-on-invert/60 hover:text-on-invert'
-                        : 'text-foreground-muted hover:text-foreground'
-                    )}
+                    class="text-sm transition-colors text-foreground-muted hover:text-foreground"
                   >
                     {link.label}
                   </a>

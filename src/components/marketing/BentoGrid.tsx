@@ -752,7 +752,7 @@ function ContentSearchCard({ reducedMotion }: { reducedMotion: boolean }) {
           <MarketingIcon name="mkt-content" className="h-5 w-5 shrink-0" />
         </div>
         <h3 className="font-display text-lg font-semibold text-foreground">
-          Content & Search
+          Content Collections, MDX & Static Search
         </h3>
       </div>
       <p className="mb-6 text-sm text-foreground-muted">
@@ -1023,7 +1023,7 @@ function SpeedCard({ reducedMotion }: { reducedMotion: boolean }) {
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-500">
           <MarketingIcon name="mkt-speed" className="h-5 w-5 shrink-0" />
         </div>
-        <h3 className="font-display text-lg font-semibold text-foreground">Built for Speed</h3>
+        <h3 className="font-display text-lg font-semibold text-foreground">Astro Performance: Zero JS by Default</h3>
       </div>
       <p className="mb-6 text-sm text-foreground-muted">
         Sub-second loads on every metric. Zero JavaScript by default means your pages fly.
@@ -1157,7 +1157,7 @@ export default function BentoGrid() {
             className="font-display font-bold tracking-tight text-foreground"
             style={{ fontSize: 'var(--text-4xl)' }}
           >
-            Everything you need to ship
+            What the Astro 6 Boilerplate Includes
           </h2>
           <p className="mt-4 text-lg text-foreground-muted">
             Built on Astro 6 with a complete design system, 57+ components, and production-ready

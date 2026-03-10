@@ -6,18 +6,15 @@
  * Shows a banner with Accept/Decline + Customize settings panel using Dialog.
  * Only renders when PUBLIC_CONSENT_ENABLED is true.
  */
+import { PUBLIC_CONSENT_ENABLED, PUBLIC_PRIVACY_POLICY_URL } from 'astro:env/client';
 import consentConfig from '@/config/consent.config';
 import Dialog from '@/components/ui/overlay/Dialog';
 import Button from '@/components/ui/form/Button';
 import Switch from '@/components/ui/form/Switch';
 import type { ConsentUIText } from '@/lib/consent.types';
 
-const PUBLIC_CONSENT_ENABLED = import.meta.env.PUBLIC_CONSENT_ENABLED === 'true';
-const PUBLIC_PRIVACY_POLICY_URL = import.meta.env.PUBLIC_PRIVACY_POLICY_URL || '';
-
 interface Props {
   position?: 'top' | 'bottom';
-  fullWidth?: boolean;
   ui?: Partial<ConsentUIText>;
   alwaysOnLabel?: string;
   class?: string;
@@ -25,7 +22,6 @@ interface Props {
 
 const {
   position = 'bottom',
-  fullWidth = false,
   ui: uiOverrides,
   alwaysOnLabel: alwaysOnLabelProp,
   class: className,
@@ -60,7 +56,6 @@ const configJson = JSON.stringify(consentConfig);
       class:list={[
         'consent-banner',
         isTop ? 'consent-banner--top' : 'consent-banner--bottom',
-        fullWidth && 'consent-banner--full',
         className,
       ]}
       role="dialog"
@@ -201,6 +196,7 @@ const configJson = JSON.stringify(consentConfig);
           if (typeof w.gtag !== 'function') {
             w.dataLayer = w.dataLayer || [];
             if (typeof w.gtag !== 'function') {
+              // eslint-disable-next-line prefer-rest-params -- GA4 requires Arguments object
               w.gtag = function() { w.dataLayer.push(arguments as unknown as Record<string, unknown>); };
             }
           }
@@ -491,10 +487,6 @@ const configJson = JSON.stringify(consentConfig);
     padding: 1.25rem 1.5rem;
     background: var(--background-elevated);
     box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.08);
-  }
-
-  .consent-banner--full .consent-banner-inner {
-    max-width: none;
   }
 
   .consent-banner--bottom .consent-banner-inner {

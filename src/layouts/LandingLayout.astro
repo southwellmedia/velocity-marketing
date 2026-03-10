@@ -1,8 +1,11 @@
 ---
 /**
- * PageLayout
- * Layout wrapper for standard content pages (non-landing)
- * Uses Header + Footer with content page configuration
+ * LandingLayout
+ * Layout wrapper for landing-style pages (marketing, demo, showcase)
+ * Uses Header + Footer with landing-specific configuration
+ *
+ * This layout is part of the "demo" layer - it can be optionally installed
+ * via CLI for users who want the full landing page experience.
  */
 import BaseLayout from './BaseLayout.astro';
 import Header from '@/components/layout/Header.astro';
@@ -15,9 +18,18 @@ interface Props {
   imageAlt?: string;
   noindex?: boolean;
   nofollow?: boolean;
+  includeOrgSchema?: boolean;
 }
 
-const { title, description, image, imageAlt, noindex, nofollow } = Astro.props;
+const {
+  title,
+  description,
+  image,
+  imageAlt,
+  noindex = false,
+  nofollow = false,
+  includeOrgSchema = false,
+} = Astro.props;
 ---
 
 <BaseLayout
@@ -27,12 +39,12 @@ const { title, description, image, imageAlt, noindex, nofollow } = Astro.props;
   imageAlt={imageAlt}
   noindex={noindex}
   nofollow={nofollow}
+  includeOrgSchema={includeOrgSchema}
 >
   <Header
     slot="header"
     position="fixed"
     size="lg"
-    showActiveState
     showCta
     cta={{ label: 'View Docs', href: 'https://docs.deployvelocity.com' }}
     extraNav={[{ label: 'Features', href: '#features' }]}
@@ -47,9 +59,7 @@ const { title, description, image, imageAlt, noindex, nofollow } = Astro.props;
     ]}
   />
 
-  <main class="min-h-screen pt-16">
-    <slot />
-  </main>
+  <slot />
 
-  <Footer slot="footer" layout="simple" />
+  <Footer slot="footer" layout="simple" background="secondary" showCopyright={false} />
 </BaseLayout>

@@ -1,9 +1,10 @@
 ---
 /**
- * Marketing Layout
- * Dedicated layout for marketing/landing pages with transparent header and editorial footer.
+ * MarketingLayout
+ * Layout wrapper for marketing pages with floating capsule header
+ * Uses Header shape="floating" for a distinctive visual identity
  */
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import BaseLayout from './BaseLayout.astro';
 import Header from '@/components/layout/Header.astro';
 import MarketingFooter from '@/components/marketing/MarketingFooter.astro';
 import '@/styles/marketing.css';
@@ -13,18 +14,38 @@ interface Props {
   description?: string;
   image?: string;
   imageAlt?: string;
+  noindex?: boolean;
+  nofollow?: boolean;
+  includeOrgSchema?: boolean;
 }
 
-const { title, description, image, imageAlt } = Astro.props;
+const {
+  title,
+  description,
+  image,
+  imageAlt,
+  noindex = false,
+  nofollow = false,
+  includeOrgSchema = false,
+} = Astro.props;
 ---
 
-<BaseLayout title={title} description={description} image={image} imageAlt={imageAlt}>
+<BaseLayout
+  title={title}
+  description={description}
+  image={image}
+  imageAlt={imageAlt}
+  noindex={noindex}
+  nofollow={nofollow}
+  includeOrgSchema={includeOrgSchema}
+>
   <Header
     slot="header"
     shape="floating"
     variant="transparent"
     position="fixed"
     colorScheme="invert"
+    nav={[]}
     showCta={true}
     cta={{ label: 'View Demo', href: 'https://demo.deployvelocity.com' }}
     actions={[{ icon: 'github', href: 'https://github.com/southwellmedia/velocity', label: 'GitHub', iconOnly: true, target: '_blank' }]}
