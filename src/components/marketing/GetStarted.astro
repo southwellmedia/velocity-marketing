@@ -7,6 +7,7 @@
 import Logo from '@/components/ui/marketing/Logo/Logo.astro';
 import NpmCopyButton from '@/components/ui/marketing/NpmCopyButton/NpmCopyButton.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import GitHubStars from '@/components/marketing/GitHubStars';
 ---
 
 <section id="get-started" class="relative overflow-hidden" style="padding-top: var(--space-section); padding-bottom: var(--space-section);">
@@ -56,15 +57,7 @@ import Icon from '@/components/ui/primitives/Icon/Icon.astro';
         <Icon name="github" size="sm" />
         GitHub
       </a>
-      <a
-        href="https://github.com/southwellmedia/velocity"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center gap-1.5 text-sm text-foreground-muted hover:text-foreground transition-colors duration-300"
-      >
-        <Icon name="star" size="sm" />
-        Star on GitHub
-      </a>
+      <GitHubStars client:visible />
     </div>
   </div>
 </section>
