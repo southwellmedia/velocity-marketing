@@ -534,6 +534,63 @@ const buttonId = `${menuId}-button`;
   document.addEventListener('astro:after-swap', initScrollWatcher);
 </script>
 
+<script>
+  const GH_REPO = 'southwellmedia/velocity';
+  const CACHE_KEY = 'gh-stars';
+  const CACHE_TTL = 1000 * 60 * 10; // 10 minutes
+
+  function initStarCount() {
+    // Find GitHub action buttons by href
+    const ghButtons = document.querySelectorAll<HTMLAnchorElement>(
+      `header a[href="https://github.com/${GH_REPO}"][aria-label="GitHub"]`
+    );
+    if (!ghButtons.length) return;
+
+    // Avoid duplicate badges
+    ghButtons.forEach((btn) => {
+      if (btn.querySelector('.gh-star-badge')) return;
+    });
+
+    function render(count: number) {
+      ghButtons.forEach((btn) => {
+        if (btn.querySelector('.gh-star-badge')) return;
+        const badge = document.createElement('span');
+        badge.className = 'gh-star-badge';
+        badge.textContent = count.toLocaleString();
+        btn.appendChild(badge);
+      });
+    }
+
+    // Check cache first
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (raw) {
+        const entry = JSON.parse(raw);
+        if (Date.now() - entry.ts < CACHE_TTL) {
+          render(entry.count);
+          return;
+        }
+      }
+    } catch { /* ignore */ }
+
+    // Fetch from GitHub API
+    fetch(`https://api.github.com/repos/${GH_REPO}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (typeof data.stargazers_count === 'number') {
+          render(data.stargazers_count);
+          try {
+            localStorage.setItem(CACHE_KEY, JSON.stringify({ count: data.stargazers_count, ts: Date.now() }));
+          } catch { /* ignore */ }
+        }
+      })
+      .catch(() => { /* fail silently */ });
+  }
+
+  initStarCount();
+  document.addEventListener('astro:page-load', initStarCount);
+</script>
+
 <style is:global>
   .mobile-menu-blur {
     opacity: 0.3;
@@ -617,6 +674,25 @@ const buttonId = `${menuId}-button`;
   }
   [data-header-shape="floating"][data-header-color-scheme="invert"][data-scrolled] .hdr-invert-cta:hover {
     opacity: 0.9;
+  }
+
+  /* ===== GitHub star badge ===== */
+  .gh-star-badge {
+    font-size: 0.625rem;
+    font-weight: 600;
+    line-height: 1;
+    padding: 2px 5px;
+    border-radius: 9999px;
+    background: var(--color-foreground, currentColor);
+    color: var(--color-background, #fff);
+    opacity: 0.8;
+    margin-left: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  [data-header-shape="floating"][data-header-color-scheme="invert"]:not([data-scrolled]) .gh-star-badge {
+    background: rgba(255, 255, 255, 0.9);
+    color: #111;
   }
 
   /* ===== Reduced motion ===== */
