@@ -546,18 +546,23 @@ const buttonId = `${menuId}-button`;
     );
     if (!ghButtons.length) return;
 
-    // Avoid duplicate badges
-    ghButtons.forEach((btn) => {
-      if (btn.querySelector('.gh-star-badge')) return;
-    });
+    // Skip if already rendered
+    const alreadyRendered = Array.from(ghButtons).every(
+      (btn) => btn.parentElement?.classList.contains('gh-star-wrapper')
+    );
+    if (alreadyRendered) return;
 
     function render(count: number) {
       ghButtons.forEach((btn) => {
-        if (btn.querySelector('.gh-star-badge')) return;
+        if (btn.parentElement?.classList.contains('gh-star-wrapper')) return;
+        const wrapper = document.createElement('span');
+        wrapper.className = 'gh-star-wrapper';
+        btn.parentNode!.insertBefore(wrapper, btn);
+        wrapper.appendChild(btn);
         const badge = document.createElement('span');
         badge.className = 'gh-star-badge';
         badge.textContent = count.toLocaleString();
-        btn.appendChild(badge);
+        wrapper.appendChild(badge);
       });
     }
 
@@ -677,17 +682,24 @@ const buttonId = `${menuId}-button`;
   }
 
   /* ===== GitHub star badge ===== */
+  .gh-star-wrapper {
+    position: relative;
+  }
+
   .gh-star-badge {
-    font-size: 0.625rem;
-    font-weight: 600;
+    position: absolute;
+    top: -4px;
+    right: -8px;
+    font-size: 0.5625rem;
+    font-weight: 700;
     line-height: 1;
-    padding: 2px 5px;
+    padding: 2px 4px;
     border-radius: 9999px;
-    background: var(--color-foreground, currentColor);
-    color: var(--color-background, #fff);
-    opacity: 0.8;
-    margin-left: 2px;
+    background: var(--color-foreground);
+    color: var(--color-background);
     font-variant-numeric: tabular-nums;
+    pointer-events: none;
+    white-space: nowrap;
   }
 
   [data-header-shape="floating"][data-header-color-scheme="invert"]:not([data-scrolled]) .gh-star-badge {
