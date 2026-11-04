@@ -52,7 +52,7 @@ export interface SiteConfig {
 
 const siteConfig: SiteConfig = {
   name: 'Velocity',
-  description: 'The production-ready Astro 7 starter kit and boilerplate. 57+ components, a full design token system, built-in i18n, and perfect Lighthouse scores. Free and open source.',
+  description: 'The production-ready Astro 7 starter kit and boilerplate. 57+ components, a full design token system, built-in i18n, and 100 Lighthouse scores for accessibility and SEO. Free and open source.',
   url: SITE_URL || 'https://example.com',
   ogImage: '/og-default.png',
   author: 'Southwell Media',
