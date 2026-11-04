@@ -35,7 +35,7 @@ const { title, description, image, imageAlt, noindex, nofollow } = Astro.props;
     showActiveState
     showCta
     cta={{ label: 'View Docs', href: 'https://docs.deployvelocity.com' }}
-    extraNav={[{ label: 'Features', href: '#features' }]}
+    extraNav={[{ label: 'Features', href: '/#features' }]}
     actions={[
       {
         icon: 'github',
@@ -47,9 +47,9 @@ const { title, description, image, imageAlt, noindex, nofollow } = Astro.props;
     ]}
   />
 
-  <main class="min-h-screen pt-16">
+  <div class="min-h-screen pt-16">
     <slot />
-  </main>
+  </div>
 
   <Footer slot="footer" layout="simple" />
 </BaseLayout>

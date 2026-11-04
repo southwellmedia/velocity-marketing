@@ -29,8 +29,8 @@ const indexPanelHtml = `
 <div class="flex"><span class="ide-ln">9</span><span class="text-foreground-muted">---</span></div>
 <div class="flex"><span class="ide-ln">10</span><span>&nbsp;</span></div>
 <div class="flex"><span class="ide-ln">11</span><span><span class="text-brand-300">&lt;MarketingLayout</span></span></div>
-<div class="flex"><span class="ide-ln">12</span><span class="pl-4"><span class="text-brand-500">title</span>=<span class="text-success">"Velocity &mdash; The Astro 6 Starter Kit"</span></span></div>
-<div class="flex"><span class="ide-ln">13</span><span class="pl-4"><span class="text-brand-500">description</span>=<span class="text-success">"Production-ready Astro 6 starter..."</span></span></div>
+<div class="flex"><span class="ide-ln">12</span><span class="pl-4"><span class="text-brand-500">title</span>=<span class="text-success">"Velocity &mdash; The Astro 7 Starter Kit"</span></span></div>
+<div class="flex"><span class="ide-ln">13</span><span class="pl-4"><span class="text-brand-500">description</span>=<span class="text-success">"Production-ready Astro 7 starter..."</span></span></div>
 <div class="flex"><span class="ide-ln">14</span><span><span class="text-brand-300">&gt;</span></span></div>
 <div class="flex"><span class="ide-ln">15</span><span class="pl-4"><span class="text-brand-300">&lt;Hero /&gt;</span></span></div>
 <div class="flex"><span class="ide-ln">16</span><span class="pl-4"><span class="text-brand-300">&lt;CredibilityStrip /&gt;</span></span></div>
@@ -80,7 +80,7 @@ const heroPanelHtml = `
 <div class="flex"><span class="ide-ln">8</span><span>&nbsp;</span></div>
 <div class="flex"><span class="ide-ln">9</span><span><span class="text-brand-300">&lt;section</span> <span class="text-brand-500">class</span>=<span class="text-foreground">{cn(<span class="text-success">'relative min-h-screen flex flex-col'</span>, className)}</span><span class="text-brand-300">&gt;</span></span></div>
 <div class="flex"><span class="ide-ln">10</span><span class="pl-4"><span class="text-brand-300">&lt;div</span> <span class="text-brand-500">class</span>=<span class="text-success">"container relative z-10 text-center max-w-4xl"</span><span class="text-brand-300">&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">11</span><span class="pl-8"><span class="text-brand-300">&lt;Badge</span> <span class="text-brand-500">variant</span>=<span class="text-success">"brand"</span><span class="text-brand-300">&gt;</span><span class="text-foreground">Astro 6 Starter Kit</span><span class="text-brand-300">&lt;/Badge&gt;</span></span></div>
+<div class="flex"><span class="ide-ln">11</span><span class="pl-8"><span class="text-brand-300">&lt;Badge</span> <span class="text-brand-500">variant</span>=<span class="text-success">"brand"</span><span class="text-brand-300">&gt;</span><span class="text-foreground">Astro 7 Starter Kit</span><span class="text-brand-300">&lt;/Badge&gt;</span></span></div>
 <div class="flex"><span class="ide-ln">12</span><span>&nbsp;</span></div>
 <div class="flex"><span class="ide-ln">13</span><span class="pl-8"><span class="text-brand-300">&lt;h1</span> <span class="text-brand-500">class</span>=<span class="text-success">"font-display text-7xl font-bold mt-6 text-foreground"</span><span class="text-brand-300">&gt;</span></span></div>
 <div class="flex"><span class="ide-ln">14</span><span class="pl-12"><span class="text-foreground">Ship </span><span class="text-brand-300">&lt;span</span> <span class="text-brand-500">class</span>=<span class="text-success">"text-brand-500"</span><span class="text-brand-300">&gt;</span><span class="text-foreground">faster.</span><span class="text-brand-300">&lt;/span&gt;</span></span></div>
@@ -105,7 +105,7 @@ const heroPanelHtml = `
 const configPanelHtml = `
 <div class="flex"><span class="ide-ln">1</span><span><span class="text-brand-400">const</span> <span class="text-foreground">siteConfig</span>: <span class="text-brand-300">SiteConfig</span> = <span class="text-foreground">{</span></span></div>
 <div class="flex"><span class="ide-ln">2</span><span class="pl-4"><span class="text-brand-500">name</span>: <span class="text-success">'Velocity'</span>,</span></div>
-<div class="flex"><span class="ide-ln">3</span><span class="pl-4"><span class="text-brand-500">description</span>: <span class="text-success">'The production-ready Astro 6 starter...'</span>,</span></div>
+<div class="flex"><span class="ide-ln">3</span><span class="pl-4"><span class="text-brand-500">description</span>: <span class="text-success">'The production-ready Astro 7 starter...'</span>,</span></div>
 <div class="flex"><span class="ide-ln">4</span><span class="pl-4"><span class="text-brand-500">url</span>: <span class="text-foreground">SITE_URL</span> || <span class="text-success">'https://example.com'</span>,</span></div>
 <div class="flex"><span class="ide-ln">5</span><span class="pl-4"><span class="text-brand-500">ogImage</span>: <span class="text-success">'/og-default.png'</span>,</span></div>
 <div class="flex"><span class="ide-ln">6</span><span class="pl-4"><span class="text-brand-500">author</span>: <span class="text-success">'Southwell Media'</span>,</span></div>
@@ -150,14 +150,14 @@ const configPanelHtml = `
   >
     <div>
       <div class="animate-slide-up opacity-0 delay-0">
-        <Badge variant="brand">Astro 6 Starter Kit & Boilerplate</Badge>
+        <a href="/blog/velocity-2-astro-7"><Badge variant="brand">Velocity 2.0 is here: rebuilt for Astro 7</Badge></a>
       </div>
 
       <h1
         class="font-display text-foreground animate-slide-up mt-6 font-bold tracking-tight text-balance opacity-0 delay-1"
         style="font-size: var(--text-5xl);"
       >
-        The Astro 6 Starter Kit<br />
+        The Astro 7 Starter Kit<br />
         <span class="bg-brand-500 mt-2 inline-block rounded-lg px-3 py-1 text-white"
           >Built for Production</span
         >
@@ -167,8 +167,9 @@ const configPanelHtml = `
         class="text-foreground-muted animate-slide-up mx-auto mt-6 max-w-3xl opacity-0 delay-2"
         style="font-size: var(--text-xl);"
       >
-        The production-ready Astro 6 starter kit and boilerplate. 57+ components, a complete design
-        token system, built-in i18n, and everything you need to launch faster.
+        The production-ready Astro 7 starter kit and boilerplate. 57+ components, a complete design
+        token system, built-in i18n, strict CSP, working forms, and everything you need to launch
+        faster.
       </p>
 
       <div

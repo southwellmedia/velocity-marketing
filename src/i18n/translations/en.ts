@@ -33,7 +33,7 @@ export const en = {
 
   // Hero Section
   hero: {
-    badge: 'v1.0 Public Beta is Live',
+    badge: 'Velocity 2.0 is here',
     title: 'Your next site',
     titleHighlight: 'starts here.',
     description:
@@ -46,7 +46,7 @@ export const en = {
   // Tech Stack Section
   techStack: {
     astro: {
-      name: 'Astro 6',
+      name: 'Astro 7',
       desc: 'Server islands & content layer',
     },
     tailwind: {
@@ -89,7 +89,7 @@ export const en = {
         desc: '100/100 Core Web Vitals',
         title: 'Zero JS by Default',
         content:
-          "We utilize Astro's island architecture to ensure your marketing pages ship 0kb of JavaScript to the client unless explicitly interactive.",
+          "We utilize Astro's island architecture to ensure your marketing pages ship about 1.2KB of JavaScript (gzipped) to the client unless explicitly interactive.",
       },
       components: {
         label: 'Components',
@@ -149,7 +149,7 @@ export const en = {
     description:
       'Join the developers building faster, better websites with Velocity. Open source and free forever.',
     docs: 'Read the Docs',
-    command: 'npm create velocity@latest',
+    command: 'npm create velocity-astro@latest',
   },
 
   // Footer

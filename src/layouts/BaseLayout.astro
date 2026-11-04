@@ -4,7 +4,6 @@ import SEO from '@/components/seo/SEO.astro';
 import JsonLd from '@/components/seo/JsonLd.astro';
 import Analytics from '@/components/layout/Analytics.astro';
 import ConsentBanner from '@/components/ui/overlay/ConsentBanner';
-import { ClientRouter } from 'astro:transitions';
 import { createWebsiteSchema, createOrganizationSchema } from '@/lib/schema';
 import type { WebSite, Organization, WithContext } from 'schema-dts';
 import siteConfig from '@/config/site.config';
@@ -23,6 +22,7 @@ interface Props {
   noindex?: boolean;
   nofollow?: boolean;
   includeOrgSchema?: boolean;
+  lang?: string;
 }
 
 const {
@@ -34,6 +34,7 @@ const {
   noindex = false,
   nofollow = false,
   includeOrgSchema = false,
+  lang = 'en',
 } = Astro.props;
 
 // Build JSON-LD schemas
@@ -44,7 +45,7 @@ if (includeOrgSchema) {
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang={lang} class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -75,14 +76,10 @@ if (includeOrgSchema) {
     <!-- Analytics (loads if PUBLIC_GA_MEASUREMENT_ID or PUBLIC_GTM_ID is set) -->
     <Analytics />
 
-    <!-- Client-side routing for view transitions -->
-    <ClientRouter />
-
     <!-- Theme script (runs before render to prevent flash) -->
     <script is:inline>
       (function () {
         const theme = localStorage.getItem('theme');
-        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
         if (theme === 'dark' || (!theme)) {
           document.documentElement.classList.add('dark');

@@ -1023,10 +1023,10 @@ function SpeedCard({ reducedMotion }: { reducedMotion: boolean }) {
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-500">
           <MarketingIcon name="mkt-speed" className="h-5 w-5 shrink-0" />
         </div>
-        <h3 className="font-display text-lg font-semibold text-foreground">Astro Performance: Zero JS by Default</h3>
+        <h3 className="font-display text-lg font-semibold text-foreground">Astro Performance: Almost No JS by Default</h3>
       </div>
       <p className="mb-6 text-sm text-foreground-muted">
-        Sub-second loads on every metric. Zero JavaScript by default means your pages fly.
+        About 1.2 KB of baseline JavaScript per page, gzipped, means your pages fly.
       </p>
 
       <div className="space-y-4">
@@ -1103,7 +1103,7 @@ function SeoOgCard({ reducedMotion }: { reducedMotion: boolean }) {
               <span className="text-[10px] text-foreground-subtle font-mono">velocity.dev</span>
             </div>
             <p className="text-xs font-semibold text-foreground font-display leading-tight">
-              Velocity — Ship faster with Astro 6
+              Velocity — Ship faster with Astro 7
             </p>
             <p className="text-[10px] text-foreground-muted leading-snug">
               The production-ready Astro starter with 57+ components, design tokens, and perfect Lighthouse scores.
@@ -1157,11 +1157,11 @@ export default function BentoGrid() {
             className="font-display font-bold tracking-tight text-foreground"
             style={{ fontSize: 'var(--text-4xl)' }}
           >
-            What the Astro 6 Boilerplate Includes
+            What the Astro 7 Boilerplate Includes
           </h2>
           <p className="mt-4 text-lg text-foreground-muted">
-            Built on Astro 6 with a complete design system, 57+ components, and production-ready
-            defaults.
+            Built on Astro 7 with a complete design system, 57+ components, strict CSP, working forms
+            with Astro Actions, and a real test suite.
           </p>
         </header>
 

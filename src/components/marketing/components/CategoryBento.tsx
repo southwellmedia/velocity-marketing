@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import {
   motion,
   useMotionValue,
@@ -228,8 +228,8 @@ const CATEGORIES: Category[] = [
             style={{ background: 'var(--color-card)' }}
           >
             <span style={{ color: 'var(--color-foreground-muted)' }}>$ </span>
-            <span style={{ color: 'var(--color-brand-500)' }}>npx</span>
-            <span style={{ color: 'var(--color-foreground)' }}> create-velocity</span>
+            <span style={{ color: 'var(--color-brand-500)' }}>npm</span>
+            <span style={{ color: 'var(--color-foreground)' }}> create velocity-astro</span>
           </div>
         </div>
         {/* npm copy button mockup */}
@@ -238,7 +238,7 @@ const CATEGORIES: Category[] = [
           style={{ borderColor: 'var(--color-border)', background: 'var(--color-card)' }}
         >
           <span className="font-mono text-[10px]" style={{ color: 'var(--color-foreground-muted)' }}>
-            npm i create-velocity
+            npm create velocity-astro@latest
           </span>
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--color-foreground-subtle)' }}>
             <rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />

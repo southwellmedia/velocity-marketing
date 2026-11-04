@@ -9,10 +9,24 @@
 @import './tokens/typography.css';
 @import './tokens/spacing.css';
 
+@plugin '@tailwindcss/typography';
+
 /* Self-hosted fonts via Fontsource (CSP-safe, no external requests) */
 @import '@fontsource-variable/manrope';
 @import '@fontsource-variable/outfit';
 @import '@fontsource-variable/jetbrains-mono';
+
+/* Native cross-document view transitions (replaces ClientRouter). Each
+   navigation is a real page load, so the theme script reruns on every page. */
+@view-transition {
+  navigation: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+}
 
 /* Dark mode variant */
 @custom-variant dark (&:where(.dark, .dark *));
@@ -731,6 +745,11 @@
     color: var(--color-foreground-secondary);
     font-size: var(--font-size-base);
     line-height: 1.75;
+  }
+
+  /* Long inline code must wrap on narrow screens */
+  .prose :not(pre) > code {
+    overflow-wrap: anywhere;
   }
 
   .prose h1, .prose h2, .prose h3, .prose h4 {

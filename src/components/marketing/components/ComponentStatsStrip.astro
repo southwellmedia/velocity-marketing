@@ -2,7 +2,7 @@
 /**
  * ComponentStatsStrip Section
  * Four glass-card stat tiles following CredibilityStrip pattern.
- * Stats: 8 Categories | 57+ Components | 3 Themes | 100 Lighthouse
+ * Stats: 8 Categories | 57+ Components | 2 Themes | 100 Lighthouse
  */
 import { cn } from '@/lib/cn';
 import MarketingIcon from '@/components/ui/primitives/MarketingIcon/MarketingIcon.astro';
@@ -17,7 +17,7 @@ const { class: className } = Astro.props;
 const stats = [
   { value: 8, suffix: '', label: 'Categories', icon: 'mkt-components', sublabel: 'Form, Data, Feedback & more' },
   { value: 57, suffix: '+', label: 'Components', icon: 'mkt-code', sublabel: 'Zero-JS by default' },
-  { value: 3, suffix: '', label: 'Themes', icon: 'mkt-tokens', sublabel: 'Default, Midnight & Ocean' },
+  { value: 2, suffix: '', label: 'Themes', icon: 'mkt-tokens', sublabel: 'Default & Midnight' },
   { value: 100, suffix: '', label: 'Lighthouse', icon: 'mkt-speed', sublabel: 'Every category, every page' },
 ];
 ---

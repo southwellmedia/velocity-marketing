@@ -7,6 +7,10 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: process.env.SITE_URL || 'https://example.com',
 
+  // Astro 7 defaults to 'jsx', which strips whitespace between inline elements.
+  // These components are authored with HTML whitespace semantics.
+  compressHTML: true,
+
   env: {
     schema: {
       PUBLIC_GA_MEASUREMENT_ID: envField.string({ context: 'client', access: 'public', optional: true, default: '' }),
@@ -55,13 +59,13 @@ export default defineConfig({
 
   markdown: {
     shikiConfig: {
-      theme: 'github-dark',
+      theme: 'github-dark-default',
       wrap: true,
     },
   },
 
   prefetch: {
     prefetchAll: true,
-    defaultStrategy: 'viewport',
+    defaultStrategy: 'hover',
   },
 });
