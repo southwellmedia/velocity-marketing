@@ -3,6 +3,7 @@ import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import Hero from '@/components/marketing/Hero.astro';
 import CredibilityStrip from '@/components/marketing/CredibilityStrip.astro';
 import BentoGrid from '@/components/marketing/BentoGrid';
+import AgentsSection from '@/components/marketing/AgentsSection.astro';
 import Showcase from '@/components/marketing/Showcase';
 import TemplatesTeaser from '@/components/marketing/TemplatesTeaser';
 import GetStarted from '@/components/marketing/GetStarted.astro';
@@ -10,13 +11,14 @@ import GetStarted from '@/components/marketing/GetStarted.astro';
 
 <MarketingLayout
   title="Velocity — Astro 7 Starter Kit & Boilerplate"
-  description="The production-ready Astro 7 starter kit and boilerplate. 57+ components, a full design token system, built-in i18n, and 100 Lighthouse scores for accessibility and SEO. Free and open source."
+  description="The production-ready Astro 7 starter kit and boilerplate. 57+ components, a full design token system, built-in i18n, AI agent skills, and 100 Lighthouse scores for accessibility and SEO. Free and open source."
   image="/velocity-og.jpg"
   imageAlt="Velocity — Astro 7 Starter Kit & Boilerplate"
 >
   <Hero />
   <CredibilityStrip />
   <BentoGrid client:visible />
+  <AgentsSection />
   <Showcase client:visible />
   <TemplatesTeaser client:visible />
   <GetStarted />
