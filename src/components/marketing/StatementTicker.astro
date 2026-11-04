@@ -1,0 +1,37 @@
+---
+/**
+ * Decorative ticker of headline facts. Hidden from assistive tech because every
+ * fact is stated in the sections around it.
+ */
+const items = [
+  { strong: '58', after: ' components' },
+  { strong: '1.2 KB', after: ' of JavaScript' },
+  { strong: 'Agent skills', after: ' in every project' },
+  { before: 'Strict ', strong: 'CSP', after: ' by default' },
+  { strong: 'i18n', after: ' in one file' },
+  { before: 'Forms on ', strong: 'Astro Actions' },
+  { strong: 'Pagefind', after: ' search' },
+  { before: 'Free and ', strong: 'open source' },
+];
+---
+
+<div class="v-ticker" aria-hidden="true">
+  <div class="v-ticker-row">
+    {
+      [0, 1].map(() => (
+        <span class="v-ticker-item">
+          {items.map((item) => (
+            <>
+              <span class="whitespace-pre">
+                {item.before}
+                <b>{item.strong}</b>
+                {item.after}
+              </span>
+              <span class="v-ticker-dot" />
+            </>
+          ))}
+        </span>
+      ))
+    }
+  </div>
+</div>

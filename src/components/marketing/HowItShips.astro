@@ -1,0 +1,118 @@
+---
+/**
+ * Three steps beside a terminal. The transcript is complete in the HTML. The
+ * script plays it once when it scrolls into view, and Replay runs it again.
+ */
+import Button from '@/components/ui/form/Button/Button.astro';
+
+const steps = [
+  {
+    title: 'Create',
+    text: 'Choose demo or minimal, your languages, all components or none. Eight project shapes, each built in CI.',
+  },
+  {
+    title: 'Build',
+    text: 'Rust compiler, Vite 8, hash-based CSP and a Pagefind index. Vitest and Playwright run against the real production server.',
+  },
+  {
+    title: 'Deploy',
+    text: 'Every page stays static. Only the form actions run on demand. The adapter is picked for Vercel, Netlify, Cloudflare or any Node host.',
+  },
+];
+
+const transcript = [
+  { kind: 'cmd', pre: '$', text: 'npm create velocity-astro@latest', wait: 900 },
+  { kind: 'ok', pre: '✔', text: 'Project name    my-site', wait: 450 },
+  { kind: 'ok', pre: '✔', text: 'Template        Demo', wait: 450 },
+  { kind: 'ok', pre: '✔', text: 'Languages       en, es, fr', wait: 450 },
+  { kind: 'ok', pre: '✔', text: 'Components      All 58', wait: 500 },
+  { kind: 'dim', pre: '', text: 'Scaffolded my-site', wait: 900 },
+  { kind: 'dim', pre: '', text: '', wait: 200 },
+  { kind: 'cmd', pre: '$', text: 'pnpm build', wait: 900 },
+  { kind: 'ok', pre: '✔', text: '58 components compiled        Rust compiler', wait: 650 },
+  { kind: 'ok', pre: '✔', text: "CSP hashes written            script-src 'self'", wait: 600 },
+  { kind: 'ok', pre: '✔', text: 'Search index built            Pagefind, 3 locales', wait: 650 },
+  { kind: 'ok', pre: '✔', text: 'Adapter detected              vercel', wait: 600 },
+  { kind: 'done', pre: '✔', text: 'Done in 6.3 s                 1.2 KB JS per page', wait: 0 },
+];
+---
+
+<section class="v-section bg-background-deep border-border-subtle border-y">
+  <div class="container v-ship">
+    <div class="flex min-w-0 flex-col gap-8">
+      <div class="flex flex-col gap-5">
+        <p class="v-eyebrow">How it ships</p>
+        <h2 class="v-display v-h2">Zero to deployed <span class="text-foreground-muted">in one command.</span></h2>
+      </div>
+      <ol>
+        {
+          steps.map((step, index) => (
+            <li class="v-step">
+              <span class="v-step-num" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+              <div class="flex flex-col gap-1.5">
+                <h3 class="v-display text-[1.375rem] font-semibold">{step.title}</h3>
+                <p class="text-foreground-muted text-sm leading-normal">{step.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+
+    <div class="v-term" data-terminal>
+      <div class="border-border bg-background flex h-14 items-center gap-3 border-b px-4">
+        <div class="v-term-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+        <span class="text-foreground-muted font-mono text-xs font-medium">zsh: my-site</span>
+        <Button variant="secondary" size="sm" class="ml-auto h-11" aria-label="Replay the terminal" data-terminal-replay>
+          Replay
+        </Button>
+      </div>
+      <div class="v-term-body" role="group" aria-label="Terminal transcript" tabindex="0">
+        {
+          transcript.map((line) => (
+            <div class={`v-term-line v-term-${line.kind}`} data-wait={line.wait}>
+              <span class="v-term-pre" aria-hidden="true">{line.pre}</span>
+              <span>{line.text}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const terminal = document.querySelector<HTMLElement>('[data-terminal]');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  if (terminal) {
+    const lines = [...terminal.querySelectorAll<HTMLElement>('.v-term-line')];
+    let timer = 0;
+
+    const play = () => {
+      window.clearTimeout(timer);
+      lines.forEach((line) => line.toggleAttribute('data-hidden', !reduced.matches));
+      if (reduced.matches) return;
+
+      const reveal = (index: number) => {
+        const line = lines[index];
+        if (!line) return;
+        line.removeAttribute('data-hidden');
+        timer = window.setTimeout(() => reveal(index + 1), Number(line.dataset.wait));
+      };
+      timer = window.setTimeout(() => reveal(0), 400);
+    };
+
+    terminal.querySelector('[data-terminal-replay]')?.addEventListener('click', play);
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        observer.disconnect();
+        play();
+      },
+      { threshold: 0.4 },
+    );
+    observer.observe(terminal);
+  }
+</script>

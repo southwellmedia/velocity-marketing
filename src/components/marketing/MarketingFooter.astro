@@ -17,18 +17,27 @@ const linkGroups = [
     title: 'Product',
     links: [
       { label: 'Features', href: '/#features' },
+      { label: 'Components', href: '/components' },
       { label: 'Showcase', href: '/#showcase' },
       { label: 'Templates', href: '/#templates' },
-      { label: 'Pricing', href: '/#templates' },
     ],
   },
   {
     title: 'Resources',
     links: [
       { label: 'Documentation', href: 'https://docs.deployvelocity.com', external: true },
+      { label: 'Getting started', href: 'https://docs.deployvelocity.com/getting-started/', external: true },
+      { label: 'CLI', href: 'https://docs.deployvelocity.com/cli/', external: true },
+      { label: 'Blog and changelog', href: '/blog' },
+    ],
+  },
+  {
+    title: 'Community',
+    links: [
       { label: 'GitHub', href: 'https://github.com/southwellmedia/velocity', external: true },
-      { label: 'Blog', href: '/blog' },
-      { label: 'Changelog', href: '/blog' },
+      { label: 'Report an issue', href: 'https://github.com/southwellmedia/velocity/issues', external: true },
+      { label: 'Submit your site', href: '/#showcase' },
+      { label: 'Southwell Media', href: 'https://southwell.media', external: true },
     ],
   },
 ];
@@ -68,8 +77,8 @@ const socialLinks = [
         </a>
 
         <p class="mt-4 text-sm leading-relaxed text-foreground-muted max-w-sm">
-          The production-ready Astro 7 starter kit and boilerplate. 57+ components,
-          a full design token system, and everything you need to ship faster.
+          The production-ready Astro 7 starter kit and boilerplate. 58 components,
+          a three-tier token system, built-in i18n, strict CSP, and agent skills in every project.
         </p>
 
         {/* Social links */}
@@ -89,7 +98,7 @@ const socialLinks = [
       </div>
 
       {/* Link columns */}
-      <div class="lg:col-span-7 grid grid-cols-2 gap-8">
+      <div class="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
         {linkGroups.map((group) => (
           <div>
             <h3 class="text-xs font-mono uppercase tracking-widest text-foreground-subtle mb-4">
