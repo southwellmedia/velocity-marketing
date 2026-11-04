@@ -1,469 +1,166 @@
 ---
 /**
- * Hero Section
- * Full-viewport dramatic dark hero with gradient bloom, staggered animations,
- * and a large browser mockup that bleeds into the next section.
+ * Home hero: positioning, the install command and the 1.0 vs 2.0 build race.
+ * The race renders its final numbers, so it reads correctly without JavaScript
+ * or with reduced motion. The script only replays it.
  */
-import Badge from '@/components/ui/data-display/Badge/Badge.astro';
 import Button from '@/components/ui/form/Button/Button.astro';
-import NpmCopyButton from '@/components/ui/marketing/NpmCopyButton/NpmCopyButton.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
-import { cn } from '@/lib/cn';
+import NpmCopyButton from '@/components/ui/marketing/NpmCopyButton/NpmCopyButton.astro';
 
-interface Props {
-  class?: string;
-}
-
-const { class: className } = Astro.props;
-
-// IDE panel HTML stored as strings to avoid Astro parsing curly braces as expressions
-const indexPanelHtml = `
-<div class="flex"><span class="ide-ln">1</span><span class="text-foreground-muted">---</span></div>
-<div class="flex"><span class="ide-ln">2</span><span><span class="text-brand-400">import</span> <span class="text-foreground">MarketingLayout</span> <span class="text-brand-400">from</span> <span class="text-success">'@/layouts/MarketingLayout.astro'</span></span></div>
-<div class="flex"><span class="ide-ln">3</span><span><span class="text-brand-400">import</span> <span class="text-foreground">Hero</span> <span class="text-brand-400">from</span> <span class="text-success">'@/components/marketing/Hero.astro'</span></span></div>
-<div class="flex"><span class="ide-ln">4</span><span><span class="text-brand-400">import</span> <span class="text-foreground">CredibilityStrip</span> <span class="text-brand-400">from</span> <span class="text-success">'@/components/marketing/CredibilityStrip.astro'</span></span></div>
-<div class="flex"><span class="ide-ln">5</span><span><span class="text-brand-400">import</span> <span class="text-foreground">BentoGrid</span> <span class="text-brand-400">from</span> <span class="text-success">'@/components/marketing/BentoGrid'</span></span></div>
-<div class="flex"><span class="ide-ln">6</span><span><span class="text-brand-400">import</span> <span class="text-foreground">Showcase</span> <span class="text-brand-400">from</span> <span class="text-success">'@/components/marketing/Showcase.astro'</span></span></div>
-<div class="flex"><span class="ide-ln">7</span><span><span class="text-brand-400">import</span> <span class="text-foreground">TemplatesTeaser</span> <span class="text-brand-400">from</span> <span class="text-success">'@/components/marketing/TemplatesTeaser.astro'</span></span></div>
-<div class="flex"><span class="ide-ln">8</span><span><span class="text-brand-400">import</span> <span class="text-foreground">GetStarted</span> <span class="text-brand-400">from</span> <span class="text-success">'@/components/marketing/GetStarted.astro'</span></span></div>
-<div class="flex"><span class="ide-ln">9</span><span class="text-foreground-muted">---</span></div>
-<div class="flex"><span class="ide-ln">10</span><span>&nbsp;</span></div>
-<div class="flex"><span class="ide-ln">11</span><span><span class="text-brand-300">&lt;MarketingLayout</span></span></div>
-<div class="flex"><span class="ide-ln">12</span><span class="pl-4"><span class="text-brand-500">title</span>=<span class="text-success">"Velocity &mdash; The Astro 7 Starter Kit"</span></span></div>
-<div class="flex"><span class="ide-ln">13</span><span class="pl-4"><span class="text-brand-500">description</span>=<span class="text-success">"Production-ready Astro 7 starter..."</span></span></div>
-<div class="flex"><span class="ide-ln">14</span><span><span class="text-brand-300">&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">15</span><span class="pl-4"><span class="text-brand-300">&lt;Hero /&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">16</span><span class="pl-4"><span class="text-brand-300">&lt;CredibilityStrip /&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">17</span><span class="pl-4"><span class="text-brand-300">&lt;BentoGrid</span> <span class="text-brand-500">client:visible</span> <span class="text-brand-300">/&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">18</span><span class="pl-4"><span class="text-brand-300">&lt;Showcase /&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">19</span><span class="pl-4"><span class="text-brand-300">&lt;TemplatesTeaser /&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">20</span><span class="pl-4"><span class="text-brand-300">&lt;GetStarted /&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">21</span><span><span class="text-brand-300">&lt;/MarketingLayout&gt;</span></span></div>
-`;
-
-const tokensPanelHtml = `
-<div class="flex"><span class="ide-ln">1</span><span><span class="text-brand-300">:root</span> <span class="text-foreground">{</span></span></div>
-<div class="flex"><span class="ide-ln">2</span><span class="pl-4"><span class="text-foreground-muted">/* Semantic Tokens &mdash; Light Mode */</span></span></div>
-<div class="flex"><span class="ide-ln">3</span><span class="pl-4"><span class="text-brand-500">--background</span>: <span class="text-foreground">var(--gray-0)</span>;</span></div>
-<div class="flex"><span class="ide-ln">4</span><span class="pl-4"><span class="text-brand-500">--background-secondary</span>: <span class="text-foreground">var(--gray-50)</span>;</span></div>
-<div class="flex"><span class="ide-ln">5</span><span class="pl-4"><span class="text-brand-500">--background-tertiary</span>: <span class="text-foreground">var(--gray-100)</span>;</span></div>
-<div class="flex"><span class="ide-ln">6</span><span>&nbsp;</span></div>
-<div class="flex"><span class="ide-ln">7</span><span class="pl-4"><span class="text-brand-500">--foreground</span>: <span class="text-foreground">var(--gray-900)</span>;           <span class="text-foreground-muted">/* WCAG AAA */</span></span></div>
-<div class="flex"><span class="ide-ln">8</span><span class="pl-4"><span class="text-brand-500">--foreground-secondary</span>: <span class="text-foreground">var(--gray-700)</span>; <span class="text-foreground-muted">/* WCAG AAA */</span></span></div>
-<div class="flex"><span class="ide-ln">9</span><span class="pl-4"><span class="text-brand-500">--foreground-muted</span>: <span class="text-foreground">var(--gray-600)</span>;     <span class="text-foreground-muted">/* WCAG AA  */</span></span></div>
-<div class="flex"><span class="ide-ln">10</span><span class="pl-4"><span class="text-brand-500">--foreground-subtle</span>: <span class="text-foreground">var(--gray-500)</span>;</span></div>
-<div class="flex"><span class="ide-ln">11</span><span>&nbsp;</span></div>
-<div class="flex"><span class="ide-ln">12</span><span class="pl-4"><span class="text-brand-500">--primary</span>: <span class="text-foreground">var(--gray-900)</span>;</span></div>
-<div class="flex"><span class="ide-ln">13</span><span class="pl-4"><span class="text-brand-500">--primary-hover</span>: <span class="text-foreground">var(--gray-800)</span>;</span></div>
-<div class="flex"><span class="ide-ln">14</span><span class="pl-4"><span class="text-brand-500">--primary-foreground</span>: <span class="text-foreground">var(--gray-0)</span>;</span></div>
-<div class="flex"><span class="ide-ln">15</span><span>&nbsp;</span></div>
-<div class="flex"><span class="ide-ln">16</span><span class="pl-4"><span class="text-brand-500">--accent</span>: <span class="text-foreground">var(--brand-500)</span>;</span></div>
-<div class="flex"><span class="ide-ln">17</span><span class="pl-4"><span class="text-brand-500">--accent-hover</span>: <span class="text-foreground">var(--brand-600)</span>;</span></div>
-<div class="flex"><span class="ide-ln">18</span><span>&nbsp;</span></div>
-<div class="flex"><span class="ide-ln">19</span><span class="pl-4"><span class="text-brand-500">--card</span>: <span class="text-foreground">var(--gray-0)</span>;</span></div>
-<div class="flex"><span class="ide-ln">20</span><span class="pl-4"><span class="text-brand-500">--border</span>: <span class="text-foreground">var(--gray-200)</span>;</span></div>
-<div class="flex"><span class="ide-ln">21</span><span class="pl-4"><span class="text-brand-500">--ring</span>: <span class="text-foreground">var(--gray-900)</span>;</span></div>
-<div class="flex"><span class="ide-ln">22</span><span>&nbsp;</span></div>
-<div class="flex"><span class="ide-ln">23</span><span class="pl-4"><span class="text-brand-500">--input-bg</span>: <span class="text-foreground">var(--gray-0)</span>;</span></div>
-<div class="flex"><span class="ide-ln">24</span><span class="pl-4"><span class="text-brand-500">--input-border</span>: <span class="text-foreground">var(--gray-300)</span>;</span></div>
-<div class="flex"><span class="ide-ln">25</span><span><span class="text-foreground">}</span></span></div>
-`;
-
-const heroPanelHtml = `
-<div class="flex"><span class="ide-ln">1</span><span class="text-foreground-muted">---</span></div>
-<div class="flex"><span class="ide-ln">2</span><span><span class="text-brand-400">import</span> <span class="text-foreground">Badge</span> <span class="text-brand-400">from</span> <span class="text-success">'@/components/ui/data-display/Badge/Badge.astro'</span></span></div>
-<div class="flex"><span class="ide-ln">3</span><span><span class="text-brand-400">import</span> <span class="text-foreground">Button</span> <span class="text-brand-400">from</span> <span class="text-success">'@/components/ui/form/Button/Button.astro'</span></span></div>
-<div class="flex"><span class="ide-ln">4</span><span><span class="text-brand-400">import</span> <span class="text-foreground">NpmCopyButton</span> <span class="text-brand-400">from</span> <span class="text-success">'@/components/ui/marketing/NpmCopyButton/NpmCopyButton.astro'</span></span></div>
-<div class="flex"><span class="ide-ln">5</span><span><span class="text-brand-400">import</span> <span class="text-foreground">Icon</span> <span class="text-brand-400">from</span> <span class="text-success">'@/components/ui/primitives/Icon/Icon.astro'</span></span></div>
-<div class="flex"><span class="ide-ln">6</span><span><span class="text-brand-400">import</span> { <span class="text-foreground">cn</span> } <span class="text-brand-400">from</span> <span class="text-success">'@/lib/cn'</span></span></div>
-<div class="flex"><span class="ide-ln">7</span><span class="text-foreground-muted">---</span></div>
-<div class="flex"><span class="ide-ln">8</span><span>&nbsp;</span></div>
-<div class="flex"><span class="ide-ln">9</span><span><span class="text-brand-300">&lt;section</span> <span class="text-brand-500">class</span>=<span class="text-foreground">{cn(<span class="text-success">'relative min-h-screen flex flex-col'</span>, className)}</span><span class="text-brand-300">&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">10</span><span class="pl-4"><span class="text-brand-300">&lt;div</span> <span class="text-brand-500">class</span>=<span class="text-success">"container relative z-10 text-center max-w-4xl"</span><span class="text-brand-300">&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">11</span><span class="pl-8"><span class="text-brand-300">&lt;Badge</span> <span class="text-brand-500">variant</span>=<span class="text-success">"brand"</span><span class="text-brand-300">&gt;</span><span class="text-foreground">Astro 7 Starter Kit</span><span class="text-brand-300">&lt;/Badge&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">12</span><span>&nbsp;</span></div>
-<div class="flex"><span class="ide-ln">13</span><span class="pl-8"><span class="text-brand-300">&lt;h1</span> <span class="text-brand-500">class</span>=<span class="text-success">"font-display text-7xl font-bold mt-6 text-foreground"</span><span class="text-brand-300">&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">14</span><span class="pl-12"><span class="text-foreground">Ship </span><span class="text-brand-300">&lt;span</span> <span class="text-brand-500">class</span>=<span class="text-success">"text-brand-500"</span><span class="text-brand-300">&gt;</span><span class="text-foreground">faster.</span><span class="text-brand-300">&lt;/span&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">15</span><span class="pl-12"><span class="text-foreground">Look better.</span></span></div>
-<div class="flex"><span class="ide-ln">16</span><span class="pl-8"><span class="text-brand-300">&lt;/h1&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">17</span><span>&nbsp;</span></div>
-<div class="flex"><span class="ide-ln">18</span><span class="pl-8"><span class="text-brand-300">&lt;p</span> <span class="text-brand-500">class</span>=<span class="text-success">"text-foreground-muted text-xl max-w-2xl mx-auto mt-6"</span><span class="text-brand-300">&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">19</span><span class="pl-12"><span class="text-foreground">The production-ready Astro starter with 57+ components...</span></span></div>
-<div class="flex"><span class="ide-ln">20</span><span class="pl-8"><span class="text-brand-300">&lt;/p&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">21</span><span>&nbsp;</span></div>
-<div class="flex"><span class="ide-ln">22</span><span class="pl-8"><span class="text-brand-300">&lt;div</span> <span class="text-brand-500">class</span>=<span class="text-success">"flex gap-4 justify-center items-center mt-10"</span><span class="text-brand-300">&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">23</span><span class="pl-12"><span class="text-brand-300">&lt;NpmCopyButton /&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">24</span><span class="pl-12"><span class="text-brand-300">&lt;Button</span> <span class="text-brand-500">variant</span>=<span class="text-success">"outline"</span> <span class="text-brand-500">href</span>=<span class="text-success">"https://docs.velocity.build"</span><span class="text-brand-300">&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">25</span><span class="pl-16"><span class="text-foreground">View Documentation</span></span></div>
-<div class="flex"><span class="ide-ln">26</span><span class="pl-16"><span class="text-brand-300">&lt;Icon</span> <span class="text-brand-500">name</span>=<span class="text-success">"arrow-right"</span> <span class="text-brand-500">size</span>=<span class="text-success">"sm"</span> <span class="text-brand-300">/&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">27</span><span class="pl-12"><span class="text-brand-300">&lt;/Button&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">28</span><span class="pl-8"><span class="text-brand-300">&lt;/div&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">29</span><span class="pl-4"><span class="text-brand-300">&lt;/div&gt;</span></span></div>
-<div class="flex"><span class="ide-ln">30</span><span><span class="text-brand-300">&lt;/section&gt;</span></span></div>
-`;
-
-const configPanelHtml = `
-<div class="flex"><span class="ide-ln">1</span><span><span class="text-brand-400">const</span> <span class="text-foreground">siteConfig</span>: <span class="text-brand-300">SiteConfig</span> = <span class="text-foreground">{</span></span></div>
-<div class="flex"><span class="ide-ln">2</span><span class="pl-4"><span class="text-brand-500">name</span>: <span class="text-success">'Velocity'</span>,</span></div>
-<div class="flex"><span class="ide-ln">3</span><span class="pl-4"><span class="text-brand-500">description</span>: <span class="text-success">'The production-ready Astro 7 starter...'</span>,</span></div>
-<div class="flex"><span class="ide-ln">4</span><span class="pl-4"><span class="text-brand-500">url</span>: <span class="text-foreground">SITE_URL</span> || <span class="text-success">'https://example.com'</span>,</span></div>
-<div class="flex"><span class="ide-ln">5</span><span class="pl-4"><span class="text-brand-500">ogImage</span>: <span class="text-success">'/og-default.png'</span>,</span></div>
-<div class="flex"><span class="ide-ln">6</span><span class="pl-4"><span class="text-brand-500">author</span>: <span class="text-success">'Southwell Media'</span>,</span></div>
-<div class="flex"><span class="ide-ln">7</span><span class="pl-4"><span class="text-brand-500">email</span>: <span class="text-success">'hello@velocity.build'</span>,</span></div>
-<div class="flex"><span class="ide-ln">8</span><span>&nbsp;</span></div>
-<div class="flex"><span class="ide-ln">9</span><span class="pl-4"><span class="text-brand-500">socialLinks</span>: <span class="text-foreground">[</span></span></div>
-<div class="flex"><span class="ide-ln">10</span><span class="pl-8"><span class="text-success">'https://github.com/southwellmedia'</span>,</span></div>
-<div class="flex"><span class="ide-ln">11</span><span class="pl-4"><span class="text-foreground">],</span></span></div>
-<div class="flex"><span class="ide-ln">12</span><span>&nbsp;</span></div>
-<div class="flex"><span class="ide-ln">13</span><span class="pl-4"><span class="text-brand-500">verification</span>: <span class="text-foreground">{</span></span></div>
-<div class="flex"><span class="ide-ln">14</span><span class="pl-8"><span class="text-brand-500">google</span>: <span class="text-foreground">GOOGLE_SITE_VERIFICATION</span>,</span></div>
-<div class="flex"><span class="ide-ln">15</span><span class="pl-8"><span class="text-brand-500">bing</span>: <span class="text-foreground">BING_SITE_VERIFICATION</span>,</span></div>
-<div class="flex"><span class="ide-ln">16</span><span class="pl-4"><span class="text-foreground">},</span></span></div>
-<div class="flex"><span class="ide-ln">17</span><span>&nbsp;</span></div>
-<div class="flex"><span class="ide-ln">18</span><span class="pl-4"><span class="text-brand-500">branding</span>: <span class="text-foreground">{</span></span></div>
-<div class="flex"><span class="ide-ln">19</span><span class="pl-8"><span class="text-brand-500">logo</span>: <span class="text-foreground">{ <span class="text-brand-500">alt</span>: <span class="text-success">'Velocity'</span> },</span></span></div>
-<div class="flex"><span class="ide-ln">20</span><span class="pl-8"><span class="text-brand-500">favicon</span>: <span class="text-foreground">{ <span class="text-brand-500">svg</span>: <span class="text-success">'/favicon.svg'</span> },</span></span></div>
-<div class="flex"><span class="ide-ln">21</span><span class="pl-8"><span class="text-brand-500">colors</span>: <span class="text-foreground">{</span></span></div>
-<div class="flex"><span class="ide-ln">22</span><span class="pl-12"><span class="text-brand-500">themeColor</span>: <span class="text-success">'#F94C10'</span>,</span></div>
-<div class="flex"><span class="ide-ln">23</span><span class="pl-12"><span class="text-brand-500">backgroundColor</span>: <span class="text-success">'#ffffff'</span>,</span></div>
-<div class="flex"><span class="ide-ln">24</span><span class="pl-8"><span class="text-foreground">},</span></span></div>
-<div class="flex"><span class="ide-ln">25</span><span class="pl-4"><span class="text-foreground">},</span></span></div>
-<div class="flex"><span class="ide-ln">26</span><span><span class="text-foreground">};</span></span></div>
-`;
+const before = 13.9;
+const after = 6.3;
+const facts = ['MIT licensed', 'Node 22+', 'Vercel, Netlify, Cloudflare or any Node host'];
+const stats = [
+  { value: '2.2×', label: 'faster build' },
+  { value: '1.2 KB', label: 'JS per page, was 5.7' },
+  { value: '8', label: 'project shapes built in CI' },
+];
 ---
 
-<section class={cn('relative min-h-screen flex flex-col', className)}>
-  <!-- Background effects (clipped to section) -->
-  <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-    <div class="bg-glow-orange absolute inset-0"></div>
-    <div
-      class="bg-grid-pattern absolute inset-0 opacity-30"
-      style="mask-image: radial-gradient(ellipse 50% 50% at 50% 40%, black 0%, transparent 70%); -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 40%, black 0%, transparent 70%);"
-    >
-    </div>
-  </div>
+<section class="v-hero" data-hero>
+  <div class="v-hero-grid" aria-hidden="true"></div>
+  <div class="v-glow" aria-hidden="true" data-hero-glow></div>
+  <div class="v-watermark" aria-hidden="true">2.1</div>
 
-  <!-- Main content — pushed up to make room for browser mockup -->
-  <div
-    class="relative z-10 container mx-auto flex max-w-4xl flex-1 flex-col justify-center text-center"
-    style="padding-top: var(--space-page-top); padding-bottom: var(--space-section-sm);"
-  >
-    <div>
-      <div class="animate-slide-up opacity-0 delay-0">
-        <a href="/blog/velocity-2-1-ai-agents"><Badge variant="brand">New in 2.1: built for AI coding agents</Badge></a>
-      </div>
-
-      <h1
-        class="font-display text-foreground animate-slide-up mt-6 font-bold tracking-tight text-balance opacity-0 delay-1"
-        style="font-size: var(--text-5xl);"
+  <div class="container v-hero-inner">
+    <div class="flex min-w-0 flex-col items-start gap-8">
+      <a
+        href="/blog/velocity-2-1-ai-agents"
+        class="v-rise border-border bg-card text-foreground-secondary inline-flex min-h-8 items-center gap-2.5 rounded-full border px-3 py-1 text-xs font-medium no-underline"
       >
-        The Astro 7 Starter Kit<br />
-        <span class="bg-brand-500 mt-2 inline-block rounded-lg px-3 py-1 text-white"
-          >Built for Production</span
-        >
+        <span class="v-pulse bg-brand-500 h-2 w-2 rounded-full" aria-hidden="true"></span>
+        <span>New in 2.1: built for AI coding agents</span>
+        <Icon name="arrow-right" size="sm" />
+      </a>
+
+      <h1 class="v-display v-giant v-rise" style="--rise-delay: 80ms;">
+        <span class="text-foreground-muted block">Astro 7,</span>
+        <span class="block">built for</span>
+        <span class="v-highlight">production.</span>
       </h1>
 
-      <p
-        class="text-foreground-muted animate-slide-up mx-auto mt-6 max-w-3xl opacity-0 delay-2"
-        style="font-size: var(--text-xl);"
-      >
-        The production-ready Astro 7 starter kit and boilerplate. 57+ components, a complete design
-        token system, built-in i18n, strict CSP, working forms, and everything you need to launch
-        faster.
+      <p class="v-lead v-rise max-w-[46ch]" style="--rise-delay: 160ms;">
+        The open-source Astro starter kit with 58 components, strict CSP, built-in i18n, forms that submit, and agent
+        skills in every project.
       </p>
 
-      <div
-        class="animate-slide-up mt-10 flex flex-col items-center justify-center gap-4 opacity-0 delay-3 sm:flex-row"
-      >
-        <NpmCopyButton />
-        <Button variant="outline" size="lg" href="https://docs.deployvelocity.com" target="_blank">
-          View Documentation
-          <Icon name="arrow-right" size="sm" />
+      <div class="v-rise flex w-full flex-wrap items-center gap-3" style="--rise-delay: 240ms;">
+        <NpmCopyButton class="h-14 max-w-full rounded-lg font-mono text-sm sm:text-base" />
+        <Button variant="secondary" size="lg" href="https://demo.deployvelocity.com" class="h-14 rounded-lg">
+          See the demo
         </Button>
       </div>
-    </div>
-  </div>
 
-  <!-- Large IDE mockup — bleeds into next section -->
-  <div
-    class="animate-slide-up relative z-10 hidden opacity-0 delay-4 md:block"
-    style="animation-delay: 400ms;"
-    aria-hidden="true"
-  >
-    <div class="container mx-auto max-w-5xl" style="perspective: 2000px;">
-      <div
-        class="border-border bg-card overflow-hidden rounded-t-xl border border-b-0"
-        style="transform: rotateX(2deg); transform-origin: bottom center; box-shadow: 0 -8px 80px rgba(249, 76, 16, 0.08), 0 -2px 40px rgba(0, 0, 0, 0.3);"
+      <ul
+        class="v-rise text-foreground-subtle flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-medium"
+        style="--rise-delay: 320ms;"
       >
-        <!-- Editor title bar -->
-        <div class="bg-background-tertiary border-border flex h-10 items-center border-b px-4">
-          <div class="flex items-center gap-1.5">
-            <div class="bg-foreground-subtle/20 h-3 w-3 rounded-full"></div>
-            <div class="bg-foreground-subtle/20 h-3 w-3 rounded-full"></div>
-            <div class="bg-foreground-subtle/20 h-3 w-3 rounded-full"></div>
-          </div>
-          <div class="flex flex-1 justify-center">
-            <span class="text-foreground-muted text-xs" data-ide-title
-              >velocity &mdash; src/pages/index.astro</span
-            >
-          </div>
-          <div class="w-16"></div>
-        </div>
+        {facts.map((fact) => <li>{fact}</li>)}
+      </ul>
+    </div>
 
-        <!-- Editor tab bar -->
-        <div
-          class="bg-background-tertiary/50 border-border flex h-9 items-end gap-px border-b px-2"
-          data-ide-tabs
+    <div class="v-surface v-rise flex min-w-0 flex-col gap-7 p-6 sm:p-8" style="--rise-delay: 240ms;">
+      <div class="flex items-start justify-between gap-4">
+        <div class="flex flex-col gap-1.5">
+          <p class="v-eyebrow">Production build</p>
+          <p class="text-foreground-secondary text-sm leading-normal">
+            Same site, same machine, Node 24. Median of three clean builds.
+          </p>
+        </div>
+        <Button
+          variant="secondary"
+          size="sm"
+          class="h-11 shrink-0 px-3"
+          aria-label="Replay the build comparison"
+          data-race-replay
         >
-          <button
-            data-ide-tab="index"
-            class="ide-tab ide-tab-active relative z-10 -mb-px flex h-8 cursor-pointer items-center gap-1.5 rounded-t-md px-3 text-xs transition-colors"
-          >
-            <Icon name="brand-astro" size="xs" />
-            index.astro
-          </button>
-          <button
-            data-ide-tab="hero"
-            class="ide-tab flex h-8 cursor-pointer items-center gap-1.5 rounded-t-md px-3 text-xs transition-colors"
-          >
-            <Icon name="brand-astro" size="xs" />
-            Hero.astro
-          </button>
-          <button
-            data-ide-tab="tokens"
-            class="ide-tab flex h-8 cursor-pointer items-center gap-1.5 rounded-t-md px-3 text-xs transition-colors"
-          >
-            <Icon name="palette" size="xs" />
-            default.css
-          </button>
-          <button
-            data-ide-tab="config"
-            class="ide-tab flex h-8 cursor-pointer items-center gap-1.5 rounded-t-md px-3 text-xs transition-colors"
-          >
-            <Icon name="brand-typescript" size="xs" />
-            site.config.ts
-          </button>
+          Replay
+        </Button>
+      </div>
+
+      <div class="flex flex-col gap-2.5">
+        <div class="text-foreground-muted flex items-baseline justify-between gap-3 text-sm font-medium">
+          <span>Velocity 1.0 · Astro 6</span>
+          <span class="text-foreground-secondary font-mono text-xl" data-race-time={before}>{before.toFixed(1)} s</span>
         </div>
+        <div class="v-race-track">
+          <div class="v-race-fill bg-foreground-subtle" style="width: 100%;" data-race-bar={before}></div>
+        </div>
+      </div>
 
-        <!-- Editor content area -->
-        <div class="flex h-[340px] lg:h-[400px]">
-          <!-- File explorer sidebar -->
+      <div class="flex flex-col gap-2.5">
+        <div class="text-foreground flex items-baseline justify-between gap-3 text-sm font-semibold">
+          <span>Velocity 2.0 · Astro 7</span>
+          <span class="font-mono text-xl" data-race-time={after}>{after.toFixed(1)} s</span>
+        </div>
+        <div class="v-race-track">
           <div
-            class="border-border bg-background-secondary/30 w-48 shrink-0 overflow-hidden border-r text-xs lg:w-52"
+            class="v-race-fill bg-brand-500"
+            style={`width: ${((after / before) * 100).toFixed(1)}%;`}
+            data-race-bar={after}
           >
-            <div
-              class="text-foreground-muted px-3 py-2 text-[10px] font-semibold tracking-wider uppercase"
-            >
-              Explorer
-            </div>
-            <div class="space-y-px px-1">
-              <div class="text-foreground-muted flex items-center gap-1 px-2 py-1">
-                <Icon name="chevron-down" size="xs" />
-                <span class="text-foreground-secondary font-medium">src</span>
-              </div>
-              <div class="text-foreground-muted flex items-center gap-1 px-5 py-1">
-                <Icon name="chevron-down" size="xs" />
-                <span>components</span>
-              </div>
-              <div class="text-foreground-muted flex items-center gap-1 px-8 py-1">
-                <Icon name="chevron-right" size="xs" />
-                <span>layout</span>
-              </div>
-              <div class="text-foreground-muted flex items-center gap-1 px-8 py-1">
-                <Icon name="chevron-down" size="xs" />
-                <span>marketing</span>
-              </div>
-              <div
-                class="text-foreground-muted flex items-center gap-1 px-11 py-1"
-                data-ide-explorer="hero"
-              >
-                <Icon name="brand-astro" size="xs" />
-                <span>Hero.astro</span>
-              </div>
-              <div class="text-foreground-muted flex items-center gap-1 px-8 py-1">
-                <Icon name="chevron-right" size="xs" />
-                <span>ui</span>
-              </div>
-              <div class="text-foreground-muted flex items-center gap-1 px-5 py-1">
-                <Icon name="chevron-down" size="xs" />
-                <span>config</span>
-              </div>
-              <div
-                class="text-foreground-muted flex items-center gap-1 px-8 py-1"
-                data-ide-explorer="config"
-              >
-                <Icon name="brand-typescript" size="xs" />
-                <span>site.config.ts</span>
-              </div>
-              <div class="text-foreground-muted flex items-center gap-1 px-5 py-1">
-                <Icon name="chevron-right" size="xs" />
-                <span>layouts</span>
-              </div>
-              <div class="text-foreground-muted flex items-center gap-1 px-5 py-1">
-                <Icon name="chevron-down" size="xs" />
-                <span>pages</span>
-              </div>
-              <div
-                class="bg-brand-500/10 text-brand-500 flex items-center gap-1 rounded px-8 py-1"
-                data-ide-explorer="index"
-              >
-                <Icon name="brand-astro" size="xs" />
-                <span class="font-medium">index.astro</span>
-              </div>
-              <div class="text-foreground-muted flex items-center gap-1 px-5 py-1">
-                <Icon name="chevron-down" size="xs" />
-                <span>styles</span>
-              </div>
-              <div class="text-foreground-muted flex items-center gap-1 px-8 py-1">
-                <Icon name="chevron-down" size="xs" />
-                <span>themes</span>
-              </div>
-              <div
-                class="text-foreground-muted flex items-center gap-1 px-11 py-1"
-                data-ide-explorer="tokens"
-              >
-                <Icon name="palette" size="xs" />
-                <span>default.css</span>
-              </div>
-              <div class="text-foreground-muted flex items-center gap-1 px-8 py-1">
-                <Icon name="file-text" size="xs" />
-                <span>marketing.css</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Code editor panes — rendered via set:html to avoid Astro parsing curly braces -->
-          <div class="bg-card relative flex-1 overflow-hidden font-mono text-[13px] leading-[1.65]">
-            <div
-              class="ide-panel absolute inset-0 overflow-hidden p-4 lg:p-5"
-              data-ide-panel="index"
-              set:html={indexPanelHtml}
-            />
-            <div
-              class="ide-panel absolute inset-0 hidden overflow-hidden p-4 lg:p-5"
-              data-ide-panel="hero"
-              set:html={heroPanelHtml}
-            />
-            <div
-              class="ide-panel absolute inset-0 hidden overflow-hidden p-4 lg:p-5"
-              data-ide-panel="tokens"
-              set:html={tokensPanelHtml}
-            />
-            <div
-              class="ide-panel absolute inset-0 hidden overflow-hidden p-4 lg:p-5"
-              data-ide-panel="config"
-              set:html={configPanelHtml}
-            />
           </div>
         </div>
       </div>
+
+      <dl class="border-border grid grid-cols-3 gap-4 border-t pt-5">
+        {
+          stats.map((stat) => (
+            <div class="flex flex-col-reverse justify-end gap-1">
+              <dt class="text-foreground-subtle text-xs font-medium">{stat.label}</dt>
+              <dd class="v-display text-[1.75rem] leading-none">{stat.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
     </div>
-    <!-- Bottom gradient fade — masks the hard bottom edge into the next section -->
-    <div class="from-background relative z-20 -mt-24 h-24 bg-gradient-to-t to-transparent"></div>
   </div>
 </section>
 
-<script is:inline>
-  function initIdeTabs() {
-    const container = document.querySelector('[data-ide-tabs]');
-    if (!container || container.dataset.initialized) return;
-    container.dataset.initialized = 'true';
+<script>
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-    const tabs = container.querySelectorAll('[data-ide-tab]');
-    const panels = document.querySelectorAll('[data-ide-panel]');
-    const titleBar = container.closest('.rounded-t-xl');
-    const titleEl = titleBar ? titleBar.querySelector('[data-ide-title]') : null;
-    const explorerItems = document.querySelectorAll('[data-ide-explorer]');
+  if (hero) {
+    const glow = hero.querySelector<HTMLElement>('[data-hero-glow]');
+    const times = [...hero.querySelectorAll<HTMLElement>('[data-race-time]')];
+    const bars = [...hero.querySelectorAll<HTMLElement>('[data-race-bar]')];
+    const longest = Math.max(...times.map((el) => Number(el.dataset.raceTime)));
+    const secondsPerMs = 1 / 200;
+    let frame = 0;
 
-    const filePaths = {
-      index: 'src/pages/index.astro',
-      hero: 'src/components/marketing/Hero.astro',
-      tokens: 'src/styles/themes/default.css',
-      config: 'src/config/site.config.ts',
+    const paint = (elapsed: number) => {
+      times.forEach((el) => {
+        el.textContent = `${Math.min(Number(el.dataset.raceTime), elapsed).toFixed(1)} s`;
+      });
+      bars.forEach((el) => {
+        el.style.width = `${(Math.min(Number(el.dataset.raceBar), elapsed) / longest) * 100}%`;
+      });
     };
 
-    function activate(tabId) {
-      tabs.forEach(function (tab) {
-        const isActive = tab.dataset.ideTab === tabId;
-        if (isActive) {
-          tab.classList.add('ide-tab-active');
-        } else {
-          tab.classList.remove('ide-tab-active');
-        }
-      });
+    const race = () => {
+      cancelAnimationFrame(frame);
+      if (reduced.matches) return paint(longest);
+      const start = performance.now();
+      const tick = (now: number) => {
+        const elapsed = (now - start) * secondsPerMs;
+        paint(elapsed);
+        if (elapsed < longest) frame = requestAnimationFrame(tick);
+      };
+      frame = requestAnimationFrame(tick);
+    };
 
-      panels.forEach(function (panel) {
-        if (panel.dataset.idePanel === tabId) {
-          panel.classList.remove('hidden');
-        } else {
-          panel.classList.add('hidden');
-        }
-      });
+    hero.querySelector('[data-race-replay]')?.addEventListener('click', race);
+    race();
 
-      if (titleEl) {
-        titleEl.textContent = 'velocity \u2014 ' + (filePaths[tabId] || '');
-      }
-
-      explorerItems.forEach(function (item) {
-        if (item.dataset.ideExplorer === tabId) {
-          item.className = item.className.replace('text-foreground-muted', '').trim();
-          item.classList.add('rounded', 'bg-brand-500/10', 'text-brand-500');
-        } else {
-          item.classList.remove('rounded', 'bg-brand-500/10', 'text-brand-500');
-          if (!item.classList.contains('text-foreground-muted')) {
-            item.classList.add('text-foreground-muted');
-          }
-        }
+    if (glow && window.matchMedia('(hover: hover)').matches) {
+      hero.addEventListener('pointermove', (event) => {
+        if (reduced.matches) return;
+        const rect = hero.getBoundingClientRect();
+        glow.style.setProperty('--glow-x', `${((event.clientX - rect.left) / rect.width) * 100}%`);
+        glow.style.setProperty('--glow-y', `${((event.clientY - rect.top) / rect.height) * 100}%`);
       });
     }
-
-    tabs.forEach(function (tab) {
-      tab.addEventListener('click', function () {
-        activate(tab.dataset.ideTab);
-      });
-    });
   }
-
-  initIdeTabs();
-  document.addEventListener('astro:page-load', initIdeTabs);
 </script>
-
-<style>
-  .delay-4 {
-    animation-delay: 400ms;
-  }
-
-  /* IDE line numbers — :global() needed because set:html bypasses scoped styles */
-  :global(.ide-ln) {
-    display: inline-block;
-    width: 2.5rem;
-    text-align: right;
-    padding-right: 1rem;
-    color: var(--color-foreground-subtle);
-    user-select: none;
-    flex-shrink: 0;
-    font-size: 12px;
-    opacity: 0.4;
-  }
-
-  /* Tab states */
-  .ide-tab {
-    color: var(--color-foreground-muted);
-  }
-
-  .ide-tab:hover {
-    color: var(--color-foreground-secondary);
-  }
-
-  .ide-tab-active {
-    background: var(--color-card);
-    border: 1px solid var(--color-border);
-    border-bottom-color: transparent;
-    color: var(--color-foreground);
-    font-weight: 500;
-  }
-
-  .ide-tab-active svg {
-    color: var(--color-brand-500);
-  }
-</style>

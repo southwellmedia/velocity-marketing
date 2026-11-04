@@ -1,0 +1,666 @@
+---
+/**
+ * "What's included" bento. Every card is complete at rest, so touch, keyboard,
+ * reduced-motion and no-JS visitors all get the full content. Hover, keyboard
+ * focus, or scrolling into view on touch replays the demo. Controls are real:
+ * using one stops that card's demo and keeps the visitor's choice.
+ */
+import Button from '@/components/ui/form/Button/Button.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import MarketingIcon from '@/components/ui/primitives/MarketingIcon/MarketingIcon.astro';
+
+const agentFiles = [
+  ['src/views/PricingView.astro', 'content'],
+  ['src/pages/pricing.astro', 'default locale'],
+  ['src/pages/[lang]/[...pricing].astro', 'localized'],
+  ['src/config/nav.config.ts', 'route and menu'],
+  ['src/i18n/translations/en.ts', 'page copy'],
+];
+
+const hues = [
+  { name: 'Orange', value: 'oklch(62.5% 0.22 38)' },
+  { name: 'Blue', value: 'oklch(68% 0.16 250)' },
+  { name: 'Green', value: 'oklch(72% 0.17 150)' },
+  { name: 'Violet', value: 'oklch(68% 0.18 300)' },
+];
+
+const locales = [
+  { code: 'en', route: '/about', title: 'About us', note: 'x-default' },
+  { code: 'es', route: '/es/sobre-nosotros', title: 'Sobre nosotros', note: 'hreflang es' },
+  { code: 'fr', route: '/fr/a-propos', title: 'À propos', note: 'hreflang fr' },
+];
+
+const searchDocs = [
+  {
+    title: 'Velocity 2.0: Rebuilt for Astro 7',
+    text: 'Strict content security policy by default.',
+  },
+  {
+    title: 'Secure by default',
+    text: 'A hash-based content security policy from the first commit.',
+  },
+  {
+    title: 'Velocity 2.1: Built for AI Coding Agents',
+    text: 'Rules and skills for adding pages and components.',
+  },
+];
+
+const consent = [
+  { label: 'Necessary', locked: true },
+  { label: 'Analytics', locked: false },
+  { label: 'Marketing', locked: false },
+];
+
+const ogPages = [
+  { path: '/', title: 'Velocity: the Astro 7 starter kit' },
+  { path: '/blog/velocity-2', title: 'Velocity 2.0: Rebuilt for Astro 7' },
+  { path: '/es/sobre-nosotros', title: 'Sobre nosotros' },
+];
+
+const seoTags = ['Meta tags', 'JSON-LD', 'Sitemap', 'RSS', 'Canonical URLs', 'OG images', 'hreflang'];
+---
+
+<section id="features" class="v-section relative overflow-hidden" aria-labelledby="features-heading">
+  <div class="v-bloom" aria-hidden="true"></div>
+  <div class="container relative flex flex-col gap-14">
+    <div class="v-section-head">
+      <div class="flex max-w-[47.5rem] flex-col gap-5">
+        <p class="v-eyebrow">What's in the kit</p>
+        <h2 id="features-heading" class="v-display v-h2">What the Astro 7 boilerplate includes.</h2>
+      </div>
+      <p class="v-lead max-w-[36ch]">The parts you'd build anyway, already built and tested across every project shape.</p>
+    </div>
+
+    <div class="v-bento" data-bento>
+      <article class="v-feature v-feature-wide v-feature-agents" data-demo="agents">
+        <div class="v-feature-copy">
+          <div class="v-feature-head">
+            <span class="v-icon-tile"><MarketingIcon name="mkt-code" /></span>
+            <h3 class="v-feature-title">Your AI agent already knows the rules.</h3>
+          </div>
+          <p class="v-feature-text">
+            Every project ships with rules and skills for Claude Code, Codex, Cursor and other agents. They know how to
+            add pages and components, and which files upgrades replace.
+          </p>
+          <div class="mt-auto flex flex-wrap gap-3 pt-3">
+            <Button size="sm" href="/blog/velocity-2-1-ai-agents" class="h-11 px-4">Read the post</Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              href="https://docs.deployvelocity.com/getting-started/ai-agents/"
+              target="_blank"
+              class="h-11 px-4"
+            >
+              Agent guide
+            </Button>
+          </div>
+        </div>
+        <div class="v-demo">
+          <div class="v-window" role="group" aria-label="An agent adds a page using the velocity-add-page skill">
+            <div class="v-window-bar" aria-hidden="true">
+              <span></span><span></span><span></span>
+              <p>.agents/skills/velocity-add-page</p>
+            </div>
+            <div class="v-window-body v-code">
+              <p class="v-agent-prompt">
+                <span class="v-accent" aria-hidden="true">&gt;</span>
+                <span data-agent-prompt>Add a Pricing page and put it in the nav.</span>
+              </p>
+              <p class="v-step-line v-code-note mt-3" data-agent-step>Using velocity-add-page</p>
+              <ul class="mt-2 flex flex-col gap-1">
+                {
+                  agentFiles.map(([file, purpose]) => (
+                    <li class="v-step-line flex justify-between gap-4 whitespace-nowrap" data-agent-step>
+                      <span class="min-w-0 truncate">{file}</span>
+                      <span class="v-agent-purpose">{purpose}</span>
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="v-feature" data-demo="tokens">
+        <div class="v-feature-copy">
+          <div class="v-feature-head">
+            <span class="v-icon-tile"><MarketingIcon name="mkt-tokens" /></span>
+            <h3 class="v-feature-title">Change the whole look in one CSS file.</h3>
+          </div>
+          <p class="v-feature-text">Primitives feed semantic tokens, semantic tokens feed components, all in OKLCH.</p>
+        </div>
+        <div class="v-demo gap-0" data-token-demo>
+          <div class="v-token-row">
+            <span class="v-token-label">Primitive</span>
+            <div class="flex flex-wrap" role="group" aria-label="Try a brand color">
+              {
+                hues.map((hue, index) => (
+                  <button
+                    type="button"
+                    class="v-swatch"
+                    style={`--swatch: ${hue.value};`}
+                    aria-label={hue.name}
+                    aria-pressed={index === 0 ? 'true' : 'false'}
+                    data-hue={hue.value}
+                  >
+                    <span />
+                  </button>
+                ))
+              }
+            </div>
+          </div>
+          <div class="v-token-row">
+            <span class="v-token-label">Semantic</span>
+            <code class="v-code break-all">--accent</code>
+          </div>
+          <div class="v-token-row">
+            <span class="v-token-label">Component</span>
+            <div class="flex flex-wrap gap-2" aria-hidden="true">
+              <span class="v-token-sample v-token-fill">Button</span>
+              <span class="v-token-sample v-token-line">Badge</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="v-feature" data-demo="i18n">
+        <div class="v-feature-copy">
+          <div class="v-feature-head">
+            <span class="v-icon-tile"><MarketingIcon name="mkt-globe" /></span>
+            <h3 class="v-feature-title">Add a language by listing it.</h3>
+          </div>
+          <p class="v-feature-text">
+            Translated slugs, hreflang alternates, a localized sitemap, per-language search and social images.
+          </p>
+        </div>
+        <div class="v-demo">
+          <pre class="v-well v-code overflow-x-auto"><span class="v-code-note">// src/i18n/locales.mjs</span>
+locales = ['en', 'es', 'fr'];</pre>
+          <div class="v-well v-code" aria-live="polite">
+            <p class="text-foreground font-sans text-base font-semibold" data-locale-title>{locales[0].title}</p>
+            <p class="flex flex-wrap justify-between gap-x-3">
+              <span class="v-accent" data-locale-route>{locales[0].route}</span>
+              <span class="v-code-note" data-locale-note>{locales[0].note}</span>
+            </p>
+          </div>
+          <div class="v-pills" role="group" aria-label="Choose a language">
+            {
+              locales.map((locale, index) => (
+                <button
+                  type="button"
+                  class="v-pill flex-1"
+                  aria-pressed={index === 0 ? 'true' : 'false'}
+                  data-locale={locale.code}
+                  data-route={locale.route}
+                  data-title={locale.title}
+                  data-note={locale.note}
+                >
+                  {locale.code.toUpperCase()}
+                </button>
+              ))
+            }
+          </div>
+        </div>
+      </article>
+
+      <article class="v-feature" data-demo="forms">
+        <div class="v-feature-copy">
+          <div class="v-feature-head">
+            <span class="v-icon-tile"><Icon name="file-text" size="md" /></span>
+            <h3 class="v-feature-title">Forms that actually submit.</h3>
+          </div>
+          <p class="v-feature-text">
+            Astro Actions with Zod validation on the server, field errors on the client, and a honeypot for bots.
+          </p>
+        </div>
+        <div class="v-demo gap-2">
+          <label for="bento-email" class="text-foreground text-sm font-medium">Email address</label>
+          <input
+            id="bento-email"
+            class="v-input"
+            type="text"
+            inputmode="email"
+            autocomplete="off"
+            spellcheck="false"
+            value="hello@studio"
+            aria-invalid="true"
+            aria-describedby="bento-email-note"
+            data-form-input
+          />
+          <p id="bento-email-note" class="v-field-note" data-state="error" role="status" data-form-note>
+            Enter a valid email address
+          </p>
+          <div aria-hidden="true" class="flex flex-col gap-2">
+            <span class="text-foreground text-sm font-medium">Message</span>
+            <span class="v-input text-foreground-muted flex h-16 items-start py-2.5">We'd like a quote for…</span>
+            <span class="v-form-send">Send message</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="v-feature" data-demo="search">
+        <div class="v-feature-copy">
+          <div class="v-feature-head">
+            <span class="v-icon-tile"><MarketingIcon name="mkt-content" /></span>
+            <h3 class="v-feature-title">Search with no server or API key.</h3>
+          </div>
+          <p class="v-feature-text">Pagefind indexes your pages at build time. Browsers fetch only the chunks they need.</p>
+        </div>
+        <div class="v-demo gap-2">
+          <label for="bento-search" class="sr-only">Try searching this sample index</label>
+          <input
+            id="bento-search"
+            class="v-input"
+            type="search"
+            autocomplete="off"
+            value="security policy"
+            aria-describedby="bento-search-count"
+            data-search-input
+          />
+          <p id="bento-search-count" class="v-field-note" role="status" data-search-count>2 results</p>
+          <ul class="v-results">
+            {
+              searchDocs.map((doc, index) => (
+                <li class="v-result" data-search-doc hidden={index === 2}>
+                  <p class="text-foreground text-sm font-semibold">{doc.title}</p>
+                  <p class="text-foreground-muted text-[0.8125rem] leading-snug">{doc.text}</p>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </article>
+
+      <article class="v-feature" data-demo="consent">
+        <div class="v-feature-copy">
+          <div class="v-feature-head">
+            <span class="v-icon-tile"><MarketingIcon name="mkt-shield" /></span>
+            <h3 class="v-feature-title">Strict CSP and consent, built in.</h3>
+          </div>
+          <p class="v-feature-text">
+            Hash-based CSP with no unsafe-inline, plus a consent banner with Google Consent Mode v2.
+          </p>
+        </div>
+        <div class="v-demo gap-2">
+          {
+            consent.map((item) => (
+              <div class="v-switch-row">
+                <span class="flex items-center gap-2">
+                  <span id={`consent-${item.label}`}>{item.label}</span>
+                  {item.locked && <span class="v-required">Required</span>}
+                </span>
+                <button
+                  type="button"
+                  class="v-switch"
+                  role="switch"
+                  aria-checked={item.locked ? 'true' : 'false'}
+                  aria-labelledby={`consent-${item.label}`}
+                  disabled={item.locked}
+                  data-consent={item.locked ? undefined : item.label}
+                />
+              </div>
+            ))
+          }
+          <p class="v-well v-code mt-1 break-words">
+            script-src 'self' <span class="v-accent">'sha256-4f2a…'</span>
+          </p>
+        </div>
+      </article>
+
+      <article class="v-feature v-feature-wide" data-demo="seo">
+        <div class="v-feature-copy">
+          <div class="v-feature-head">
+            <span class="v-icon-tile"><MarketingIcon name="mkt-seo" /></span>
+            <h3 class="v-feature-title">Metadata and a social image on every page.</h3>
+          </div>
+          <p class="v-feature-text">
+            Automatic tags and structured data, plus a generated Open Graph image for each page and locale.
+          </p>
+          <ul class="mt-2 flex flex-wrap gap-2">
+            {seoTags.map((tag) => <li class="v-tag">{tag}</li>)}
+          </ul>
+        </div>
+        <div class="v-demo">
+          <div class="v-og" aria-live="polite">
+            <p class="text-foreground text-xs font-bold">Velocity</p>
+            <p class="v-display max-w-[20ch] text-2xl" data-og-title>{ogPages[1].title}</p>
+            <p class="text-foreground-muted text-[0.6875rem] font-medium">
+              deployvelocity.com<span class="v-accent" data-og-path>{ogPages[1].path}</span>
+            </p>
+          </div>
+          <div class="v-pills" role="group" aria-label="Preview a page">
+            {
+              ogPages.map((page, index) => (
+                <button
+                  type="button"
+                  class="v-pill flex-1 whitespace-nowrap"
+                  aria-pressed={index === 1 ? 'true' : 'false'}
+                  data-og={page.path}
+                  data-title={page.title}
+                >
+                  {page.path === '/' ? 'Home' : index === 1 ? 'Blog post' : 'Spanish page'}
+                </button>
+              ))
+            }
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<script>
+  type Demo = {
+    /** Plays the demo. Rejects when the signal aborts. */
+    play: (signal: AbortSignal) => Promise<void>;
+    /** Puts the card back to its resting state. */
+    reset: () => void;
+  };
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const canHover = window.matchMedia('(hover: hover)');
+
+  const wait = (ms: number, signal: AbortSignal) =>
+    new Promise<void>((resolve, reject) => {
+      if (signal.aborted) return reject(signal.reason);
+      const timer = setTimeout(resolve, ms);
+      signal.addEventListener(
+        'abort',
+        () => {
+          clearTimeout(timer);
+          reject(signal.reason);
+        },
+        { once: true },
+      );
+    });
+
+  const typeText = async (
+    text: string,
+    write: (value: string) => void,
+    signal: AbortSignal,
+    from = 0,
+    speed = 45,
+  ) => {
+    for (let index = from; index <= text.length; index += 1) {
+      write(text.slice(0, index));
+      await wait(speed, signal);
+    }
+  };
+
+  const press = (buttons: HTMLElement[], active?: HTMLElement) => {
+    buttons.forEach((button) => button.setAttribute('aria-pressed', String(button === active)));
+  };
+
+  function agentsDemo(card: HTMLElement): Demo {
+    const prompt = card.querySelector<HTMLElement>('[data-agent-prompt]')!;
+    const steps = [...card.querySelectorAll<HTMLElement>('[data-agent-step]')];
+    const text = prompt.textContent ?? '';
+    return {
+      async play(signal) {
+        steps.forEach((step) => step.toggleAttribute('data-hidden', true));
+        await typeText(text, (value) => (prompt.textContent = value), signal, 0, 28);
+        for (const step of steps) {
+          await wait(220, signal);
+          step.removeAttribute('data-hidden');
+        }
+      },
+      reset() {
+        prompt.textContent = text;
+        steps.forEach((step) => step.removeAttribute('data-hidden'));
+      },
+    };
+  }
+
+  function tokensDemo(card: HTMLElement): Demo {
+    const target = card.querySelector<HTMLElement>('[data-token-demo]')!;
+    const swatches = [...card.querySelectorAll<HTMLElement>('[data-hue]')];
+    const apply = (swatch: HTMLElement) => {
+      press(swatches, swatch);
+      target.style.setProperty('--demo-accent', swatch.dataset.hue ?? '');
+    };
+    swatches.forEach((swatch) => swatch.addEventListener('click', () => apply(swatch)));
+    return {
+      async play(signal) {
+        for (const swatch of swatches) {
+          apply(swatch);
+          await wait(800, signal);
+        }
+        apply(swatches[0]);
+      },
+      reset: () => apply(swatches[0]),
+    };
+  }
+
+  function i18nDemo(card: HTMLElement): Demo {
+    const pills = [...card.querySelectorAll<HTMLElement>('[data-locale]')];
+    const title = card.querySelector<HTMLElement>('[data-locale-title]')!;
+    const route = card.querySelector<HTMLElement>('[data-locale-route]')!;
+    const note = card.querySelector<HTMLElement>('[data-locale-note]')!;
+    const apply = (pill: HTMLElement) => {
+      press(pills, pill);
+      title.textContent = pill.dataset.title ?? '';
+      route.textContent = pill.dataset.route ?? '';
+      note.textContent = pill.dataset.note ?? '';
+    };
+    pills.forEach((pill) => pill.addEventListener('click', () => apply(pill)));
+    return {
+      async play(signal) {
+        for (const pill of [...pills.slice(1), pills[0]]) {
+          await wait(1100, signal);
+          apply(pill);
+        }
+      },
+      reset: () => apply(pills[0]),
+    };
+  }
+
+  function formsDemo(card: HTMLElement): Demo {
+    const input = card.querySelector<HTMLInputElement>('[data-form-input]')!;
+    const note = card.querySelector<HTMLElement>('[data-form-note]')!;
+    const validate = () => {
+      const value = input.value.trim();
+      const valid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
+      input.setAttribute('aria-invalid', String(Boolean(value) && !valid));
+      note.dataset.state = !value ? '' : valid ? 'ok' : 'error';
+      note.textContent = !value ? '' : valid ? 'Looks good' : 'Enter a valid email address';
+    };
+    const write = (value: string) => {
+      input.value = value;
+      validate();
+    };
+    input.addEventListener('input', validate);
+    return {
+      async play(signal) {
+        await typeText('hello@studio', write, signal);
+        await wait(900, signal);
+        await typeText('hello@studio.com', write, signal, 'hello@studio'.length);
+      },
+      reset: () => write('hello@studio'),
+    };
+  }
+
+  function searchDemo(card: HTMLElement): Demo {
+    const input = card.querySelector<HTMLInputElement>('[data-search-input]')!;
+    const count = card.querySelector<HTMLElement>('[data-search-count]')!;
+    const docs = [...card.querySelectorAll<HTMLElement>('[data-search-doc]')];
+    const filter = () => {
+      const words = input.value.toLowerCase().split(/\s+/).filter(Boolean);
+      let shown = 0;
+      docs.forEach((doc) => {
+        const haystack = (doc.textContent ?? '').toLowerCase();
+        doc.hidden = !words.every((word) => haystack.includes(word));
+        if (!doc.hidden) shown += 1;
+      });
+      count.textContent = shown === 1 ? '1 result' : `${shown} results`;
+    };
+    const write = (value: string) => {
+      input.value = value;
+      filter();
+    };
+    input.addEventListener('input', filter);
+    return {
+      // Results stay put while the demo types. Filtering each keystroke would
+      // flash every result, because an empty or partial query matches them all.
+      play: (signal) => typeText('security policy', (value) => (input.value = value), signal, 0, 60),
+      reset: () => write('security policy'),
+    };
+  }
+
+  function consentDemo(card: HTMLElement): Demo {
+    const switches = [...card.querySelectorAll<HTMLElement>('[data-consent]')];
+    const set = (button: HTMLElement, on: boolean) => button.setAttribute('aria-checked', String(on));
+    switches.forEach((button) =>
+      button.addEventListener('click', () => set(button, button.getAttribute('aria-checked') !== 'true')),
+    );
+    return {
+      async play(signal) {
+        for (const button of switches) {
+          await wait(400, signal);
+          set(button, true);
+        }
+      },
+      reset: () => switches.forEach((button) => set(button, false)),
+    };
+  }
+
+  function seoDemo(card: HTMLElement): Demo {
+    const pills = [...card.querySelectorAll<HTMLElement>('[data-og]')];
+    const title = card.querySelector<HTMLElement>('[data-og-title]')!;
+    const path = card.querySelector<HTMLElement>('[data-og-path]')!;
+    const apply = (pill: HTMLElement) => {
+      press(pills, pill);
+      title.textContent = pill.dataset.title ?? '';
+      path.textContent = pill.dataset.og ?? '';
+    };
+    pills.forEach((pill) => pill.addEventListener('click', () => apply(pill)));
+    return {
+      async play(signal) {
+        for (const pill of [pills[2], pills[0], pills[1]]) {
+          await wait(1100, signal);
+          apply(pill);
+        }
+      },
+      reset: () => apply(pills[1]),
+    };
+  }
+
+  const demos: Record<string, (card: HTMLElement) => Demo> = {
+    agents: agentsDemo,
+    tokens: tokensDemo,
+    i18n: i18nDemo,
+    forms: formsDemo,
+    search: searchDemo,
+    consent: consentDemo,
+    seo: seoDemo,
+  };
+
+  function wire(card: HTMLElement) {
+    const demo = demos[card.dataset.demo ?? '']?.(card);
+    if (!demo) return;
+
+    let controller: AbortController | undefined;
+    let touched = false;
+
+    const stop = () => {
+      controller?.abort();
+      controller = undefined;
+    };
+
+    const run = () => {
+      card.classList.add('is-live');
+      if (touched || reduced.matches) return;
+      stop();
+      const current = new AbortController();
+      controller = current;
+      demo.play(current.signal).catch(() => {});
+    };
+
+    const rest = () => {
+      card.classList.remove('is-live');
+      if (touched) return;
+      stop();
+      demo.reset();
+    };
+
+    // Using a real control hands the card to the visitor.
+    const takeOver = (event: Event) => {
+      const control = (event.target as HTMLElement).closest('button, input');
+      if (!control || touched) return;
+      stop();
+      touched = true;
+      if (control instanceof HTMLInputElement) control.dispatchEvent(new Event('input'));
+    };
+    card.addEventListener('click', takeOver);
+    card.addEventListener('input', (event) => {
+      if (event.isTrusted) takeOver(event);
+    });
+
+    card.addEventListener('pointerenter', (event) => {
+      if (event.pointerType === 'mouse' && canHover.matches) run();
+    });
+    card.addEventListener('pointerleave', (event) => {
+      if (event.pointerType !== 'mouse' || !canHover.matches) return;
+      if (card.contains(document.activeElement)) card.classList.remove('is-live');
+      else rest();
+    });
+    card.addEventListener('focusin', (event) => {
+      const target = event.target as HTMLElement;
+      if (target.matches(':focus-visible') && !(target instanceof HTMLInputElement)) run();
+      else card.classList.add('is-live');
+    });
+    card.addEventListener('focusout', (event) => {
+      if (!card.contains(event.relatedTarget as Node | null) && !card.matches(':hover')) rest();
+    });
+
+    // Touch has no hover, so the demo plays once as the card scrolls into view.
+    if (!canHover.matches && !reduced.matches) {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry?.isIntersecting) return;
+          observer.disconnect();
+          run();
+          window.setTimeout(() => card.classList.remove('is-live'), 5000);
+        },
+        { threshold: 0.6 },
+      );
+      observer.observe(card);
+    }
+  }
+
+  const bento = document.querySelector<HTMLElement>('[data-bento]');
+  if (bento) {
+    const cards = [...bento.querySelectorAll<HTMLElement>('[data-demo]')];
+    cards.forEach(wire);
+
+    if (!reduced.matches) {
+      const reveal = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            reveal.unobserve(entry.target);
+            entry.target.removeAttribute('data-reveal');
+            entry.target.classList.add('v-rise');
+          });
+        },
+        { rootMargin: '0px 0px -8% 0px' },
+      );
+      cards.forEach((card, index) => {
+        card.style.setProperty('--rise-delay', `${(index % 3) * 90}ms`);
+        card.toggleAttribute('data-reveal', true);
+        reveal.observe(card);
+      });
+    }
+
+    if (canHover.matches) {
+      bento.addEventListener('pointermove', (event) => {
+        if (reduced.matches) return;
+        const card = (event.target as HTMLElement).closest<HTMLElement>('[data-demo]');
+        if (!card) return;
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty('--mx', `${event.clientX - rect.left}px`);
+        card.style.setProperty('--my', `${event.clientY - rect.top}px`);
+      });
+    }
+  }
+</script>

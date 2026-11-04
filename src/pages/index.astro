@@ -1,25 +1,27 @@
 ---
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import Hero from '@/components/marketing/Hero.astro';
-import CredibilityStrip from '@/components/marketing/CredibilityStrip.astro';
-import BentoGrid from '@/components/marketing/BentoGrid';
-import AgentsSection from '@/components/marketing/AgentsSection.astro';
-import Showcase from '@/components/marketing/Showcase';
-import TemplatesTeaser from '@/components/marketing/TemplatesTeaser';
+import StatementTicker from '@/components/marketing/StatementTicker.astro';
+import FeatureBento from '@/components/marketing/FeatureBento.astro';
+import HowItShips from '@/components/marketing/HowItShips.astro';
+import ComponentMarquee from '@/components/marketing/ComponentMarquee.astro';
+import ShowcaseGallery from '@/components/marketing/ShowcaseGallery.astro';
+import TemplatesRelease from '@/components/marketing/TemplatesRelease.astro';
 import GetStarted from '@/components/marketing/GetStarted.astro';
 ---
 
 <MarketingLayout
   title="Velocity — Astro 7 Starter Kit & Boilerplate"
-  description="The production-ready Astro 7 starter kit and boilerplate. 57+ components, a full design token system, built-in i18n, AI agent skills, and 100 Lighthouse scores for accessibility and SEO. Free and open source."
+  description="The production-ready Astro 7 starter kit and boilerplate. 58 components, a full design token system, built-in i18n, AI agent skills, and 100 Lighthouse scores for accessibility and SEO. Free and open source."
   image="/velocity-og.jpg"
   imageAlt="Velocity — Astro 7 Starter Kit & Boilerplate"
 >
   <Hero />
-  <CredibilityStrip />
-  <BentoGrid client:visible />
-  <AgentsSection />
-  <Showcase client:visible />
-  <TemplatesTeaser client:visible />
+  <StatementTicker />
+  <FeatureBento />
+  <HowItShips />
+  <ComponentMarquee />
+  <ShowcaseGallery />
+  <TemplatesRelease />
   <GetStarted />
 </MarketingLayout>

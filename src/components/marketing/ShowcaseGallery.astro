@@ -1,0 +1,115 @@
+---
+/**
+ * Sites built on Velocity: the asymmetric gallery with a featured tile.
+ * Screenshots sit in grayscale and come to life on hover or focus. Touch
+ * devices show them in color with the caption visible, since they can't hover.
+ */
+import { Image } from 'astro:assets';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import southwell from '@/assets/showcase/southwell-media.png';
+import kirsch from '@/assets/showcase/kirsch-velocity.png';
+import deployVelocity from '@/assets/showcase/deploy-velocity.png';
+import ridgecut from '@/assets/showcase/ridgecut.png';
+import bigjunk from '@/assets/showcase/bigjunk.png';
+import greenDoor from '@/assets/showcase/green-door-26.png';
+
+const submitUrl = 'https://github.com/southwellmedia/velocity/issues/new';
+
+const sites = [
+  { name: 'Southwell Media', category: 'Digital agency', url: 'https://southwellmedia.com', image: southwell, accent: '#a0a0a0' },
+  { name: 'Allen Kirsch', category: 'Luxury real estate', url: 'https://kirsch-refresh.vercel.app/', image: kirsch, accent: '#c4a265' },
+  { name: 'Deploy Velocity', category: 'Developer tools', url: 'https://deployvelocity.com', image: deployVelocity, accent: 'var(--brand-500)' },
+  { name: 'Ridge Cut Roofing', category: 'Roofing and construction', url: 'https://ridgecut.vercel.app', image: ridgecut, accent: '#c4a265' },
+  { name: 'Big Junk', category: 'Junk removal', url: 'https://bigjunk.vercel.app', image: bigjunk, accent: '#f59e0b' },
+  { name: 'Green Door', category: 'Waste management', url: 'https://greendoor26.vercel.app', image: greenDoor, accent: '#4ade80' },
+];
+---
+
+<section id="showcase" class="v-section border-border-subtle border-t">
+  <div class="container flex flex-col gap-10">
+    <div class="flex max-w-[47.5rem] flex-col gap-5">
+      <p class="v-eyebrow">Showcase</p>
+      <h2 class="v-display v-h2">Shipped on Velocity.</h2>
+    </div>
+
+    <ul class="showcase-grid" data-showcase>
+      {
+        sites.map((site, index) => (
+          <li class="v-show" data-tilt>
+            <a class="v-show-link group" href={site.url} target="_blank" rel="noopener noreferrer">
+              <Image
+                src={site.image}
+                alt=""
+                width={index === 0 ? 1400 : 800}
+                class="v-show-image"
+                loading="lazy"
+              />
+              <span class="v-show-vignette" aria-hidden="true"></span>
+              <span class="showcase-card-overlay v-show-curtain" aria-hidden="true"></span>
+              <span class:list={['v-show-text', index === 0 && 'v-show-text-featured']}>
+                <span class="showcase-card-text showcase-stagger-1 v-show-category">
+                  <span class="h-1 w-1 rounded-full" style={`background-color: ${site.accent};`}></span>
+                  {site.category}
+                </span>
+                <span
+                  class="showcase-card-text showcase-stagger-2 font-display block font-bold tracking-tight text-white"
+                  style={`font-size: ${index === 0 ? 'clamp(1.5rem, 3vw, 2.5rem)' : 'var(--text-lg)'};`}
+                >
+                  {site.name}
+                </span>
+                <span class="showcase-card-text showcase-stagger-3 v-show-view">
+                  View site
+                  <Icon name="arrow-right" size="xs" />
+                </span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="border-border flex flex-col gap-6 border-t pt-10 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h3 class="font-display text-foreground font-semibold tracking-tight" style="font-size: var(--text-2xl);">
+          Built something with Velocity?
+        </h3>
+        <p class="text-foreground-muted mt-2 max-w-md text-sm leading-relaxed">
+          Send us the link and we'll feature it here, with a credit back to you.
+        </p>
+      </div>
+      <a
+        class="border-border-strong text-foreground hover:border-brand-500 hover:text-brand-500 inline-flex h-11 shrink-0 items-center gap-2.5 self-start rounded-md border px-5 font-mono text-xs tracking-wider uppercase no-underline transition-colors sm:self-auto"
+        href={submitUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Submit your site
+        <Icon name="arrow-right" size="sm" />
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  if (window.matchMedia('(hover: hover)').matches) {
+    document.querySelectorAll<HTMLElement>('[data-tilt]').forEach((tile, index) => {
+      const strength = index === 0 ? 3 : 8;
+      tile.addEventListener('pointermove', (event) => {
+        if (reduced.matches) return;
+        const rect = tile.getBoundingClientRect();
+        const x = (event.clientX - rect.left) / rect.width - 0.5;
+        const y = (event.clientY - rect.top) / rect.height - 0.5;
+        tile.style.setProperty('--tilt-x', `${(-y * strength).toFixed(2)}deg`);
+        tile.style.setProperty('--tilt-y', `${(x * strength).toFixed(2)}deg`);
+        tile.style.setProperty('--tilt-scale', '1.015');
+      });
+      tile.addEventListener('pointerleave', () => {
+        tile.style.removeProperty('--tilt-x');
+        tile.style.removeProperty('--tilt-y');
+        tile.style.removeProperty('--tilt-scale');
+      });
+    });
+  }
+</script>

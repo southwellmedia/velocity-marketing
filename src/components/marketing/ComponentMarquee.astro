@@ -1,0 +1,139 @@
+---
+/**
+ * Component wall. Every tile renders the real primitive, so what visitors see
+ * is what they install. The rows are decorative motion, so they are inert and
+ * hidden from assistive tech. The catalogue link is the accessible route.
+ */
+import Button from '@/components/ui/form/Button/Button.astro';
+import Input from '@/components/ui/form/Input/Input.astro';
+import Select from '@/components/ui/form/Select/Select.astro';
+import Switch from '@/components/ui/form/Switch/Switch.astro';
+import Checkbox from '@/components/ui/form/Checkbox/Checkbox.astro';
+import Badge from '@/components/ui/data-display/Badge/Badge.astro';
+import Avatar from '@/components/ui/data-display/Avatar/Avatar.astro';
+import Progress from '@/components/ui/data-display/Progress/Progress.astro';
+import Skeleton from '@/components/ui/data-display/Skeleton/Skeleton.astro';
+import Pagination from '@/components/ui/data-display/Pagination/Pagination.astro';
+import Alert from '@/components/ui/feedback/Alert/Alert.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+
+const plans = [
+  { value: 'studio', label: 'Studio plan' },
+  { value: 'agency', label: 'Agency plan' },
+];
+---
+
+<section class="v-section relative flex flex-col gap-10 overflow-hidden">
+  <div class="v-bloom" aria-hidden="true"></div>
+  <div class="container v-section-head relative">
+    <div class="flex max-w-[47.5rem] flex-col gap-5">
+      <p class="v-eyebrow">Components</p>
+      <h2 class="v-display v-h2">58 components. <span class="text-foreground-muted">Zero JavaScript by default.</span></h2>
+    </div>
+    <Button variant="secondary" size="lg" href="/components">
+      Browse the catalogue
+      <Icon name="arrow-right" size="sm" />
+    </Button>
+  </div>
+
+  <div class="v-marquee relative" aria-hidden="true">
+    <div class="v-track" inert>
+      {
+        [0, 1].map(() => (
+          <>
+            <div class="v-wall-tile">
+              <div class="v-wall-stage gap-2">
+                <Button size="sm">Primary</Button>
+                <Button size="sm" variant="secondary">Secondary</Button>
+              </div>
+              <p class="v-wall-label">Button</p>
+            </div>
+            <div class="v-wall-tile">
+              <div class="v-wall-stage flex-wrap gap-2">
+                <Badge variant="brand">New</Badge>
+                <Badge>Stable</Badge>
+                <Badge pill>Draft</Badge>
+              </div>
+              <p class="v-wall-label">Badge</p>
+            </div>
+            <div class="v-wall-tile">
+              <div class="v-wall-stage">
+                <Switch label="Email alerts" checked />
+              </div>
+              <p class="v-wall-label">Switch</p>
+            </div>
+            <div class="v-wall-tile">
+              <div class="v-wall-stage">
+                <Input class="w-full" placeholder="you@studio.com" size="sm" />
+              </div>
+              <p class="v-wall-label">Input</p>
+            </div>
+            <div class="v-wall-tile">
+              <div class="v-wall-stage gap-2">
+                <Avatar fallback="AK" size="md" />
+                <Avatar fallback="RC" size="md" />
+                <Avatar fallback="SM" size="md" />
+              </div>
+              <p class="v-wall-label">Avatar</p>
+            </div>
+            <div class="v-wall-tile">
+              <div class="v-wall-stage">
+                <Progress class="w-full" value={68} variant="brand" />
+              </div>
+              <p class="v-wall-label">Progress</p>
+            </div>
+            <div class="v-wall-tile">
+              <div class="v-wall-stage">
+                <Select class="w-full" size="sm" options={plans} />
+              </div>
+              <p class="v-wall-label">Select</p>
+            </div>
+          </>
+        ))
+      }
+    </div>
+
+    <div class="v-track v-track-reverse" inert>
+      {
+        [0, 1].map(() => (
+          <>
+            <div class="v-wall-tile v-wall-tile-wide">
+              <div class="v-wall-stage">
+                <Alert class="w-full" variant="success" title="Deployed">Your site is live.</Alert>
+              </div>
+              <p class="v-wall-label">Alert</p>
+            </div>
+            <div class="v-wall-tile">
+              <div class="v-wall-stage">
+                <Checkbox label="Accept the terms" checked />
+              </div>
+              <p class="v-wall-label">Checkbox</p>
+            </div>
+            <div class="v-wall-tile v-wall-tile-wide">
+              <div class="v-wall-stage">
+                <Pagination currentPage={2} totalPages={5} size="sm" />
+              </div>
+              <p class="v-wall-label">Pagination</p>
+            </div>
+            <div class="v-wall-tile">
+              <div class="v-wall-stage gap-3">
+                <Skeleton variant="circular" width="2.5rem" height="2.5rem" />
+                <div class="flex flex-1 flex-col gap-2">
+                  <Skeleton variant="text" width="100%" />
+                  <Skeleton variant="text" width="70%" />
+                </div>
+              </div>
+              <p class="v-wall-label">Skeleton</p>
+            </div>
+            <div class="v-wall-tile">
+              <div class="v-wall-stage">
+                <Input class="w-full" size="sm" value="hello@studio" error="Enter a valid email" />
+              </div>
+              <p class="v-wall-label">Field error</p>
+            </div>
+          </>
+        ))
+      }
+    </div>
+  </div>
+</section>
