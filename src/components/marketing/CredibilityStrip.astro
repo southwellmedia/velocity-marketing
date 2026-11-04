@@ -17,8 +17,8 @@ const { class: className } = Astro.props;
 const stats = [
   { value: 57, suffix: '+', label: 'Production Components', icon: 'mkt-components', sublabel: 'Zero-JS by default' },
   { value: 100, suffix: '', label: 'Lighthouse Score', icon: 'mkt-speed', sublabel: 'Every category, every page' },
-  { value: 0, suffix: 'kb', label: 'JavaScript Shipped', icon: 'mkt-code', sublabel: 'Until you need it', static: true },
-  { value: 3, suffix: '', label: 'Built-in Themes', icon: 'mkt-tokens', sublabel: 'Light, dark, & custom' },
+  { value: 1.2, suffix: 'KB', label: 'Baseline JavaScript', icon: 'mkt-code', sublabel: 'Gzipped, per page', static: true },
+  { value: 2, suffix: '', label: 'Built-in Themes', icon: 'mkt-tokens', sublabel: 'Each with light & dark' },
 ];
 ---
 
@@ -88,7 +88,7 @@ const stats = [
     let animated = false;
 
     function animateCount(el) {
-      const target = parseInt(el.dataset.target, 10);
+      const target = parseFloat(el.dataset.target);
       const suffix = el.dataset.suffix || '';
       const isStatic = el.dataset.static === 'true';
 

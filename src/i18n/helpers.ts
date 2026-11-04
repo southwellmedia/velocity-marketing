@@ -261,7 +261,7 @@ export type NavRoute = {
  */
 export function getNavRoutes(locale: Locale = defaultLocale): NavRoute[] {
   return Object.entries(routes)
-    .filter(([_, route]) => route.nav?.show === true)
+    .filter(([_, route]) => Boolean(route.nav?.show))
     .map(([routeId, route]) => ({
       routeId: routeId as RouteId,
       label: route.nav!.label,

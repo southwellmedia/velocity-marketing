@@ -35,7 +35,7 @@ export const fr: TranslationKeys = {
 
   // Hero Section
   hero: {
-    badge: 'v1.0 Bêta Publique Disponible',
+    badge: 'Velocity 2.0 est disponible',
     title: 'Votre prochain site',
     titleHighlight: 'commence ici.',
     description:
@@ -48,7 +48,7 @@ export const fr: TranslationKeys = {
   // Tech Stack Section
   techStack: {
     astro: {
-      name: 'Astro 6',
+      name: 'Astro 7',
       desc: 'Îles serveur et couche de contenu',
     },
     tailwind: {
@@ -91,7 +91,7 @@ export const fr: TranslationKeys = {
         desc: '100/100 Core Web Vitals',
         title: 'Zéro JS par Défaut',
         content:
-          "Nous utilisons l'architecture en îles d'Astro pour garantir que vos pages marketing n'envoient 0kb de JavaScript au client sauf si explicitement interactif.",
+          "Nous utilisons l'architecture en îles d'Astro pour garantir que vos pages marketing n'envoient qu'environ 1,2 Ko de JavaScript (gzip) au client sauf si explicitement interactif.",
       },
       components: {
         label: 'Composants',
@@ -151,7 +151,7 @@ export const fr: TranslationKeys = {
     description:
       "Rejoignez les développeurs qui construisent des sites web plus rapides et meilleurs avec Velocity. Open source et gratuit pour toujours.",
     docs: 'Lire la Documentation',
-    command: 'npm create velocity@latest',
+    command: 'npm create velocity-astro@latest',
   },
 
   // Footer

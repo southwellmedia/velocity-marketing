@@ -1,5 +1,6 @@
 ---
 import BlogLayout from '@/layouts/BlogLayout.astro';
+import { getReadingTime } from '@/lib/utils';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -27,6 +28,7 @@ const { Content } = await render(post);
   imageAlt={post.data.imageAlt}
   tags={post.data.tags}
   slug={post.id}
+  readingTime={getReadingTime(post.body ?? '')}
 >
   <Content />
 </BlogLayout>

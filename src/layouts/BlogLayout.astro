@@ -7,6 +7,7 @@ import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
 import ArticleHero from '@/components/blog/ArticleHero.astro';
 import ShareButtons from '@/components/blog/ShareButtons.astro';
 import RelatedPosts from '@/components/blog/RelatedPosts.astro';
+import { defaultLocale, type Locale } from '@/i18n/config';
 
 interface Props {
   title: string;
@@ -18,6 +19,8 @@ interface Props {
   imageAlt?: string;
   tags?: string[];
   slug?: string;
+  locale?: Locale;
+  readingTime?: number;
 }
 
 const {
@@ -30,9 +33,12 @@ const {
   imageAlt,
   tags = [],
   slug = '',
+  locale = defaultLocale,
+  readingTime,
 } = Astro.props;
 
-const ogImage = image?.src || `/og${Astro.url.pathname}.png`;
+// A post image becomes the social preview; otherwise SEO.astro uses the generated /og/<path>.png
+const ogImage = image?.src;
 
 const breadcrumbs = [
   { label: 'Home', href: '/' },
@@ -45,6 +51,7 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
 ---
 
 <BaseLayout
+  lang={locale}
   title={title}
   description={description}
   image={ogImage}
@@ -63,7 +70,7 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
     showActiveState
     showCta
     cta={{ label: 'View Docs', href: 'https://docs.deployvelocity.com' }}
-    extraNav={[{ label: 'Features', href: '#features' }]}
+    extraNav={[{ label: 'Features', href: '/#features' }]}
     actions={[
       {
         icon: 'github',
@@ -85,6 +92,7 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
     tags={tags}
     image={image}
     imageAlt={imageAlt}
+    readingTime={readingTime}
   />
 
   <article class={`py-12 ${image ? 'pt-24' : ''}`}>
@@ -132,7 +140,7 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
   {
     tags.length > 0 && (
       <div class="mx-auto max-w-6xl px-6 pb-16">
-        <RelatedPosts currentSlug={slug} tags={tags} locale="en" maxPosts={3} />
+        <RelatedPosts currentSlug={slug} tags={tags} locale={locale} maxPosts={3} />
       </div>
     )
   }
