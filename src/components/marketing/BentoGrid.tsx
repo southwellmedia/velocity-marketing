@@ -1106,7 +1106,7 @@ function SeoOgCard({ reducedMotion }: { reducedMotion: boolean }) {
               Velocity — Ship faster with Astro 7
             </p>
             <p className="text-[10px] text-foreground-muted leading-snug">
-              The production-ready Astro starter with 57+ components, design tokens, and perfect Lighthouse scores.
+              The production-ready Astro starter with 57+ components, design tokens, and 100 Lighthouse scores for accessibility and SEO.
             </p>
           </div>
         </div>

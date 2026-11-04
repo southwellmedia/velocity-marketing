@@ -578,8 +578,8 @@ const buttonId = `${menuId}-button`;
       }
     } catch { /* ignore */ }
 
-    // Fetch from GitHub API
-    fetch(`https://api.github.com/repos/${GH_REPO}`)
+    // Fetch from GitHub API once the page has loaded, so it never competes with it
+    const load = () => fetch(`https://api.github.com/repos/${GH_REPO}`)
       .then((r) => r.json())
       .then((data) => {
         if (typeof data.stargazers_count === 'number') {
@@ -590,6 +590,9 @@ const buttonId = `${menuId}-button`;
         }
       })
       .catch(() => { /* fail silently */ });
+
+    if (document.readyState === 'complete') load();
+    else window.addEventListener('load', load, { once: true });
   }
 
   initStarCount();

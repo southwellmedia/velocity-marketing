@@ -435,7 +435,7 @@ export const es: TranslationKeys = {
         iconsHint: 'Set de iconos Lucide — 24 incluidos',
         stacked: 'Apilados',
         performance: 'Rendimiento',
-        performanceScore: '100/100 Lighthouse',
+        performanceScore: '100/100 Accesibilidad',
         performanceDesc: 'Cero JavaScript por defecto. Arquitectura de islas con hidratación selectiva para velocidad óptima.',
         typeSafe: 'Type-Safe',
         typeSafeScore: 'TypeScript Completo',

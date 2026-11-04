@@ -433,7 +433,7 @@ export const en = {
         iconsHint: 'Lucide icon set — 24 included',
         stacked: 'Stacked',
         performance: 'Performance',
-        performanceScore: '100/100 Lighthouse',
+        performanceScore: '100/100 Accessibility',
         performanceDesc: 'Zero JavaScript by default. Islands architecture with selective hydration for optimal speed.',
         typeSafe: 'Type-Safe',
         typeSafeScore: 'Full TypeScript',
