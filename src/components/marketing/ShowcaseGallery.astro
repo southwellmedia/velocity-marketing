@@ -6,6 +6,7 @@
  */
 import { Image } from 'astro:assets';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import SubmitSiteDialog from '@/components/marketing/SubmitSiteDialog.astro';
 import southwell from '@/assets/showcase/southwell-media.png';
 import kirsch from '@/assets/showcase/kirsch-velocity.png';
 import deployVelocity from '@/assets/showcase/deploy-velocity.png';
@@ -80,6 +81,7 @@ const sites = [
       <a
         class="border-border-strong text-foreground hover:border-brand-500 hover:text-brand-500 inline-flex h-11 shrink-0 items-center gap-2.5 self-start rounded-md border px-5 font-mono text-xs tracking-wider uppercase no-underline transition-colors sm:self-auto"
         href={submitUrl}
+        data-submit-site
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -88,6 +90,7 @@ const sites = [
       </a>
     </div>
   </div>
+  <SubmitSiteDialog />
 </section>
 
 <script>
