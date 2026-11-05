@@ -34,6 +34,9 @@ jobs:
 
       - name: Build
         run: pnpm run build
+
+      - name: Check social images
+        run: pnpm run check:social
         env:
           SITE_URL: ${{ secrets.SITE_URL }}
 
