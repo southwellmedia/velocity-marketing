@@ -957,6 +957,70 @@
     box-shadow: 0 0 40px color-mix(in oklch, var(--brand-500) 8%, transparent);
   }
 
+  /* A planned template: the same card as a live one, with a sketched page
+     where the screenshot will go */
+  .v-planned {
+    border-style: dashed;
+  }
+
+  .v-sketch {
+    background:
+      linear-gradient(to bottom, color-mix(in oklch, var(--brand-500) 6%, transparent), transparent 60%),
+      var(--background-secondary);
+  }
+
+  .v-sketch-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .v-sketch-dot {
+    width: 0.625rem;
+    height: 0.625rem;
+    border-radius: 9999px;
+    background: var(--brand-500);
+    opacity: 0.8;
+  }
+
+  .v-sketch-line {
+    display: block;
+    height: 0.375rem;
+    border-radius: 9999px;
+    background: var(--foreground);
+    opacity: 0.14;
+  }
+
+  .v-sketch-block {
+    display: block;
+    border-radius: 0.5rem;
+    background: var(--foreground);
+    opacity: 0.08;
+  }
+
+  .v-sketch-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .v-sketch-badge {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    background: var(--card);
+    border: 1px dashed var(--border-strong);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--foreground-muted);
+  }
+
   .v-link {
     display: inline-flex;
     align-items: center;
