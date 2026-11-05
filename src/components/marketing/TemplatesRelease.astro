@@ -1,15 +1,15 @@
 ---
 /**
- * Premium templates teaser beside the latest release. Templates have no signup
- * backend yet, so the call to action links out instead of collecting emails.
+ * Premium templates beside the latest release. Checkout runs on Polar, which also
+ * invites buyers to the private templates repository.
  */
 import { Image } from 'astro:assets';
-import Badge from '@/components/ui/data-display/Badge/Badge.astro';
 import Button from '@/components/ui/form/Button/Button.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import medicalPractice from '@/assets/templates/medical-practice.png';
 
 const medicalDemoUrl = 'https://medical.deployvelocity.com';
+const checkoutUrl = 'https://buy.polar.sh/polar_cl_nAA9sZJmlwO6K0MfkPojRrWnKblhcnyqiidG2217nf9';
 
 const templates = [
   ['Agency Portfolio', 'Creative and studio'],
@@ -27,10 +27,7 @@ const releaseNotes = [
 <section id="templates" class="v-section pt-0!">
   <div class="container v-split">
     <div class="v-surface flex flex-col gap-6 p-6 sm:p-10">
-      <div class="flex items-center justify-between gap-4">
-        <p class="v-eyebrow">Premium templates</p>
-        <Badge variant="brand">Coming soon</Badge>
-      </div>
+      <p class="v-eyebrow">Premium templates</p>
       <h2 class="v-display v-h3">Start from a finished site.</h2>
       <a
         class="border-border-subtle group flex flex-col overflow-hidden rounded-lg border"
@@ -55,7 +52,7 @@ const releaseNotes = [
       </a>
       <p class="text-foreground-subtle -mt-3 text-xs font-medium">Demo photos not included.</p>
       <table class="v-table">
-        <caption class="sr-only">Planned premium templates</caption>
+        <caption class="text-foreground-subtle pb-2 text-left text-xs font-medium">Planned templates</caption>
         <tbody>
           {
             templates.map(([name, category]) => (
@@ -71,10 +68,11 @@ const releaseNotes = [
         <div class="flex max-w-[30ch] flex-col gap-1">
           <span class="v-display text-[2.5rem] leading-none">$199</span>
           <span class="text-foreground-subtle text-xs font-medium">
-            One-time. Every current and future template, full source, commercial license.
+            One-time. Every current and future template, full source, commercial license. 14-day refunds. Requires a free
+            GitHub account.
           </span>
         </div>
-        <Button size="lg" href="https://github.com/southwellmedia/velocity" target="_blank">Follow on GitHub</Button>
+        <Button size="lg" href={checkoutUrl}>Get lifetime access</Button>
       </div>
     </div>
 
