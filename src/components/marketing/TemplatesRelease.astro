@@ -3,12 +3,15 @@
  * Premium templates teaser beside the latest release. Templates have no signup
  * backend yet, so the call to action links out instead of collecting emails.
  */
+import { Image } from 'astro:assets';
 import Badge from '@/components/ui/data-display/Badge/Badge.astro';
 import Button from '@/components/ui/form/Button/Button.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import medicalPractice from '@/assets/templates/medical-practice.png';
+
+const medicalDemoUrl = 'https://medical.deployvelocity.com';
 
 const templates = [
-  ['Medical Practice', 'Healthcare and wellness'],
   ['Agency Portfolio', 'Creative and studio'],
   ['Developer Blog', 'Content and MDX'],
   ['E-Commerce', 'Storefront and catalog'],
@@ -29,6 +32,28 @@ const releaseNotes = [
         <Badge variant="brand">Coming soon</Badge>
       </div>
       <h2 class="v-display v-h3">Start from a finished site.</h2>
+      <a
+        class="border-border-subtle group flex flex-col overflow-hidden rounded-lg border"
+        href={medicalDemoUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Image
+          src={medicalPractice}
+          alt="Home page of the Medical Practice template, for a fictional clinic called Velocity Health"
+          widths={[480, 720, 960]}
+          sizes="(min-width: 1024px) 40vw, 100vw"
+          class="aspect-[16/10] w-full object-cover object-top"
+        />
+        <span class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 p-4">
+          <span class="flex flex-col">
+            <span class="text-foreground font-semibold">Medical Practice</span>
+            <span class="text-foreground-muted text-sm">Healthcare and wellness</span>
+          </span>
+          <span class="v-link">View live demo <Icon name="arrow-right" size="sm" /></span>
+        </span>
+      </a>
+      <p class="text-foreground-subtle -mt-3 text-xs font-medium">Demo photos not included.</p>
       <table class="v-table">
         <caption class="sr-only">Planned premium templates</caption>
         <tbody>
