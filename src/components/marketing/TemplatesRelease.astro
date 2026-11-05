@@ -11,6 +11,7 @@ import { Image } from 'astro:assets';
 import Button from '@/components/ui/form/Button/Button.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import medicalPractice from '@/assets/templates/medical-practice.png';
+import ecommerceStore from '@/assets/templates/ecommerce-store.png';
 
 const checkoutUrl = 'https://buy.polar.sh/polar_cl_nAA9sZJmlwO6K0MfkPojRrWnKblhcnyqiidG2217nf9';
 
@@ -29,9 +30,16 @@ const liveTemplates = [
     image: medicalPractice,
     alt: 'Home page of the Medical Practice template, for a fictional clinic called Velocity Health',
   },
+  {
+    name: 'E-commerce Store',
+    category: 'Retail and outdoor',
+    url: 'https://velocity-ecommerce-demo.vercel.app',
+    image: ecommerceStore,
+    alt: 'Home page of the E-commerce Store template, for a fictional outdoor brand called Northline',
+  },
 ];
 
-const plannedTemplates = ['Agency Portfolio', 'Developer Blog', 'E-Commerce'];
+const plannedTemplates = ['Agency Portfolio', 'Developer Blog'];
 
 const single = liveTemplates.length === 1;
 ---
