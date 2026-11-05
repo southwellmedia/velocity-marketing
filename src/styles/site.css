@@ -929,27 +929,17 @@
   }
 
   /* Templates and release ------------------------------------------------- */
-  .v-split {
+  .v-premium {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
+    align-items: start;
     gap: 1.5rem;
   }
 
-  .v-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.875rem;
-    line-height: 1.5;
-  }
-
-  .v-table td {
-    padding-block: 0.875rem;
-    border-bottom: 1px solid var(--border);
-    vertical-align: top;
-  }
-
-  .v-table tr:last-child td {
-    border-bottom: none;
+  @media (min-width: 1024px) {
+    .v-premium {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    }
   }
 
   .v-release {
@@ -1058,10 +1048,6 @@
   }
 
   @media (min-width: 720px) {
-    .v-split {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
     .v-bento {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }

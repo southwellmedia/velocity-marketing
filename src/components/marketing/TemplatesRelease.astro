@@ -1,79 +1,123 @@
 ---
 /**
- * Premium templates teaser beside the latest release. Templates have no signup
- * backend yet, so the call to action links out instead of collecting emails.
+ * Premium offer pinned beside the templates, with the latest release below.
+ * Checkout runs on Polar, which also invites buyers to the private templates
+ * repository.
+ *
+ * To add a template, move it from `plannedTemplates` to `liveTemplates`. One
+ * template shows wide; two or more switch to a grid.
  */
-import Badge from '@/components/ui/data-display/Badge/Badge.astro';
+import { Image } from 'astro:assets';
 import Button from '@/components/ui/form/Button/Button.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import medicalPractice from '@/assets/templates/medical-practice.png';
 
-const templates = [
-  ['Medical Practice', 'Healthcare and wellness'],
-  ['Agency Portfolio', 'Creative and studio'],
-  ['Developer Blog', 'Content and MDX'],
-  ['E-Commerce', 'Storefront and catalog'],
+const checkoutUrl = 'https://buy.polar.sh/polar_cl_nAA9sZJmlwO6K0MfkPojRrWnKblhcnyqiidG2217nf9';
+
+const benefits = [
+  'Every current and future template',
+  'Full source, with a commercial license',
+  'Unlimited sites, including client work',
+  'English and Spanish, light and dark',
 ];
 
-const releaseNotes = [
-  'AGENTS.md and project rules in every new project.',
-  'Skills for adding pages and components the Velocity way.',
-  'Agents know which files upgrades replace.',
+const liveTemplates = [
+  {
+    name: 'Medical Practice',
+    category: 'Healthcare and wellness',
+    url: 'https://medical.deployvelocity.com',
+    image: medicalPractice,
+    alt: 'Home page of the Medical Practice template, for a fictional clinic called Velocity Health',
+  },
 ];
+
+const plannedTemplates = ['Agency Portfolio', 'Developer Blog', 'E-Commerce'];
+
+const single = liveTemplates.length === 1;
 ---
 
 <section id="templates" class="v-section pt-0!">
-  <div class="container v-split">
-    <div class="v-surface flex flex-col gap-6 p-6 sm:p-10">
-      <div class="flex items-center justify-between gap-4">
+  <div class="container flex flex-col gap-6">
+    <div class="v-premium">
+      <div class="v-surface flex flex-col gap-6 p-6 sm:p-8 lg:sticky lg:top-28">
         <p class="v-eyebrow">Premium templates</p>
-        <Badge variant="brand">Coming soon</Badge>
-      </div>
-      <h2 class="v-display v-h3">Start from a finished site.</h2>
-      <table class="v-table">
-        <caption class="sr-only">Planned premium templates</caption>
-        <tbody>
+        <h2 class="v-display v-h3">Start from a finished site.</h2>
+        <div class="flex flex-col gap-1">
+          <span class="v-display text-[2.5rem] leading-none">$199</span>
+          <span class="text-foreground-subtle text-xs font-medium">One-time. All sales final.</span>
+        </div>
+        <ul class="text-foreground-secondary flex flex-col gap-2.5 text-sm leading-normal">
           {
-            templates.map(([name, category]) => (
-              <tr>
-                <td class="text-foreground font-semibold">{name}</td>
-                <td class="text-foreground-muted text-right">{category}</td>
-              </tr>
+            benefits.map((benefit) => (
+              <li class="flex items-start gap-2.5">
+                <Icon name="check" size="sm" class="text-foreground-subtle mt-0.5 shrink-0" />
+                {benefit}
+              </li>
             ))
           }
-        </tbody>
-      </table>
-      <div class="mt-auto flex flex-wrap items-end justify-between gap-4 pt-2">
-        <div class="flex max-w-[30ch] flex-col gap-1">
-          <span class="v-display text-[2.5rem] leading-none">$199</span>
-          <span class="text-foreground-subtle text-xs font-medium">
-            One-time. Every current and future template, full source, commercial license.
-          </span>
+        </ul>
+        <div class="flex flex-col gap-3">
+          <Button size="lg" href={checkoutUrl} fullWidth>Get lifetime access</Button>
+          <span class="text-foreground-subtle text-xs font-medium">Requires a free GitHub account.</span>
         </div>
-        <Button size="lg" href="https://github.com/southwellmedia/velocity" target="_blank">Follow on GitHub</Button>
+      </div>
+
+      <div class="flex min-w-0 flex-col gap-6">
+        <div class:list={['grid gap-6', !single && 'sm:grid-cols-2']}>
+          {
+            liveTemplates.map((template) => (
+              <a
+                class="v-surface v-release overflow-hidden"
+                href={template.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image
+                  src={template.image}
+                  alt={template.alt}
+                  widths={[480, 720, 960, 1280]}
+                  sizes="(min-width: 1024px) 60vw, 100vw"
+                  class:list={[
+                    'w-full object-cover object-top',
+                    single ? 'aspect-[16/10] sm:aspect-[2/1]' : 'aspect-[16/10]',
+                  ]}
+                />
+                <span class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 p-4 sm:px-5">
+                  <span class="flex flex-col">
+                    <span class="text-foreground font-semibold">{template.name}</span>
+                    <span class="text-foreground-muted text-sm">{template.category}</span>
+                  </span>
+                  <span class="v-link">
+                    View live demo <Icon name="arrow-right" size="sm" />
+                  </span>
+                </span>
+              </a>
+            ))
+          }
+        </div>
+        <p class="text-foreground-subtle text-xs font-medium">Demo photos not included.</p>
+        {
+          plannedTemplates.length > 0 && (
+            <p class="text-foreground-muted flex flex-wrap gap-x-6 gap-y-2 text-sm">
+              <span class="text-foreground-secondary font-semibold">Planned:</span>
+              {plannedTemplates.map((name) => (
+                <span>{name}</span>
+              ))}
+            </p>
+          )
+        }
       </div>
     </div>
 
-    <a class="v-surface v-release gap-6 p-6 sm:p-10" href="/blog/velocity-2-1-ai-agents">
-      <span class="flex items-center justify-between gap-4">
+    <a
+      class="v-surface v-release flex-row! flex-wrap items-center justify-between gap-x-6 gap-y-3 p-5 sm:px-6"
+      href="/blog/velocity-2-1-ai-agents"
+    >
+      <span class="flex flex-wrap items-center gap-x-4 gap-y-1">
         <span class="v-eyebrow">Latest release</span>
-        <time datetime="2026-11-04" class="text-foreground-subtle text-xs font-medium">November 4, 2026</time>
+        <span class="text-foreground font-semibold">Velocity 2.1: Built for AI Coding Agents</span>
       </span>
-      <span class="v-display v-h3">Velocity 2.1: Built for AI Coding Agents</span>
-      <span class="text-foreground-muted leading-relaxed">
-        Every project now ships with agent rules and skills, so Claude Code, Codex and Cursor can add pages and components
-        the Velocity way.
-      </span>
-      <span class="text-foreground-secondary flex flex-col gap-2.5 text-sm leading-normal">
-        {
-          releaseNotes.map((note) => (
-            <span class="flex items-start gap-2.5">
-              <span class="text-foreground-subtle w-7 shrink-0 font-mono text-xs leading-5">2.1</span>
-              {note}
-            </span>
-          ))
-        }
-      </span>
-      <span class="v-link mt-auto">Read the release notes <Icon name="arrow-right" size="sm" /></span>
+      <span class="v-link">Read the release notes <Icon name="arrow-right" size="sm" /></span>
     </a>
   </div>
 </section>
