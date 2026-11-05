@@ -1,0 +1,124 @@
+---
+/**
+ * The Submit Your Site form. Anything with data-submit-site opens it, and keeps its
+ * href as a fallback if JavaScript doesn't run. Posts to /api/submit-site.
+ */
+import Button from '@/components/ui/form/Button/Button.astro';
+import Checkbox from '@/components/ui/form/Checkbox/Checkbox.astro';
+import Dialog from '@/components/ui/overlay/Dialog/Dialog.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import Input from '@/components/ui/form/Input/Input.astro';
+import Textarea from '@/components/ui/form/Textarea/Textarea.astro';
+---
+
+<Dialog
+  id="submit-site"
+  title="Submit your site"
+  description="Built with Velocity? Send it over and we'll take a look."
+  size="md"
+>
+  <form action="/api/submit-site" method="POST" class="flex flex-col gap-4" data-submit-form novalidate>
+    <Input label="Site URL" name="siteUrl" type="url" placeholder="https://" autocomplete="url" required />
+    <Input label="Site name" name="siteName" type="text" required />
+    <div class="grid gap-4 sm:grid-cols-2">
+      <Input label="Your name" name="name" type="text" autocomplete="name" required />
+      <Input label="Email" name="email" type="email" autocomplete="email" required />
+    </div>
+    <Textarea label="Anything we should know? (optional)" name="notes" rows={3} maxlength={1000} />
+    <Checkbox
+      name="permission"
+      label="I own this site or have permission, and you can feature it with a screenshot and a credit."
+      required
+    />
+
+    {/* Bots fill this in. People never see it. */}
+    <div class="hidden" aria-hidden="true">
+      <label>Company <input type="text" name="company" tabindex="-1" autocomplete="off" /></label>
+    </div>
+
+    <p class="text-destructive min-h-5 text-sm font-medium" role="alert" data-submit-error></p>
+    <Button type="submit" size="lg" fullWidth data-submit-button>
+      <span data-submit-label>Submit site</span>
+    </Button>
+  </form>
+
+  <div class="hidden flex-col items-start gap-3 py-2" data-submit-done tabindex="-1">
+    <span class="bg-brand-500 grid size-12 place-items-center rounded-full text-white">
+      <Icon name="check" size="md" />
+    </span>
+    <h3 class="font-display text-foreground text-xl font-semibold">Thanks, we've got it.</h3>
+    <p class="text-foreground-muted text-sm leading-relaxed">
+      We review every site. If yours is a fit for the showcase, we'll be in touch by email.
+    </p>
+    <Button variant="outline" data-dialog-close>Close</Button>
+  </div>
+</Dialog>
+
+<script>
+  type Dialog = HTMLElement & { open?: () => void };
+
+  function init() {
+    const dialog = document.getElementById('submit-site') as Dialog | null;
+    const form = dialog?.querySelector<HTMLFormElement>('[data-submit-form]');
+    if (!dialog || !form || form.dataset.init) return;
+    form.dataset.init = 'true';
+
+    const error = form.querySelector<HTMLElement>('[data-submit-error]')!;
+    const button = form.querySelector<HTMLButtonElement>('[data-submit-button]')!;
+    const label = form.querySelector<HTMLElement>('[data-submit-label]')!;
+    const done = dialog.querySelector<HTMLElement>('[data-submit-done]')!;
+    const idle = label.textContent;
+
+    document.querySelectorAll<HTMLElement>('[data-submit-site]').forEach((trigger) => {
+      trigger.addEventListener('click', (event) => {
+        if (!dialog.open) return;
+        event.preventDefault();
+        form.classList.remove('hidden');
+        done.classList.add('hidden');
+        done.classList.remove('flex');
+        dialog.open();
+      });
+    });
+
+    const markInvalid = (errors: Record<string, string> = {}) => {
+      for (const control of form.querySelectorAll<HTMLInputElement>('input[name], textarea[name]')) {
+        if (errors[control.name]) control.setAttribute('aria-invalid', 'true');
+        else control.removeAttribute('aria-invalid');
+      }
+      const first = Object.keys(errors)[0];
+      if (first) form.querySelector<HTMLElement>(`[name="${first}"]`)?.focus();
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      error.textContent = '';
+      markInvalid();
+      button.disabled = true;
+      label.textContent = 'Sending…';
+      try {
+        const response = await fetch(form.action, { method: 'POST', body: new FormData(form) });
+        const result = await response.json();
+        if (result.success) {
+          form.reset();
+          form.classList.add('hidden');
+          done.classList.remove('hidden');
+          done.classList.add('flex');
+          done.focus();
+        } else if (result.errors) {
+          error.textContent = Object.values(result.errors).join(' ');
+          markInvalid(result.errors);
+        } else {
+          error.textContent = result.error;
+        }
+      } catch {
+        error.textContent = 'Something went wrong. Please try again.';
+      } finally {
+        button.disabled = false;
+        label.textContent = idle;
+      }
+    });
+  }
+
+  init();
+  document.addEventListener('astro:after-swap', init);
+</script>
