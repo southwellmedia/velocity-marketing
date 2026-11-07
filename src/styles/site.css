@@ -484,7 +484,8 @@
   /* Showcase gallery */
   .v-show {
     min-height: 15rem;
-    transform: perspective(1200px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) scale(var(--tilt-scale, 1));
+    transform: perspective(1200px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg))
+      scale(var(--tilt-scale, 1));
     transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
   }
 
@@ -586,7 +587,6 @@
     text-transform: uppercase;
     color: rgb(255 255 255 / 0.7);
   }
-
 
   .v-well {
     padding: 0.875rem 1rem;
@@ -957,6 +957,87 @@
     box-shadow: 0 0 40px color-mix(in oklch, var(--brand-500) 8%, transparent);
   }
 
+  /* Templates row: scrolls sideways, snaps to cards, and fades whichever
+     edge has more to see */
+  .v-carousel {
+    --fade-start: 0px;
+    --fade-end: 4rem;
+    min-width: 0;
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 var(--fade-start),
+      #000 calc(100% - var(--fade-end)),
+      transparent
+    );
+  }
+
+  .v-carousel:not([data-at-start]) {
+    --fade-start: 2rem;
+  }
+
+  .v-carousel[data-at-end] {
+    --fade-end: 0px;
+  }
+
+  .v-carousel-track {
+    display: flex;
+    gap: 1.5rem;
+    /* Room for the hover glow and focus ring, which overflow would clip */
+    margin: -0.75rem 0;
+    padding: 0.75rem 0;
+    list-style: none;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .v-carousel-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .v-carousel-item {
+    flex: 0 0 85%;
+    scroll-snap-align: start;
+  }
+
+  @media (min-width: 640px) {
+    .v-carousel-item {
+      flex-basis: 62%;
+    }
+  }
+
+  .v-carousel-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 9999px;
+    border: 1px solid var(--border-strong);
+    background: var(--card);
+    color: var(--foreground);
+    cursor: pointer;
+    transition:
+      border-color 200ms ease,
+      opacity 200ms ease;
+  }
+
+  .v-carousel-arrow:hover:not(:disabled) {
+    border-color: var(--brand-500);
+  }
+
+  .v-carousel-arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  .v-carousel-arrow:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
   /* A planned template: the same card as a live one, with a sketched page
      where the screenshot will go */
   .v-planned {
@@ -965,7 +1046,11 @@
 
   .v-sketch {
     background:
-      linear-gradient(to bottom, color-mix(in oklch, var(--brand-500) 6%, transparent), transparent 60%),
+      linear-gradient(
+        to bottom,
+        color-mix(in oklch, var(--brand-500) 6%, transparent),
+        transparent 60%
+      ),
       var(--background-secondary);
   }
 
