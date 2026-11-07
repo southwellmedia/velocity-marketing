@@ -8,10 +8,20 @@ const STATIC_PAGES = [
   { slug: 'index', title: siteConfig.name, description: siteConfig.description },
   { slug: 'about', title: 'About', description: `Learn more about ${siteConfig.name}` },
   { slug: 'contact', title: 'Contact', description: `Get in touch with ${siteConfig.name}` },
-  { slug: 'blog', title: 'Blog', description: `Latest articles and updates from ${siteConfig.name}` },
+  {
+    slug: 'blog',
+    title: 'Blog',
+    description: `Latest articles and updates from ${siteConfig.name}`,
+  },
   { slug: 'es/blog', title: 'Blog', description: `Artículos y novedades de ${siteConfig.name}` },
   { slug: 'fr/blog', title: 'Blog', description: `Articles et actualités de ${siteConfig.name}` },
   { slug: 'components', title: 'Component Library', description: 'UI component showcase' },
+  {
+    slug: 'premium',
+    title: 'Velocity Premium',
+    description:
+      'Complete Astro sites built on Velocity. $199 once for every current and future template.',
+  },
   { slug: 'showcase', title: 'Showcase', description: `Sites built with ${siteConfig.name}` },
 ];
 

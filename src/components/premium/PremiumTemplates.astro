@@ -1,0 +1,72 @@
+---
+/**
+ * Each live template, large, with its brand, pages and demo link.
+ * Rows alternate sides on wide screens.
+ */
+import { Image } from 'astro:assets';
+import Button from '@/components/ui/form/Button/Button.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import { liveTemplates } from '@/data/premium';
+
+const count = liveTemplates.length;
+---
+
+<section id="templates" class="v-section v-premium-band scroll-mt-24">
+  <div class="container flex flex-col gap-16 lg:gap-24">
+    <div class="flex max-w-[42rem] flex-col gap-4">
+      <p class="v-eyebrow">The templates</p>
+      <h2 class="v-display v-h2">Three sites, ready to ship.</h2>
+      <p class="v-lead">
+        Each one is a real business site with every page written, not a home page and a promise.
+        Open a demo and click around.
+      </p>
+    </div>
+
+    {liveTemplates.map((template, index) => (
+      <article class:list={['v-tpl', index % 2 === 1 && 'v-tpl-flip']}>
+        <a
+          class="v-tpl-shot"
+          href={template.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${template.name} live demo (opens in a new tab)`}
+        >
+          <Image
+            src={template.image}
+            alt={template.alt}
+            widths={[640, 960, 1280]}
+            sizes="(min-width: 1024px) 700px, 100vw"
+            class="block aspect-[16/10] w-full object-cover object-top"
+          />
+        </a>
+        <div class="flex flex-col items-start gap-5">
+          <p class="text-foreground-subtle flex items-center gap-2.5 text-sm font-medium">
+            <span class="font-mono">{String(count - index).padStart(2, '0')}</span>
+            <span class="bg-border-strong h-px w-6" aria-hidden="true" />
+            {template.isNew ? `New · ${template.category}` : template.category}
+          </p>
+          <h3 class="v-display text-[clamp(2rem,1.5rem+1.5vw,2.5rem)]">{template.name}</h3>
+          <p class="text-foreground-secondary leading-relaxed">
+            <span class="text-foreground font-semibold">{template.brand}:</span>{' '}
+            {template.description}
+          </p>
+          <div class="flex flex-col gap-2.5">
+            <span class="text-foreground-subtle text-xs font-semibold tracking-widest uppercase">
+              Pages
+            </span>
+            <ul class="flex flex-wrap gap-2">
+              {template.pages.map((page) => (
+                <li class="border-border text-foreground-secondary rounded-md border px-2.5 py-1.5 text-[0.8125rem]">
+                  {page}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <Button variant="secondary" size="lg" href={template.url} target="_blank">
+            View live demo <Icon name="arrow-up-right" size="sm" />
+          </Button>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>

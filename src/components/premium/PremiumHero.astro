@@ -1,0 +1,78 @@
+---
+/**
+ * /premium hero: the offer, centered, over the live templates fanned out.
+ */
+import { Image } from 'astro:assets';
+import Button from '@/components/ui/form/Button/Button.astro';
+import { checkoutUrl, liveTemplates, plannedTemplates, price } from '@/data/premium';
+
+const [front, ...rest] = liveTemplates;
+const sides = rest.slice(0, 2);
+const host = new URL(front.url).host;
+---
+
+<section class="v-premium-hero">
+  <div class="v-premium-grid" aria-hidden="true"></div>
+  <div class="relative container flex flex-col items-center gap-7 text-center">
+    <p class="v-count v-rise">
+      <span class="text-foreground whitespace-nowrap">Velocity Premium</span>
+      <span class="v-count-divider" aria-hidden="true"></span>
+      <span>
+        {liveTemplates.length} templates live, {plannedTemplates.length} in the works
+      </span>
+    </p>
+    <h1 class="v-display v-giant v-rise max-w-[14ch]" style="--rise-delay: 80ms;">
+      Start from a <span class="v-highlight">finished site.</span>
+    </h1>
+    <p class="v-lead v-rise max-w-[52ch]" style="--rise-delay: 160ms;">
+      Complete, multi-page sites built on Velocity, with the hard patterns already done: booking,
+      search, listings, two languages and both themes. Pay once and use them on every project you
+      ship.
+    </p>
+    <div class="v-rise flex flex-wrap justify-center gap-3" style="--rise-delay: 240ms;">
+      <Button size="lg" href={checkoutUrl}>
+        Get lifetime access · {price}
+      </Button>
+      <Button size="lg" variant="secondary" href="#templates">
+        Browse the templates
+      </Button>
+    </div>
+    <p class="v-rise text-foreground-subtle text-xs font-medium" style="--rise-delay: 320ms;">
+      One-time payment. Requires a free GitHub account.
+    </p>
+  </div>
+
+  <div class="relative container mt-14 sm:mt-16">
+    <div class="v-fan">
+      {sides.map((template, index) => (
+        <Image
+          src={template.image}
+          alt={template.alt}
+          widths={[480, 720, 960]}
+          sizes="45vw"
+          loading="eager"
+          class:list={['v-fan-side', index === 0 ? 'v-fan-left' : 'v-fan-right']}
+        />
+      ))}
+      <figure class="v-fan-front">
+        <figcaption class="v-browser-bar">
+          <span class="v-browser-dots" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+          <span class="v-browser-url">{host}</span>
+        </figcaption>
+        <Image
+          src={front.image}
+          alt={front.alt}
+          widths={[640, 960, 1280, 1600]}
+          sizes="(min-width: 900px) 760px, 100vw"
+          loading="eager"
+          fetchpriority="high"
+          class="block aspect-[16/10] w-full object-cover object-top"
+        />
+      </figure>
+    </div>
+  </div>
+</section>

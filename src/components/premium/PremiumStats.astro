@@ -1,0 +1,27 @@
+---
+/**
+ * Four facts under the /premium hero, number first.
+ */
+import { liveTemplates, plannedTemplates, price } from '@/data/premium';
+
+const stats = [
+  { value: price, label: 'One time, lifetime access' },
+  {
+    value: `${liveTemplates.length} + ${plannedTemplates.length}`,
+    label: 'Live templates, plus two in the works',
+  },
+  { value: 'Unlimited', label: 'Sites, including client work' },
+  { value: 'EN · ES', label: 'Two languages, light and dark' },
+];
+---
+
+<section class="pb-[clamp(4rem,10vw,6rem)]">
+  <ul class="container grid grid-cols-2 gap-4 lg:grid-cols-4">
+    {stats.map((stat) => (
+      <li class="v-surface flex flex-col gap-1.5 p-5 sm:p-6">
+        <span class="v-display text-[clamp(1.75rem,1.25rem+1.5vw,2.5rem)]">{stat.value}</span>
+        <span class="text-foreground-muted text-sm">{stat.label}</span>
+      </li>
+    ))}
+  </ul>
+</section>

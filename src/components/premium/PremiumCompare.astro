@@ -1,0 +1,73 @@
+---
+/**
+ * The free starter beside Premium, so it is clear what the $199 adds.
+ */
+import Button from '@/components/ui/form/Button/Button.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import { benefits, checkoutUrl, price } from '@/data/premium';
+
+const free = [
+  'Astro 7 starter kit, MIT licensed',
+  '58 components and a full design token system',
+  'Built-in i18n and strict CSP',
+  'AI agent skills in every project',
+  'A blank canvas you design yourself',
+];
+---
+
+<section class="v-section border-border border-t">
+  <div class="container flex flex-col gap-12 lg:gap-14">
+    <div class="flex max-w-[42rem] flex-col gap-4">
+      <p class="v-eyebrow">Velocity and Premium</p>
+      <h2 class="v-display v-h2">The starter is free. The sites are Premium.</h2>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2">
+      <div class="v-surface flex flex-col gap-6 p-6 sm:p-8">
+        <div class="flex flex-col gap-2">
+          <span class="text-foreground-muted text-sm font-semibold">Velocity</span>
+          <span class="v-display text-[2.5rem] leading-none">Free</span>
+          <span class="text-foreground-muted text-sm">Open source, forever.</span>
+        </div>
+        <ul class="text-foreground-secondary flex flex-col gap-3">
+          {free.map((item) => (
+            <li class="flex items-start gap-2.5">
+              <Icon name="check" size="sm" class="text-foreground-subtle mt-1" />
+              {item}
+            </li>
+          ))}
+        </ul>
+        <Button
+          variant="secondary"
+          size="lg"
+          href="https://docs.deployvelocity.com"
+          class="mt-auto self-start"
+        >
+          Read the docs
+        </Button>
+      </div>
+
+      <div class="v-surface v-premium-card flex flex-col gap-6 p-6 sm:p-8">
+        <div class="flex flex-col gap-2">
+          <span class="text-foreground text-sm font-semibold">Velocity Premium</span>
+          <span class="flex items-baseline gap-2">
+            <span class="v-display text-[2.5rem] leading-none">{price}</span>
+            <span class="text-foreground-muted font-medium">one time</span>
+          </span>
+          <span class="text-foreground-muted text-sm">Everything in Velocity, plus:</span>
+        </div>
+        <ul class="text-foreground flex flex-col gap-3">
+          {benefits.map((item) => (
+            <li class="flex items-start gap-2.5">
+              <Icon name="check" size="sm" class="mt-1" />
+              {item}
+            </li>
+          ))}
+        </ul>
+        <Button size="lg" href={checkoutUrl} class="mt-auto self-start">
+          Get lifetime access
+        </Button>
+      </div>
+    </div>
+  </div>
+</section>

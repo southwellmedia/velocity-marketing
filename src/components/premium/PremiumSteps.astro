@@ -1,0 +1,67 @@
+---
+/**
+ * How buying works, then the templates still to come.
+ */
+import { plannedTemplates, price } from '@/data/premium';
+
+const steps = [
+  { title: 'Check out once', body: `Pay ${price} on Polar. No subscription, no seats.` },
+  {
+    title: 'Accept the invite',
+    body: 'Polar adds your GitHub account to the private templates repository.',
+  },
+  {
+    title: 'Clone and ship',
+    body: 'Pick a template, swap in your content and photos, and deploy.',
+  },
+];
+---
+
+<section class="v-section v-premium-band">
+  <div class="container flex flex-col gap-20 lg:gap-24">
+    <div class="flex flex-col gap-10">
+      <div class="flex flex-col gap-4">
+        <p class="v-eyebrow">How it works</p>
+        <h2 class="v-display v-h3 text-[clamp(2rem,1.5rem+2vw,3.25rem)]!">
+          From checkout to clone in a minute.
+        </h2>
+      </div>
+      <ol class="grid gap-8 md:grid-cols-3 md:gap-6">
+        {steps.map((step, index) => (
+          <li class="border-border-strong flex flex-col gap-3 border-t pt-5">
+            <span class="text-foreground-subtle font-mono text-sm">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <h3 class="v-display text-[1.375rem]">{step.title}</h3>
+            <p class="text-foreground-muted leading-relaxed">{step.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <div class="flex flex-col gap-8">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div class="flex flex-col gap-4">
+          <p class="v-eyebrow">Coming next</p>
+          <h2 class="v-display v-h3 text-[clamp(2rem,1.5rem+2vw,3.25rem)]!">
+            Included when they ship.
+          </h2>
+        </div>
+        <p class="text-foreground-muted max-w-[40ch] leading-relaxed">
+          Lifetime access covers every template we release. You will not pay again.
+        </p>
+      </div>
+      <ul class="grid gap-4 md:grid-cols-2">
+        {plannedTemplates.map((template) => (
+          <li class="v-planned-row">
+            <span class="flex flex-col gap-1">
+              <span class="text-foreground font-semibold">{template.name}</span>
+              <span class="text-foreground-muted text-sm">{template.category}</span>
+            </span>
+            <span class="v-planned-tag">In the works</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>

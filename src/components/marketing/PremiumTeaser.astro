@@ -1,0 +1,94 @@
+---
+/**
+ * Home page teaser for Velocity Premium. Sells the idea in one screen and
+ * sends visitors to /premium, where the full pitch lives. Template data comes
+ * from `src/data/premium.ts`.
+ */
+import { Image } from 'astro:assets';
+import Button from '@/components/ui/form/Button/Button.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import { checkoutUrl, liveTemplates, plannedTemplates, price } from '@/data/premium';
+
+// The newest template sits in front of the stack; the next two fan out behind
+const [front, ...rest] = liveTemplates;
+const behind = rest.slice(0, 2);
+---
+
+<section id="premium" class="v-premium-band v-section">
+  <div class="v-premium-glow" aria-hidden="true"></div>
+  <div class="relative container flex flex-col gap-14 lg:gap-18">
+    <div class="v-teaser">
+      <div class="flex flex-col items-start gap-7">
+        <p class="v-count">
+          <span class="v-eyebrow">Premium</span>
+          <span class="v-count-divider" aria-hidden="true"></span>
+          <span>
+            <span class="text-foreground">{liveTemplates.length} live</span> ·{' '}
+            {plannedTemplates.length} in the works
+          </span>
+        </p>
+        <h2 class="v-display v-h2">Start from a finished site.</h2>
+        <p class="v-lead max-w-[44ch]">
+          Complete sites for clinics, stores and brokerages, built on Velocity with every page,
+          pattern and translation done.
+        </p>
+        <p class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <span class="v-display text-[2.75rem] leading-none">{price}</span>
+          <span class="text-foreground-muted text-sm font-medium">
+            once, for every current and future template
+          </span>
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <Button size="lg" href="/premium">
+            Explore Premium <Icon name="arrow-right" size="sm" />
+          </Button>
+          <Button size="lg" variant="secondary" href={checkoutUrl}>
+            Get lifetime access
+          </Button>
+        </div>
+      </div>
+
+      <div class="v-stack" aria-hidden="true">
+        {behind.map((template, index) => (
+          <Image
+            src={template.image}
+            alt=""
+            widths={[480, 720, 960]}
+            sizes="(min-width: 1024px) 40vw, 70vw"
+            class:list={['v-stack-shot', index === 0 ? 'v-stack-left' : 'v-stack-right']}
+          />
+        ))}
+        <div class="v-stack-front">
+          <Image
+            src={front.image}
+            alt=""
+            widths={[480, 720, 960, 1280]}
+            sizes="(min-width: 1024px) 45vw, 80vw"
+            class="block aspect-[16/10] w-full object-cover object-top"
+          />
+          {front.isNew && <span class="v-stack-tag">New: {front.name}</span>}
+        </div>
+      </div>
+    </div>
+
+    <ul class="grid gap-4 sm:grid-cols-3" aria-label="Live demos">
+      {liveTemplates.map((template) => (
+        <li>
+          <a
+            class="v-surface v-release flex-row! items-center justify-between gap-3 px-5 py-4"
+            href={template.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="flex flex-col">
+              <span class="text-foreground font-semibold">{template.name}</span>
+              <span class="text-foreground-muted text-sm">{template.category}</span>
+            </span>
+            <Icon name="arrow-up-right" size="sm" class="text-foreground-muted shrink-0" />
+            <span class="sr-only">(live demo, opens in a new tab)</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
