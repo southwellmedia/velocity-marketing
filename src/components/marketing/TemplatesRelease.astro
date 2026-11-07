@@ -58,7 +58,7 @@ const plannedTemplates = [
 <section id="templates" class="v-section pt-0!">
   <div class="container flex flex-col gap-6">
     <div class="v-premium">
-      <div class="v-surface flex flex-col gap-6 p-6 sm:p-8 lg:sticky lg:top-28">
+      <div class="v-surface flex flex-col gap-6 p-6 sm:p-8">
         <p class="v-eyebrow">Premium templates</p>
         <h2 class="v-display v-h3">Start from a finished site.</h2>
         <div class="flex flex-col gap-1">
@@ -83,7 +83,36 @@ const plannedTemplates = [
         </div>
       </div>
 
-      <div class="flex min-w-0 flex-col gap-6">
+      <div class="flex min-w-0 flex-col gap-5">
+        <div class="flex items-center justify-between gap-4">
+          <p class="v-count">
+            <span class="v-count-live">
+              <span class="v-count-dot" aria-hidden="true"></span>
+              {liveTemplates.length} live
+            </span>
+            <span class="v-count-divider" aria-hidden="true"></span>
+            <span>{plannedTemplates.length} in the works</span>
+          </p>
+          <div class="flex shrink-0 gap-2" data-carousel-controls>
+            <button
+              type="button"
+              class="v-carousel-arrow"
+              data-carousel-prev
+              aria-label="Previous templates"
+              disabled
+            >
+              <Icon name="arrow-left" size="sm" />
+            </button>
+            <button
+              type="button"
+              class="v-carousel-arrow"
+              data-carousel-next
+              aria-label="Next templates"
+            >
+              <Icon name="arrow-right" size="sm" />
+            </button>
+          </div>
+        </div>
         <div class="v-carousel" data-carousel data-at-start>
           <ul class="v-carousel-track" data-carousel-track aria-label="Templates">
             {liveTemplates.map((template) => (
@@ -99,7 +128,7 @@ const plannedTemplates = [
                     alt={template.alt}
                     widths={[480, 720, 960, 1280]}
                     sizes="(min-width: 1024px) 40vw, 85vw"
-                    class="aspect-[16/10] w-full object-cover object-top"
+                    class="v-carousel-media w-full object-cover object-left-top"
                   />
                   <span class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 p-4 sm:px-5">
                     <span class="flex flex-col">
@@ -119,7 +148,10 @@ const plannedTemplates = [
                   class="v-surface v-planned flex h-full flex-col overflow-hidden"
                   aria-label={`${template.name}, planned`}
                 >
-                  <div class="v-sketch relative aspect-[16/10] overflow-hidden" aria-hidden="true">
+                  <div
+                    class="v-sketch v-carousel-media relative overflow-hidden"
+                    aria-hidden="true"
+                  >
                     <div class="v-sketch-bar">
                       <span class="v-sketch-dot" />
                       <span class="v-sketch-line w-12" />
@@ -175,31 +207,6 @@ const plannedTemplates = [
               </li>
             ))}
           </ul>
-        </div>
-        <div class="flex items-center justify-between gap-4">
-          <p class="text-foreground-subtle text-xs font-medium">
-            Demo photos not included. Planned templates are included in lifetime access when they
-            ship.
-          </p>
-          <div class="flex shrink-0 gap-2" data-carousel-controls>
-            <button
-              type="button"
-              class="v-carousel-arrow"
-              data-carousel-prev
-              aria-label="Previous templates"
-              disabled
-            >
-              <Icon name="arrow-left" size="sm" />
-            </button>
-            <button
-              type="button"
-              class="v-carousel-arrow"
-              data-carousel-next
-              aria-label="Next templates"
-            >
-              <Icon name="arrow-right" size="sm" />
-            </button>
-          </div>
         </div>
       </div>
     </div>

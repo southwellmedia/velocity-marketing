@@ -1002,10 +1002,74 @@
     scroll-snap-align: start;
   }
 
+  .v-carousel-media {
+    aspect-ratio: 16 / 10;
+  }
+
   @media (min-width: 640px) {
     .v-carousel-item {
-      flex-basis: 62%;
+      flex-basis: 68%;
     }
+  }
+
+  /* Beside the offer, the row grows to the offer card's height so both
+     columns end on the same line; screenshots fill the extra height */
+  @media (min-width: 1024px) {
+    .v-premium {
+      align-items: stretch;
+    }
+
+    .v-carousel {
+      display: flex;
+      flex: 1;
+    }
+
+    .v-carousel-track {
+      flex: 1;
+    }
+
+    .v-carousel-media {
+      flex: 1 1 0;
+      min-height: 0;
+      aspect-ratio: auto;
+    }
+  }
+
+  /* Template count above the row: how many are live and how many planned */
+  .v-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    height: 2.5rem;
+    padding-inline: 1rem;
+    border-radius: 9999px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--foreground-muted);
+    white-space: nowrap;
+  }
+
+  .v-count-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--foreground);
+  }
+
+  .v-count-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: var(--brand-500);
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--brand-500) 20%, transparent);
+  }
+
+  .v-count-divider {
+    width: 1px;
+    height: 1rem;
+    background: var(--border-strong);
   }
 
   .v-carousel-arrow {
